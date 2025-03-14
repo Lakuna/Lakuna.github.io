@@ -1,40 +1,44 @@
 import type { MetadataRoute } from "next";
-import domain from "#domain";
+import domain from "util/domain";
 
+/**
+ * The website's sitemap.
+ * @returns The sitemap.
+ * @public
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
 	return [
-		{ url: `${domain}/a/cccv` },
-		{ url: `${domain}/a/esojs` },
-		{ url: `${domain}/a/mc` },
-		{ url: `${domain}/a/mtg` },
-		{ url: `${domain}/a/pedit5` },
-		{ url: `${domain}/a/q_rsqrt` },
-		{ url: `${domain}/a/webgl/3d` },
-		{ url: `${domain}/a/webgl/attributes` },
-		{ url: `${domain}/a/webgl/cubemaps` },
-		{ url: `${domain}/a/webgl/fog` },
-		{ url: `${domain}/a/webgl/framebuffers` },
-		{ url: `${domain}/a/webgl/glossary` },
-		{ url: `${domain}/a/webgl/gpgpu` },
-		{ url: `${domain}/a/webgl/image-processing` },
-		{ url: `${domain}/a/webgl/intro` },
-		{ url: `${domain}/a/webgl/lighting` },
-		{ url: `${domain}/a/webgl/loss-of-context` },
-		{ url: `${domain}/a/webgl/picking` },
-		{ url: `${domain}/a/webgl/program-structure` },
-		{ url: `${domain}/a/webgl/scene-graph` },
-		{ url: `${domain}/a/webgl/shaders` },
-		{ url: `${domain}/a/webgl/shadows` },
-		{ url: `${domain}/a/webgl/skinning` },
-		{ url: `${domain}/a/webgl/text` },
-		{ url: `${domain}/a/webgl/textures` },
-		{ url: `${domain}/a/webgl/transformation` },
-		{ url: `${domain}/a/webgl/transparency` },
-		{ url: `${domain}/a/webgl/uniforms` },
-		{ url: `${domain}/a/webgl/varyings` },
-		{ url: `${domain}/a/webgl` },
-		{ url: `${domain}/blog` },
-		{ url: `${domain}/portfolio` },
-		{ url: `${domain}/` }
+		{ url: new URL("/a/cccv", domain).href },
+		{ url: new URL("/a/esojs", domain).href },
+		{ url: new URL("/a/mc", domain).href },
+		{ url: new URL("/a/mtg", domain).href },
+		{ url: new URL("/a/pedit5", domain).href },
+		{ url: new URL("/a/q_rsqrt", domain).href },
+		{ url: new URL("/a/webgl/3d", domain).href },
+		{ url: new URL("/a/webgl/attributes", domain).href },
+		{ url: new URL("/a/webgl/cubemaps", domain).href },
+		{ url: new URL("/a/webgl/fog", domain).href },
+		{ url: new URL("/a/webgl/framebuffers", domain).href },
+		{ url: new URL("/a/webgl/glossary", domain).href },
+		{ url: new URL("/a/webgl/gpgpu", domain).href },
+		{ url: new URL("/a/webgl/image-processing", domain).href },
+		{ url: new URL("/a/webgl/intro", domain).href },
+		{ url: new URL("/a/webgl/lighting", domain).href },
+		{ url: new URL("/a/webgl/loss-of-context", domain).href },
+		{ url: new URL("/a/webgl/picking", domain).href },
+		{ url: new URL("/a/webgl/program-structure", domain).href },
+		{ url: new URL("/a/webgl/scene-graph", domain).href },
+		{ url: new URL("/a/webgl/shaders", domain).href },
+		{ url: new URL("/a/webgl/skinning", domain).href },
+		{ url: new URL("/a/webgl/text", domain).href },
+		{ url: new URL("/a/webgl/textures", domain).href },
+		{ url: new URL("/a/webgl/transformation", domain).href },
+		{ url: new URL("/a/webgl/transparency", domain).href },
+		{ url: new URL("/a/webgl/uniforms", domain).href },
+		{ url: new URL("/a/webgl/varyings", domain).href },
+		{ url: new URL("/a/webgl", domain).href },
+		{ url: new URL("/blog", domain).href },
+		{ url: new URL("/portfolio", domain).href },
+		{ url: new URL("/", domain).href }
 	];
 }

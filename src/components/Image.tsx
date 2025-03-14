@@ -1,47 +1,48 @@
 import NextImage, { type ImageProps as NextImageProps } from "next/image";
 import type { JSX } from "react";
+import defaultBlur from "./assets/default-blur.png";
 
-export type ImageProps = NextImageProps | JSX.IntrinsicElements["img"];
+/**
+ * Equivalent to the props that can be passed to a Next.js image or an image element.
+ * @public
+ */
+export type ImageProps = Omit<NextImageProps, "children"> & {
+	/**
+	 * Whether or not the image is trusted. Untrusted images don't use the Next.js image optimization API, so their `src` doesn't need to be a `trustedDomain`.
+	 * @see {@link https://nextjs.org/docs/messages/next-image-unconfigured-host | Un-configured host}
+	 */
+	untrusted?: boolean | undefined;
+};
 
+/**
+ * Create an image. Automatically applies default styling and configuration.
+ * @param props - The properties to pass to the image.
+ * @returns The image.
+ * @public
+ */
 export default function Image({
-	alt = "",
-	src,
-	style = {},
-	width,
-	height,
+	untrusted,
 	...props
-}: ImageProps) {
-	// Apply default styling.
-	style.display ??= "block";
-	style.height ??= "auto";
-	style.margin ??= "auto";
-	style.width ??= "100%";
+}: ImageProps): JSX.Element {
+	// Untrusted images must use a string `src` value.
+	if (untrusted) {
+		if (typeof props.src !== "string") {
+			throw new Error("Untrusted image must use a string source.");
+		}
 
-	// Recombine arguments into one object (so that default arguments can be applied).
-	const actualProps: ImageProps = {
-		alt,
-		src: src ?? "",
-		style,
-		...props
-	};
-
-	// Apply width if present.
-	if (typeof width === "number") {
-		actualProps.width = width;
-	} else if (width) {
-		actualProps.width = parseInt(width, 10);
+		// eslint-disable-next-line @next/next/no-img-element
+		return <img {...props} alt={props.alt} src={props.src} />;
 	}
 
-	// Apply height if present.
-	if (typeof height === "number") {
-		actualProps.height = height;
-	} else if (height) {
-		actualProps.height = parseInt(height, 10);
+	// Set default properties.
+	props.placeholder ??= "blur";
+	if (
+		props.placeholder === "blur" &&
+		typeof props.src === "string" &&
+		defaultBlur.blurDataURL
+	) {
+		props.blurDataURL ??= defaultBlur.blurDataURL;
 	}
 
-	// Apply default placeholder type unless specified.
-	actualProps.placeholder =
-		"placeholder" in props ? (props.placeholder ?? "blur") : "blur";
-
-	return <NextImage {...actualProps} />;
+	return <NextImage {...props} />;
 }

@@ -11,7 +11,7 @@ import {
 import { createMatrix4Like, identity, scale } from "@lakuna/umath/Matrix4";
 import type { JSX } from "react";
 import ReactCanvas from "@lakuna/react-canvas";
-import domain from "#domain";
+import domain from "util/domain";
 
 const vss = `\
 #version 300 es
@@ -76,7 +76,7 @@ export default function Textures(props: JSX.IntrinsicElements["canvas"]) {
 
 				const texture = Texture2d.fromImageUrl(
 					gl,
-					`${domain}/images/webgl-example-texture.png`
+					new URL("/images/webgl-example-texture.png", domain).href
 				);
 
 				const matrix = createMatrix4Like();

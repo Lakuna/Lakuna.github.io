@@ -1,112 +1,93 @@
-@use "variables";
-@use "mixins";
+@use "variables" as v;
+@use "fg.module.scss";
 
-// TODO: Make this better - clean up Sass variables to add separate ones just for Syntax highlighting.
-// Custom highlight.js color theme, based loosely on Panda.
+// Custom highlight.js color theme, based on Panda Syntax Theme by Annmarie Switzer.
 pre > code.hljs {
+	@extend .fg;
+
 	display: block;
 	overflow-x: auto;
 	padding: 1em;
-	color: variables.$text-color;
-	background: variables.$fg-color;
-	border-radius: 10px;
 
-	@include mixins.is-light-theme using ($is-light-theme) {
-		@if $is-light-theme {
-			$shadow-x: 2px;
-			$shadow-y: 2px;
-			margin: 0px $shadow-x $shadow-y;
-			box-shadow:
-				1px 1px 2px #3a3a443d,
-				$shadow-x $shadow-y 4px #5a5b6a3d;
-		}
+	& > span.hljs-keyword,
+	& > span.hljs-deletion {
+		color: v.$keyword-color;
 	}
 
-	& > .hljs-emphasis {
+	& > span.hljs-built_in,
+	& > span.hljs-type,
+	& > span.hljs-literal,
+	& > span.hljs-number,
+	& > span.hljs-variable,
+	& > span.hljs-title,
+	& > span.hljs-doctag,
+	& > span.hljs-meta > span.hljs-keyword,
+	& > span.hljs-tag,
+	& > span.hljs-attribute,
+	& > span.hljs-link,
+	& > span.hljs-selector-id,
+	& > span.hljs-template-tag,
+	& > span.hljs-template-variable {
+		color: v.$built-in-color;
+	}
+
+	& > span.hljs-operator,
+	& > span.hljs-char.escape_ {
+		color: v.$operator-color;
+	}
+
+	& > span.hljs-property,
+	& > span.hljs-subst,
+	& > span.hljs-title.function_,
+	& > span.hljs-section,
+	& > span.hljs-code,
+	& > span.hljs-formula {
+		color: v.$prop-color;
+	}
+
+	& > span.hljs-regexp,
+	& > span.hljs-variable.language_,
+	& > span.hljs-selector-attr,
+	& > span.hljs-selector-pseudo {
+		color: v.$regex-color;
+	}
+
+	& > span.hljs-string,
+	& > span.hljs-symbol,
+	& > span.hljs-title.class_,
+	& > span.hljs-title.class_.inherited__,
+	& > span.hljs-meta > span.hljs-string,
+	& > span.hljs-bullet,
+	& > span.hljs-selector-class,
+	& > span.hljs-addition {
+		color: v.$string-color;
+	}
+
+	& > span.hljs-params {
+		color: v.$comment-color;
+	}
+
+	& > span.hljs-comment,
+	& > span.hljs-quote {
+		color: v.$comment-color;
 		font-style: italic;
 	}
 
-	& > .hljs-strong {
+	& > span.hljs-meta,
+	& > span.hljs-name,
+	& > span.hljs-selector-tag {
+		color: v.$meta-color;
+	}
+
+	& > span.hljs-emphasis {
+		font-style: italic;
+	}
+
+	& > span.hljs-strong {
 		font-weight: bold;
 	}
 
-	& > .hljs-link {
+	& > span.hljs-link {
 		text-decoration: underline;
-	}
-
-	& > .hljs-comment,
-	& > .hljs-quote {
-		color: variables.$alt-text-color;
-		font-style: italic;
-	}
-
-	& > .hljs-params {
-		color: variables.$alt-text-color;
-	}
-
-	& > .hljs-punctuation,
-	& > .hljs-attr {
-		color: variables.$text-color;
-	}
-
-	& > .hljs-selector-tag,
-	& > .hljs-name,
-	& > .hljs-meta {
-		color: variables.$italic-color;
-	}
-
-	& > .hljs-operator,
-	& > .hljs-char.escape_ {
-		color: variables.$highlight-color-4;
-	}
-
-	& > .hljs-keyword,
-	& > .hljs-deletion {
-		color: variables.$bold-color;
-	}
-
-	& > .hljs-regexp,
-	& > .hljs-selector-pseudo,
-	& > .hljs-selector-attr,
-	& > .hljs-variable.language_ {
-		color: variables.$bold-bold-color;
-	}
-
-	& > .hljs-subst,
-	& > .hljs-property,
-	& > .hljs-code,
-	& > .hljs-formula,
-	& > .hljs-section,
-	& > .hljs-title.function_ {
-		color: variables.$highlight-color-2;
-	}
-
-	& > .hljs-string,
-	& > .hljs-symbol,
-	& > .hljs-bullet,
-	& > .hljs-addition,
-	& > .hljs-selector-class,
-	& > .hljs-title.class_,
-	& > .hljs-title.class_.inherited__,
-	& > .hljs-meta > .hljs-string {
-		color: variables.$highlight-color;
-	}
-
-	& > .hljs-variable,
-	& > .hljs-template-variable,
-	& > .hljs-number,
-	& > .hljs-literal,
-	& > .hljs-type,
-	& > .hljs-link,
-	& > .hljs-built_in,
-	& > .hljs-title,
-	& > .hljs-selector-id,
-	& > .hljs-tag,
-	& > .hljs-doctag,
-	& > .hljs-attribute,
-	& > .hljs-template-tag,
-	& > .hljs-meta > .hljs-keyword,
-	& > .hljs-punctuation {
-		color: variables.$highlight-color-3;
 	}
 }

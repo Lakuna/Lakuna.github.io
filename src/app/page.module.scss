@@ -1,0 +1,67 @@
+@use "../styles/mixins" as m;
+@use "../styles/variables" as v;
+@use "../styles/fg.module.scss";
+
+div.content {
+	& > h1 {
+		margin-bottom: 0px;
+		text-align: center;
+	}
+
+	& > p {
+		margin-top: 0px;
+		text-align: center;
+	}
+
+	& > iframe {
+		display: block;
+		margin: 0px auto;
+		max-width: 100%;
+		width: max(v.$mobile-breakpoint, 60%);
+	}
+
+	& > ul.socials {
+		// Remove default list stylization.
+		list-style: none;
+		margin: 0px auto;
+		padding: 0px;
+
+		display: flex;
+		font-size: 1.2em;
+		gap: 10px;
+		justify-content: center;
+
+		& > a {
+			@extend .fg;
+
+			border: 1px solid v.$text-color;
+			border-radius: 10px;
+			color: v.$text-color;
+			display: flex;
+			gap: 5px;
+			padding: 10px;
+			text-decoration: none;
+			vertical-align: middle;
+
+			&:hover {
+				color: v.$fg-color;
+				background-color: v.$text-color;
+				border: 1px solid v.$text-color;
+			}
+		}
+	}
+
+	// Cards.
+	& > ul > a > div,
+	& > ul > div > div {
+		& > svg.half,
+		& > img.half {
+			width: 50%;
+		}
+
+		& > img.shield {
+			height: 2em;
+			width: auto;
+		}
+	}
+}

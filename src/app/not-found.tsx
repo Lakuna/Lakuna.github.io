@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
+import style from "./page.module.scss";
 
 export default function NotFound() {
 	return (
-		<>
-			<h1 style={{ textAlign: "center" }}>{"404 Not Found"}</h1>
-			<p style={{ textAlign: "center" }}>
-				{"This isn't the page you're looking for."}
-			</p>
-		</>
+		<div className={style["content"]}>
+			<h1>{"404 Not Found"}</h1>
+			<p>{"This isn't the page you're looking for."}</p>
+		</div>
 	);
 }
 

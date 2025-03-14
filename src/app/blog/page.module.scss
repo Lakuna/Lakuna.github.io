@@ -1,0 +1,9 @@
+@use "../../styles/mixins" as m;
+@use "../../styles/variables" as v;
+@use "../../styles/fg.module.scss";
+
+div.content {
+	& > h1 {
+		text-align: center;
+	}
+}

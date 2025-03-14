@@ -1,106 +1,131 @@
-@use "mixins";
-@use "variables";
+@use "mixins" as m;
+@use "variables" as v;
+@use "fg.module.scss";
 
 :root {
-	font-family: variables.$font-sans-serif;
-	color: variables.$text-color;
-	background-color: variables.$bg-color;
+	font-family: v.$font-sans-serif;
+	color: v.$text-color;
+	background-color: v.$bg-color;
 	tab-size: 4;
 
-	@include mixins.is-light-theme using ($is-light-theme) {
+	--bg-color: #{v.$cod-gray};
+	--fg-color: #{v.$eerie-black};
+	--text-color: #{v.$silver};
+	--theme-color: #{v.$emerald};
+	--strong-color: #{v.$neon-carrot};
+	--em-color: #{v.$pink-flamingo};
+	--keyword-color: #{v.$persian-pink};
+	--built-in-color: #{v.$rajah};
+	--operator-color: #{v.$biloba-flower};
+	--prop-color: #{v.$blue-jeans};
+	--regex-color: #{v.$illusion};
+	--string-color: #{v.$bright-turquoise};
+	--comment-color: #{v.$silver-chalice};
+	--meta-color: #{v.$tickle-me-pink};
+	color-scheme: dark;
+
+	@include m.is-light-theme using ($is-light-theme) {
 		@if $is-light-theme {
-			--bg-color: #{variables.$alabaster};
-			--fg-color: #{variables.$mercury};
-			--text-color: #{variables.$emperor};
-			--alt-text-color: #{variables.$tundora};
-			--highlight-color: #{variables.$parsley};
-			--highlight-color-2: #{variables.$cello};
-			--highlight-color-3: #{variables.$clover};
-			--highlight-color-4: #{variables.$sapphire};
-			--italic-color: #{variables.$stiletto};
-			--bold-color: #{variables.$eminence};
-			--bold-bold-color: #{variables.$honey-flower};
+			--bg-color: #{v.$alabaster};
+			--fg-color: #{v.$gallery};
+			--text-color: #{v.$cod-gray};
+			--theme-color: #{v.$cobalt};
+			--strong-color: #{v.$camarone};
+			--em-color: #{v.$gigas};
+			--keyword-color: #{v.$fresh-eggplant};
+			--built-in-color: #{v.$gigas};
+			--operator-color: #{v.$cinnamon};
+			--prop-color: #{v.$fiord};
+			--regex-color: #{v.$fresh-eggplant};
+			--string-color: #{v.$eden};
+			--comment-color: #{v.$mineshaft};
+			--meta-color: #{v.$cinnamon};
 			color-scheme: light;
-		} @else {
-			--bg-color: #{variables.$eerie-black};
-			--fg-color: #{variables.$mine-shaft};
-			--text-color: #{variables.$silver-chalice};
-			--alt-text-color: #{variables.$silver};
-			--highlight-color: #{variables.$emerald};
-			--highlight-color-2: #{variables.$half-baked};
-			--highlight-color-3: #{variables.$celery};
-			--highlight-color-4: #{variables.$dull-lavender};
-			--italic-color: #{variables.$shilo};
-			--bold-color: #{variables.$wisteria};
-			--bold-bold-color: #{variables.$french-lilac};
-			color-scheme: dark;
 		}
 	}
 }
 
 a,
-hr,
 caption,
+figcaption,
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-	color: variables.$highlight-color;
+	color: v.$theme-color;
 }
 
 b,
 strong {
-	color: variables.$bold-color;
-}
-
-i,
-em {
-	color: variables.$italic-color;
-}
-
-blockquote {
-	font-family: variables.$font-serif;
+	color: v.$strong-color;
 }
 
 body {
 	margin: 0px;
 }
 
+button {
+	@extend .fg;
+
+	border: 1px solid v.$text-color;
+	border-radius: 10px;
+	cursor: pointer;
+	padding: 10px;
+
+	&:hover {
+		color: v.$fg-color;
+		background-color: v.$text-color;
+		border: 1px solid v.$text-color;
+	}
+}
+
+// See https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Styling_web_forms#fonts_and_text.
+button,
+input,
+select,
+textarea {
+	color: inherit;
+	font-family: inherit;
+	font-size: inherit;
+}
+
+blockquote,
+q {
+	font-family: v.$font-serif;
+}
+
+code,
+kbd,
+pre,
+samp {
+	background-color: v.$fg-color;
+	font-family: v.$font-monospace;
+}
+
+dfn,
+em,
+i {
+	color: v.$em-color;
+}
+
+hr {
+	color: v.$theme-color;
+	background-color: v.$theme-color;
+	border-color: v.$theme-color;
+}
+
 main {
 	margin: 8px;
 }
 
-button {
-	color: variables.$text-color;
-	background-color: variables.$fg-color;
-	border: 1px solid variables.$text-color;
-	border-radius: 10px;
-	padding: 6px 8px;
-
-	&:hover {
-		color: variables.$fg-color;
-		background-color: variables.$text-color;
-		border: 1px solid variables.$fg-color;
-	}
-}
-
-code {
-	font-family: variables.$font-monospace;
-	background-color: variables.$fg-color;
-	padding: 2px;
-}
-
-pre,
-samp {
-	font-family: variables.$font-monospace;
-}
-
-table,
-th,
-td {
-	border: 1px solid variables.$highlight-color;
+table {
 	border-collapse: collapse;
+}
+
+td,
+th {
+	border: 1px solid v.$theme-color;
 	padding: 5px;
 }

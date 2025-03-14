@@ -1,6 +1,6 @@
-import "#highlight";
-import "#katex";
-import type LayoutProps from "#LayoutProps";
+import "styles/highlight.scss";
+import "styles/katex.scss";
+import type LayoutProps from "types/LayoutProps";
 
 export default function Layout({ children }: LayoutProps) {
 	return children;

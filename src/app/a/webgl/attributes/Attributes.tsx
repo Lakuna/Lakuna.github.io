@@ -22,13 +22,13 @@ precision mediump float;
 out vec4 outColor;
 
 void main() {
-	outColor = vec4(0, 0, 0, 1);
+	outColor = vec4(0.5, 0.5, 0.5, 1);
 }
 `;
 
 const positionData = new Float32Array([0, 0.5, 0, 0, 0.7, 0]);
 
-export default function Indices(props: JSX.IntrinsicElements["canvas"]) {
+export default function Attributes(props: JSX.IntrinsicElements["canvas"]) {
 	return (
 		<ReactCanvas
 			init={(canvas) => {

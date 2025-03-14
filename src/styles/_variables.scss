@@ -1,61 +1,33 @@
-// Standard mobile breakpoint; the width of an iPad in the portrait orientation.
+// Standard mobile breakpoint; 4:3 XGA height.
 $mobile-breakpoint: 768px;
 
-// Theme color.
-$emerald: #50c878;
-
-// Split complementary colors of the theme color.
-$chestnut-rose: #c85064;
-$fuchsia: #b450c8;
-
-// Split complementary colors of the split complementary colors (et cetera).
-$shakespeare: #50a0c8;
-$celery: #a0c850;
-$indigo: #5064c8;
-
-// The lightest background color for the theme color to qualify for WCAG AAA; the dark theme foreground color.
-$mine-shaft: #272727;
-
-// A shade of the dark theme foreground color; the dark theme background color. The difference will appear exaggerated due to Mach bands.
-$eerie-black: #202020;
-
-// The darkest text color for the dark theme to qualify for WCAG AAA.
-$silver-chalice: #b2b2b2;
-
-// A tint of the text color for the dark theme.
-$silver: #c0c0c0;
-
-// The darkest tints of the split complementary colors (et cetera) to qualify for WCAG AAA in the dark theme.
-$shilo: #e1a1ad;
-$wisteria: #db9ce0;
-$half-baked: #80bad7;
-$dull-lavender: #a6b0e3;
-
-// A tint of the bold color for the dark theme.
-$french-lilac: #db9ce0;
-
-// A foreground color for the light theme.
-$mercury: #e5e5e5;
-
-// A tint of the light theme foreground color; the light theme background color. The difference will appear exaggerated due to Mach bands.
+// Light theme color palette.
+$gallery: #efefef;
 $alabaster: #fafafa;
+$mineshaft: #323232;
+$eden: #105852;
+$camarone: #00581a;
+$fiord: #405169;
+$cobalt: #0047ab;
+$gigas: #523c94;
+$fresh-eggplant: #990066;
+$cinnamon: #7b3f00;
 
-// The lightest text color for the light theme to qualify for WCAG AAA.
-$emperor: #4a4a4a;
-
-// A shade of the text color for the light theme.
-$tundora: #404040;
-
-// The lightest shades of the theme color and split complementary colors to qualify for WCAG AAA in the light theme.
-$parsley: #15552a;
-$stiletto: #842a39;
-$eminence: #742981;
-$cello: #1f4e64;
-$clover: #3e4f16;
-$sapphire: #31429a;
-
-// A shade of the bold color for the light theme.
-$honey-flower: #63236f;
+// Dark theme color palette.
+$eerie-black: #1b1b1b;
+$cod-gray: #0b0b0b;
+$silver: #c0c0c0;
+$silver-chalice: #acacac;
+$rajah: #f7b668;
+$neon-carrot: #ff9933;
+$emerald: #50c878;
+$bright-turquoise: #08e8de;
+$blue-jeans: #5dadec;
+$biloba-flower: #b2a1ea;
+$illusion: #f6a4c9;
+$persian-pink: #f77fbe;
+$tickle-me-pink: #fc89ac;
+$pink-flamingo: #ff66ff;
 
 // Sass variables for CSS variables.
 $font-serif: var(--font-serif);
@@ -64,11 +36,14 @@ $font-monospace: var(--font-monospace);
 $bg-color: var(--bg-color);
 $fg-color: var(--fg-color);
 $text-color: var(--text-color);
-$alt-text-color: var(--alt-text-color);
-$highlight-color: var(--highlight-color);
-$highlight-color-2: var(--highlight-color-2);
-$highlight-color-3: var(--highlight-color-3);
-$highlight-color-4: var(--highlight-color-4);
-$italic-color: var(--italic-color);
-$bold-color: var(--bold-color);
-$bold-bold-color: var(--bold-bold-color);
+$theme-color: var(--theme-color);
+$strong-color: var(--strong-color);
+$em-color: var(--em-color);
+$keyword-color: var(--keyword-color);
+$built-in-color: var(--built-in-color);
+$operator-color: var(--operator-color);
+$prop-color: var(--prop-color);
+$regex-color: var(--regex-color);
+$string-color: var(--string-color);
+$comment-color: var(--comment-color);
+$meta-color: var(--meta-color);

@@ -5,8 +5,10 @@ import eslint from "@eslint/js";
 import { fileURLToPath } from "node:url";
 import prettier from "eslint-plugin-prettier/recommended";
 
-// TODO: Add OGP images and better descriptions to articles where possible.
-
+/**
+ * ESLint configuration options.
+ * @internal
+ */
 export default config(
 	// Next.js ESLint rules.
 	...new FlatCompat({

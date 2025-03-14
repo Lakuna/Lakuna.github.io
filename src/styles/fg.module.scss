@@ -1,0 +1,23 @@
+@use "mixins" as m;
+@use "variables" as v;
+
+.fg {
+	background-color: v.$fg-color;
+
+	@include m.is-light-theme using ($is-light-theme) {
+		@if $is-light-theme {
+			/*
+			The offset and blur radius of the outer shadow, respectively. The
+			blur of the outer shadow is expected to extend at least as far as
+			that of the inner shadow in every direction.
+			*/
+			$o: 2px;
+			$r: 4px;
+
+			box-shadow:
+				1px 1px 2px #00000030,
+				$o $o $r #00000020;
+			margin: $r - $o $r + $o $r + $o $r - $o;
+		}
+	}
+}

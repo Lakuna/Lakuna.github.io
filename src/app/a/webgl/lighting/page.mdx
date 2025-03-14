@@ -1,12 +1,12 @@
 ---
 title: "Lighting"
-description: "An introduction to some techniques that are used to emulate lighting in WebGL."
+description: "An introduction to some techniques that are used to emulate lighting in WebGL. Covers normals, diffuse, ambient, point, specular, and spot lighting, and the Phong and Blinn-Phong lighting models."
 openGraph:
   url: "/a/webgl/lighting"
 ---
 
-import DiffuseLighting from "./DiffuseLighting.tsx";
-import PhongLighting from "./PhongLighting.tsx";
+import DiffuseLighting from "./DiffuseLighting";
+import PhongLighting from "./PhongLighting";
 
 # Lighting
 
@@ -162,6 +162,8 @@ void main() {
 	outColor.rgb *= brightness;
 }
 ```
+
+The result of adding this form of spectral lighting with the ambient and diffuse lighting shown above is the _Blinn-Phong lighting model_, which is an upgraded version of the Phong lighting model that calculates specular lighting in a slightly different way to improve the result at certain viewing angles.
 
 <PhongLighting style={{ width: "100%" }} />
 

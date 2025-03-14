@@ -24,7 +24,7 @@ import {
 import type { JSX } from "react";
 import ReactCanvas from "@lakuna/react-canvas";
 import { createVector3Like } from "@lakuna/umath/Vector3";
-import domain from "#domain";
+import domain from "util/domain";
 
 const vss = `\
 #version 300 es
@@ -111,12 +111,12 @@ export default function EnvironmentMaps(
 
 				const texture = TextureCubemap.fromImageUrls(
 					gl,
-					`${domain}/images/webgl-example-environment-map/px.png`,
-					`${domain}/images/webgl-example-environment-map/nx.png`,
-					`${domain}/images/webgl-example-environment-map/py.png`,
-					`${domain}/images/webgl-example-environment-map/ny.png`,
-					`${domain}/images/webgl-example-environment-map/pz.png`,
-					`${domain}/images/webgl-example-environment-map/nz.png`
+					new URL("/images/webgl-example-environment-map/px.png", domain).href,
+					new URL("/images/webgl-example-environment-map/nx.png", domain).href,
+					new URL("/images/webgl-example-environment-map/py.png", domain).href,
+					new URL("/images/webgl-example-environment-map/ny.png", domain).href,
+					new URL("/images/webgl-example-environment-map/pz.png", domain).href,
+					new URL("/images/webgl-example-environment-map/nz.png", domain).href
 				);
 				texture.minFilter = TextureFilter.LINEAR_MIPMAP_LINEAR;
 				texture.magFilter = TextureFilter.LINEAR;

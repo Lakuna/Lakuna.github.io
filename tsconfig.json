@@ -24,6 +24,7 @@
 		"strict": true,
 
 		// Modules
+		"baseUrl": "src",
 		"module": "esnext", // Next.js required.
 		"moduleResolution": "bundler", // Next.js required.
 		"resolveJsonModule": true, // Next.js required.

@@ -1,9 +1,9 @@
-import "#global";
+import "styles/global.scss";
 import type { Metadata, Viewport } from "next";
-import { monospace, sansSerif, serif } from "#font";
-import type LayoutProps from "#LayoutProps";
-import Topnav from "#Topnav";
-import domain from "#domain";
+import { monospace, sansSerif, serif } from "util/font";
+import type LayoutProps from "types/LayoutProps";
+import Topnav from "./Topnav";
+import domain from "util/domain";
 import style from "./layout.module.scss";
 
 export default function Layout({ children }: LayoutProps) {
@@ -29,7 +29,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-	authors: [{ name: "Travis Martin", url: domain }],
+	authors: [{ name: "Travis Martin", url: new URL(domain) }],
 	creator: "Travis Martin",
 	metadataBase: new URL(domain),
 	openGraph: {

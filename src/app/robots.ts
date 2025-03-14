@@ -1,12 +1,17 @@
 import type { MetadataRoute } from "next";
-import domain from "#domain";
+import domain from "util/domain";
 
+/**
+ * The website's robots file.
+ * @returns The robots file.
+ * @public
+ */
 export default function robots(): MetadataRoute.Robots {
 	return {
 		rules: {
 			allow: "/",
 			userAgent: "*"
 		},
-		sitemap: `${domain}/sitemap.xml`
+		sitemap: new URL("/sitemap.xml", domain).href
 	};
 }

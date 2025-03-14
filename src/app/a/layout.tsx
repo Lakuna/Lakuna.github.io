@@ -1,4 +1,4 @@
-import type LayoutProps from "#LayoutProps";
+import type LayoutProps from "types/LayoutProps";
 import type { Metadata } from "next";
 import style from "./layout.module.scss";
 

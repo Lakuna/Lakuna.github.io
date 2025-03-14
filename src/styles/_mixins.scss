@@ -19,10 +19,20 @@
 	}
 }
 
-// An implementation of `media-query-boolean` specifically for checking if the viewport is mobile-sized.
-@mixin is-mobile {
+// An implementation of `media-query-boolean` specifically for checking if the viewport is at most mobile-sized.
+@mixin lte-mobile {
 	@include media-query-boolean("(max-width: #{variables.$mobile-breakpoint})")
-		using ($is-mobile) {
-		@content ($is-mobile);
+		using ($lte-mobile) {
+		@content ($lte-mobile);
+	}
+}
+
+// An implementation of `media-query-boolean` specifically for checking if the viewport is greater than mobile-sized. This is recommended over `lte-mobile` for mobile-first design.
+@mixin gt-mobile {
+	@include media-query-boolean(
+			"(min-width: #{variables.$mobile-breakpoint + 1px})"
+		)
+		using ($gt-mobile) {
+		@content ($gt-mobile);
 	}
 }

@@ -21,7 +21,7 @@ import {
 } from "@lakuna/umath/Matrix4";
 import type { JSX } from "react";
 import ReactCanvas from "@lakuna/react-canvas";
-import domain from "#domain";
+import domain from "util/domain";
 
 const vss = `\
 #version 300 es
@@ -98,7 +98,7 @@ export default function TextureAtlases(props: JSX.IntrinsicElements["canvas"]) {
 
 				const texture = Texture2d.fromImageUrl(
 					gl,
-					`${domain}/images/webgl-example-texture-atlas.png`
+					new URL("/images/webgl-example-texture-atlas.png", domain).href
 				);
 				texture.minFilter = TextureFilter.NEAREST;
 				texture.magFilter = TextureFilter.NEAREST;
