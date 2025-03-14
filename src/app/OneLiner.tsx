@@ -19,6 +19,11 @@ const oneLiners = [
 		<Link href="https://ty.business/">{"ty.business"}</Link>
 		{"!"}
 	</span>,
+	<span key={2}>
+		{"Also check out "}
+		<Link href="https://www.xanycki.art/">{"xanycki.art"}</Link>
+		{"!"}
+	</span>,
 	<span key={3}>{"All your base are belong to us."}</span>,
 	<code key={4}>{"// evil floating point bit level hacking"}</code>,
 	<span key={5}>{"There's a frood who really knows where his towel is."}</span>,
@@ -64,12 +69,16 @@ const oneLiners = [
 	<span key={54}>{"SEE YOU SPACE COWBOY..."}</span>,
 	<span key={55}>{"Dodge, duck, dip, dive, and dodge."}</span>,
 	<span key={64}>{"Fiat justitia ruat caelum"}</span>,
-	<span key={65}>{"Rip and tear, until it is done."}</span>
+	<span key={65}>{"Rip and tear, until it is done."}</span>,
+	<span key={66}>
+		{"Also check out "}
+		<Link href="https://fluquor.com/">{"fluquor.com"}</Link>
+		{"!"}
+	</span>
 ];
 
 /*
  * Retired One-Liners:
- * 2. Also check out [xanycki.art](https://www.xanycki.art/)!
  * 7. Roads? Where we're going, we don't need roads!
  * 8. ♪ Trigger, killer, eye of the storm ♪
  * 12. ♪ There's blood on the crown, go and take it ♪
