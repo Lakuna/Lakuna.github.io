@@ -52,68 +52,60 @@ export default function HyperGeoCalc({
 
 	return (
 		<form className={fullClassName} {...props}>
-			<label htmlFor="N">{"Cards in deck:"}</label>
-			<input
-				type="number"
-				id="N"
-				name="N"
-				value={N}
-				onChange={onChange(setN)}
-			/>
-			<label htmlFor="K">{"Copies of [card] in deck:"}</label>
-			<input
-				type="number"
-				id="K"
-				name="K"
-				value={K}
-				onChange={onChange(setK)}
-			/>
-			<label htmlFor="n">{"Cards drawn:"}</label>
-			<input
-				type="number"
-				id="n"
-				name="n"
-				value={n}
-				onChange={onChange(setn)}
-			/>
-			<label htmlFor="k">{"Preferred copies of [card] drawn:"}</label>
-			<input
-				type="number"
-				id="k"
-				name="k"
-				value={k}
-				onChange={onChange(setk)}
-			/>
-			<label htmlFor="lt">
-				{"Chance to draw less than "}
-				{k}
-				{" [card]s:"}
-			</label>
-			<output id="lt" name="lt">{`~${(lt * 100).toFixed(2)}%`}</output>
-			<label htmlFor="lte">
-				{"Chance to draw at most "}
-				{k}
-				{" [card]s:"}
-			</label>
-			<output id="lte" name="lte">{`~${((lt + e) * 100).toFixed(2)}%`}</output>
-			<label htmlFor="e">
-				{"Chance to draw exactly "}
-				{k}
-				{" [card]s:"}
-			</label>
-			<output id="e" name="e">{`~${(e * 100).toFixed(2)}%`}</output>
-			<label htmlFor="gte">
-				{"Chance to draw at least "}
-				{k}
-				{" [card]s:"}
-			</label>
-			<output id="gte" name="gte">{`~${((gt + e) * 100).toFixed(2)}%`}</output>
-			<label htmlFor="gt">
-				{"Chance to draw more than "}
-				{k}
-				{" [card]s:"}
-			</label>
-			<output id="gt" name="gt">{`~${(gt * 100).toFixed(2)}%`}</output>
+			<p>
+				<label>
+					{"Cards in deck:"}
+					<input type="number" name="N" value={N} onChange={onChange(setN)} />
+				</label>
+			</p>
+			<p>
+				<label>
+					{"Copies of [card] in deck:"}
+					<input type="number" name="K" value={K} onChange={onChange(setK)} />
+				</label>
+			</p>
+			<p>
+				<label>
+					{"Cards drawn:"}
+					<input type="number" name="n" value={n} onChange={onChange(setn)} />
+				</label>
+			</p>
+			<p>
+				<label>
+					{"Preferred copies of [card] drawn:"}
+					<input type="number" name="k" value={k} onChange={onChange(setk)} />
+				</label>
+			</p>
+			<p>
+				<label>
+					{`Chance to draw less than ${k.toString()} [card]s:`}
+					<output name="lt">{`~${(lt * 100).toFixed(2)}%`}</output>
+				</label>
+			</p>
+			<p>
+				<label>
+					{`Chance to draw at most ${k.toString()} [card]s:`}
+					<output name="lte">{`~${((lt + e) * 100).toFixed(2)}%`}</output>
+				</label>
+			</p>
+			<p>
+				<label>
+					{`Chance to draw exactly ${k.toString()} [card]s:`}
+					<output name="e">{`~${(e * 100).toFixed(2)}%`}</output>
+				</label>
+			</p>
+			<p>
+				<label>
+					{`Chance to draw at least ${k.toString()} [card]s:`}
+					<output name="gte">{`~${((gt + e) * 100).toFixed(2)}%`}</output>
+				</label>
+			</p>
+			<p>
+				<label>
+					{`Chance to draw more than ${k.toString()} [card]s:`}
+					<output name="gt">{`~${(gt * 100).toFixed(2)}%`}</output>
+				</label>
+			</p>
 		</form>
 	);
 }

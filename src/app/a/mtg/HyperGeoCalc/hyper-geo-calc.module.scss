@@ -1,9 +1,27 @@
 form.hyper-geo-calc {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	column-gap: 10px;
+	display: flex;
+	flex-direction: column;
 
-	& > label {
-		text-align: right;
+	* {
+		margin: 0px;
+	}
+
+	& > p {
+		& > label {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 10px;
+			text-align: right;
+
+			& > output {
+				text-align: left;
+			}
+		}
+
+		& > input,
+		& > select,
+		& > textarea {
+			width: 100%;
+		}
 	}
 }

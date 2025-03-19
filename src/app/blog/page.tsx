@@ -215,6 +215,14 @@ export default function Page() {
 					<h2>{"WebGL2 Introduction"}</h2>
 					<p>{"The introduction to my WebGL2 tutorial series."}</p>
 				</Card>
+				<Card href="/a/mtg">
+					<h2>{"Magic: The Gathering Deck Building Compendium"}</h2>
+					<p>
+						{
+							"A summary of my knowledge about deck building for Magic: The Gathering. Includes a built-in hypergeometric calculator."
+						}
+					</p>
+				</Card>
 			</CardList>
 		</div>
 	);
