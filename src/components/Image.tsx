@@ -44,8 +44,5 @@ export default function Image({
 		props.blurDataURL ??= defaultBlur.blurDataURL;
 	}
 
-	// TODO: Delete.
-	props.unoptimized = true;
-
 	return <NextImage {...props} />;
 }
