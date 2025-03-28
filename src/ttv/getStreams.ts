@@ -12,8 +12,8 @@ import ttvFetch from "./ttvFetch";
  */
 export default async function getStreams(
 	userId: string,
-	id?: string,
-	secret?: string
+	id: string | undefined = process.env["TWITCH_CLIENT_ID"],
+	secret: string | undefined = process.env["TWITCH_CLIENT_SECRET"]
 ): Promise<Streams> {
 	const url = new URL("/helix/streams", "https://api.twitch.tv/");
 	url.searchParams.set("user_id", userId);

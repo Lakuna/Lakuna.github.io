@@ -32,8 +32,12 @@ export default async function TwitchStreamIfLive({
 	secret,
 	...props
 }: TwitchStreamIfLiveProps): Promise<JSX.Element | undefined> {
-	const [streamData] = (await getStreams(userId, id, secret)).data;
-	return (
-		streamData && <TwitchStream channel={streamData.user_login} {...props} />
-	);
+	try {
+		const [streamData] = (await getStreams(userId, id, secret)).data;
+		return (
+			streamData && <TwitchStream channel={streamData.user_login} {...props} />
+		);
+	} catch {
+		return void 0;
+	}
 }
