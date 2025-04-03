@@ -78,25 +78,25 @@ export default function Page() {
 					</p>
 				</Card>
 				<Card href="/a/webgl/text">
-					<h2>{"WebGL2 Text"}</h2>
+					<h2>{"OpenGL Text"}</h2>
 					<GlyphTextures />
 					<p>
 						{
-							"An introduction to rendering text in WebGL, including a guide for rendering bitmap fonts with glyph textures."
+							"An introduction to rendering text in WebGL, including a tutorial for rendering bitmap fonts with glyph textures."
 						}
 					</p>
 				</Card>
 				<Card href="/a/webgl/transparency">
-					<h2>{"WebGL2 Transparency"}</h2>
+					<h2>{"Transparency Emulation"}</h2>
 					<DualDepthPeeling />
 					<p>
 						{
-							"An introduction to transparency in WebGL. Covers blending (functions and equations), alpha premultiplication, order-independent transparency (OIT), and includes a guide for dual depth peeling."
+							"An introduction to transparency in WebGL. Covers blending (functions and equations), alpha premultiplication, order-independent transparency (OIT), and includes a tutorial for dual depth peeling with WebGL2."
 						}
 					</p>
 				</Card>
 				<Card href="/a/webgl/fog">
-					<h2>{"WebGL2 Fog"}</h2>
+					<h2>{"Fog Emulation"}</h2>
 					<Fog />
 					<p>
 						{
@@ -105,7 +105,7 @@ export default function Page() {
 					</p>
 				</Card>
 				<Card href="/a/webgl/shadows">
-					<h2>{"WebGL2 Shadows"}</h2>
+					<h2>{"Shadow Emulation"}</h2>
 					<PercentageCloserFiltering />
 					<p>
 						{
@@ -114,7 +114,7 @@ export default function Page() {
 					</p>
 				</Card>
 				<Card href="/a/webgl/cubemaps">
-					<h2>{"WebGL2 Cubemaps"}</h2>
+					<h2>{"OpenGL Cubemaps"}</h2>
 					<Skyboxes />
 					<p>
 						{
@@ -123,7 +123,7 @@ export default function Page() {
 					</p>
 				</Card>
 				<Card href="/a/webgl/lighting">
-					<h2>{"WebGL2 Lighting"}</h2>
+					<h2>{"Lighting Emulation"}</h2>
 					<PhongLighting />
 					<p>
 						{
@@ -132,7 +132,7 @@ export default function Page() {
 					</p>
 				</Card>
 				<Card href="/a/webgl/framebuffers">
-					<h2>{"WebGL2 Framebuffers"}</h2>
+					<h2>{"OpenGL Framebuffers"}</h2>
 					<Framebuffers />
 					<p>
 						{
@@ -141,7 +141,7 @@ export default function Page() {
 					</p>
 				</Card>
 				<Card href="/a/webgl/textures">
-					<h2>{"WebGL2 Textures"}</h2>
+					<h2>{"OpenGL Textures"}</h2>
 					<TextureAtlases />
 					<p>
 						{
@@ -150,7 +150,7 @@ export default function Page() {
 					</p>
 				</Card>
 				<Card href="/a/webgl/3d">
-					<h2>{"WebGL2 3D"}</h2>
+					<h2>{"3D Emulation"}</h2>
 					<Perspective />
 					<p>
 						{
@@ -159,7 +159,7 @@ export default function Page() {
 					</p>
 				</Card>
 				<Card href="/a/webgl/scene-graph">
-					<h2>{"WebGL2 Scene Graphs"}</h2>
+					<h2>{"Scene Graphs"}</h2>
 					<SceneGraph />
 					<p>
 						{
@@ -168,7 +168,7 @@ export default function Page() {
 					</p>
 				</Card>
 				<Card href="/a/webgl/transformation">
-					<h2>{"WebGL2 Transformation"}</h2>
+					<h2>{"Affine Transformation With Linear Algebra"}</h2>
 					<Matrices />
 					<p>
 						{
@@ -177,17 +177,17 @@ export default function Page() {
 					</p>
 				</Card>
 				<Card href="/a/webgl/varyings">
-					<h2>{"WebGL2 Varyings"}</h2>
+					<h2>{"OpenGL Varyings"}</h2>
 					<Varyings />
 					<p>{"An introduction to varyings in WebGL."}</p>
 				</Card>
 				<Card href="/a/webgl/uniforms">
-					<h2>{"WebGL2 Uniforms"}</h2>
+					<h2>{"OpenGL Uniforms"}</h2>
 					<Uniforms />
 					<p>{"An introduction to uniforms in WebGL."}</p>
 				</Card>
 				<Card href="/a/webgl/attributes">
-					<h2>{"WebGL2 Attributes"}</h2>
+					<h2>{"OpenGL Attributes"}</h2>
 					<Indices />
 					<p>
 						{
@@ -196,7 +196,7 @@ export default function Page() {
 					</p>
 				</Card>
 				<Card href="/a/webgl/program-structure">
-					<h2>{"WebGL2 Program Structure"}</h2>
+					<h2>{"OpenGL Program Structure"}</h2>
 					<p>
 						{
 							"A reference page for the typical structure of a program that uses OpenGL."
@@ -204,7 +204,7 @@ export default function Page() {
 					</p>
 				</Card>
 				<Card href="/a/webgl/shaders">
-					<h2>{"WebGL2 Shaders"}</h2>
+					<h2>{"OpenGL Shaders"}</h2>
 					<p>
 						{
 							"An introduction to shaders (vertex and fragment), shader programs, rasterization, and GLSL."
@@ -212,7 +212,7 @@ export default function Page() {
 					</p>
 				</Card>
 				<Card href="/a/webgl/intro">
-					<h2>{"WebGL2 Introduction"}</h2>
+					<h2>{"WebGL Introduction"}</h2>
 					<p>{"The introduction to my WebGL2 tutorial series."}</p>
 				</Card>
 				<Card href="/a/mtg">

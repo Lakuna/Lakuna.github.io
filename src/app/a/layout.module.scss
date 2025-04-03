@@ -1,3 +1,5 @@
+@use "../../styles/highlight.scss" as highlight;
+
 article.content {
 	display: grid;
 	grid-template-columns: 1fr min(65ch, 100%) 1fr;
@@ -6,6 +8,12 @@ article.content {
 	& > * {
 		grid-column: 2 / 3;
 		overflow: auto hidden;
+	}
+
+	// Use default (Firefox 137) main header sizing and margin even inside an article.
+	& > h1 {
+		font-size: 2em;
+		margin-block: 0.67em;
 	}
 
 	& > hr {
@@ -26,6 +34,9 @@ article.content {
 		width: 100%;
 
 		& > code {
+			// Extend the Highlight.js theme so that non-highlighted code blocks still display correctly.
+			@extend .hljs;
+
 			max-width: min(80ch, 100%);
 			margin-left: auto;
 			margin-right: auto;

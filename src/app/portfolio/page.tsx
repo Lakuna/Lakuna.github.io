@@ -131,7 +131,7 @@ export default function Page() {
 					</p>
 					<Image
 						alt="Prepare Moderately subscriber count."
-						src="https://img.shields.io/steam/subscriptions/2057362949?style=for-the-badge"
+						src="https://img.shields.io/steam/subscriptions/2057362949?style=for-the-badge&logo=steam"
 						className={style["shield"]}
 						untrusted
 					/>
@@ -222,6 +222,12 @@ export default function Page() {
 							"A Minecraft mod that allows players to equip Elytra at the same time as a chestplate. Written in Java with the Fabric mod loader and the Trinkets API."
 						}
 					</p>
+					<Image
+						alt="Elytra Trinket download count."
+						src="https://img.shields.io/modrinth/dt/elytra_trinket?style=for-the-badge&logo=modrinth"
+						className={style["shield"]}
+						untrusted
+					/>
 				</Card>
 				<Card>
 					<h3>
@@ -268,7 +274,7 @@ export default function Page() {
 					</p>
 					<Image
 						alt="Well Met subscriber count."
-						src="https://img.shields.io/steam/subscriptions/2553173153?style=for-the-badge"
+						src="https://img.shields.io/steam/subscriptions/2553173153?style=for-the-badge&logo=steam"
 						className={style["shield"]}
 						untrusted
 					/>
@@ -283,7 +289,7 @@ export default function Page() {
 					</p>
 					<Image
 						alt="RimWorld Christmas Hats subscriber count."
-						src="https://img.shields.io/steam/subscriptions/1947309066?style=for-the-badge"
+						src="https://img.shields.io/steam/subscriptions/1947309066?style=for-the-badge&logo=steam"
 						className={style["shield"]}
 						untrusted
 					/>
