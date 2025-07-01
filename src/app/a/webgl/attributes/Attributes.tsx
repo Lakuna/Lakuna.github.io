@@ -3,6 +3,7 @@
 import { Context, Program, VertexArray, VertexBuffer } from "@lakuna/ugl";
 import type { JSX } from "react";
 import ReactCanvas from "@lakuna/react-canvas";
+import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 
 const vss = `\
 #version 300 es
@@ -28,7 +29,7 @@ void main() {
 
 const positionData = new Float32Array([0, 0.5, 0, 0, 0.7, 0]);
 
-export default function Attributes(props: JSX.IntrinsicElements["canvas"]) {
+export default function Attributes(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
 			init={(canvas) => {

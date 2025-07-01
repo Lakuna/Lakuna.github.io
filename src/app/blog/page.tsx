@@ -6,6 +6,7 @@ import Framebuffers from "app/a/webgl/framebuffers/Framebuffers";
 import GlyphTextures from "app/a/webgl/text/GlyphTextures";
 import Image from "components/Image";
 import Indices from "app/a/webgl/attributes/Indices";
+import type { JSX } from "react";
 import Matrices from "app/a/webgl/transformation/Matrices";
 import type { Metadata } from "next";
 import PercentageCloserFiltering from "app/a/webgl/shadows/PercentageCloserFiltering";
@@ -20,7 +21,7 @@ import contourDetection from "app/a/cccv/opengraph-image.png";
 import style from "./page.module.scss";
 import victoryScreen from "app/a/pedit5/opengraph-image.png";
 
-export default function Page() {
+export default function Page(): JSX.Element {
 	return (
 		<div className={style["content"]}>
 			<h1>{"Blog"}</h1>
@@ -228,8 +229,8 @@ export default function Page() {
 	);
 }
 
-export const metadata: Metadata = {
+export const metadata = {
 	description: "Travis Martin's blog.",
 	openGraph: { url: "/blog" },
 	title: "Blog"
-};
+} satisfies Metadata;

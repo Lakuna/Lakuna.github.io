@@ -25,6 +25,7 @@ import {
 } from "@lakuna/umath/Matrix4";
 import type { JSX } from "react";
 import ReactCanvas from "@lakuna/react-canvas";
+import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 import { createVector3Like } from "@lakuna/umath/Vector3";
 import domain from "util/domain";
 
@@ -122,7 +123,7 @@ const indexData = new Uint8Array([
 const planePositionData = new Float32Array([-1, 1, -1, -1, 1, -1, 1, 1]);
 const planeIndexData = new Uint8Array([0, 1, 2, 0, 2, 3]);
 
-export default function Skyboxes(props: JSX.IntrinsicElements["canvas"]) {
+export default function Skyboxes(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
 			init={(canvas) => {

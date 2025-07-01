@@ -2,16 +2,16 @@ import type { JSX } from "react";
 import type { Metadata } from "next";
 import style from "./page.module.scss";
 
-export default function NotFound(): JSX.Element {
+export default function Forbidden(): JSX.Element {
 	return (
 		<div className={style["content"]}>
-			<h1>{"404 Not Found"}</h1>
-			<p>{"This isn't the page you're looking for."}</p>
+			<h1>{"403 Forbidden"}</h1>
+			<p>{"We don't serve your kind here."}</p>
 		</div>
 	);
 }
 
 export const metadata = {
-	description: "Page not found.",
-	title: "404 Not Found"
+	description: "Page forbidden.",
+	title: "403 Forbidden"
 } satisfies Metadata;

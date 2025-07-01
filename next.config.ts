@@ -28,10 +28,9 @@ export default createMDX({
 		]
 	}
 })({
-	experimental: {
-		turbo: { rules: { "*.svg": { as: "*.js", loaders: ["@svgr/webpack"] } } }
-	},
 	pageExtensions: ["mdx", "ts", "tsx"],
+	trailingSlash: false,
+	turbopack: { rules: { "*.svg": { as: "*.js", loaders: ["@svgr/webpack"] } } },
 	webpack: (config: Configuration) => {
 		// Find the existing rule that handles SVG imports.
 		const fileLoaderRule = config.module?.rules?.find(

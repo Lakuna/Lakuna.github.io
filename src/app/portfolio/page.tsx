@@ -2,6 +2,7 @@ import Card from "components/Card";
 import CardList from "components/CardList";
 import Gcs from "./gcs.svg";
 import Image from "components/Image";
+import type { JSX } from "react";
 import Link from "components/Link";
 import type { Metadata } from "next";
 import PhongLighting from "app/a/webgl/lighting/PhongLighting";
@@ -21,7 +22,7 @@ import riseOfCivilizations from "./rise-of-civilizations.png";
 import style from "./page.module.scss";
 import wellMet from "./well-met.png";
 
-export default function Page() {
+export default function Page(): JSX.Element {
 	return (
 		<div className={style["content"]}>
 			<h1>{"Portfolio"}</h1>
@@ -448,8 +449,8 @@ export default function Page() {
 	);
 }
 
-export const metadata: Metadata = {
+export const metadata = {
 	description: "Travis Martin's portfolio.",
 	openGraph: { url: "/portfolio" },
 	title: "Portfolio"
-};
+} satisfies Metadata;

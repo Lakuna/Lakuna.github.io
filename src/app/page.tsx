@@ -33,8 +33,8 @@ export default function Page() {
 	);
 }
 
-export const metadata: Metadata = {
+export const metadata = {
 	description: "Travis Martin's website.",
 	openGraph: { url: "/" },
 	title: "Lakuna"
-};
+} satisfies Metadata;

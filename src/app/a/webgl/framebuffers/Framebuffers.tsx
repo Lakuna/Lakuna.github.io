@@ -27,6 +27,7 @@ import {
 } from "@lakuna/umath/Matrix4";
 import type { JSX } from "react";
 import ReactCanvas from "@lakuna/react-canvas";
+import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 
 const vss = `\
 #version 300 es
@@ -75,7 +76,7 @@ const indexData = new Uint8Array([
 	15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23
 ]);
 
-export default function Framebuffers(props: JSX.IntrinsicElements["canvas"]) {
+export default function Framebuffers(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
 			init={(canvas) => {

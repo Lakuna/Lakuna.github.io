@@ -9,6 +9,7 @@ import {
 	useState
 } from "react";
 import { hypergeometricPmf, summation } from "@lakuna/umath";
+import multiclass from "util/multiclass";
 import style from "./hyper-geo-calc.module.scss";
 
 const onChange =
@@ -17,18 +18,12 @@ const onChange =
 		setter(parseInt(event.target.value, 10) || 0);
 	};
 
+export type HyperGeoCalcProps = Omit<JSX.IntrinsicElements["form"], "children">;
+
 export default function HyperGeoCalc({
 	className,
 	...props
-}: JSX.IntrinsicElements["form"]) {
-	const hyperGeoCalcClassName = style["hyper-geo-calc"];
-
-	const fullClassName = hyperGeoCalcClassName
-		? className
-			? `${hyperGeoCalcClassName} ${className}`
-			: hyperGeoCalcClassName
-		: className;
-
+}: HyperGeoCalcProps): JSX.Element {
 	const [N, setN] = useState(60);
 	const [K, setK] = useState(4);
 	const [n, setn] = useState(7);
@@ -38,7 +33,7 @@ export default function HyperGeoCalc({
 	const [lt, setlt] = useState(0);
 	const [gt, setgt] = useState(0);
 
-	const effectCallback = () => {
+	useEffect(() => {
 		const eOut = hypergeometricPmf(N, K, n, k);
 		const ltOut = summation(0, k - 1, (k2) => hypergeometricPmf(N, K, n, k2));
 		const gtOut = summation(k + 1, K, (k2) => hypergeometricPmf(N, K, n, k2));
@@ -46,12 +41,10 @@ export default function HyperGeoCalc({
 		sete(eOut);
 		setlt(ltOut);
 		setgt(gtOut);
-	};
-
-	useEffect(effectCallback, [N, K, n, k]);
+	}, [N, K, n, k]);
 
 	return (
-		<form className={fullClassName} {...props}>
+		<form className={multiclass(style["hyper-geo-calc"], className)} {...props}>
 			<p>
 				<label>
 					{"Cards in deck:"}

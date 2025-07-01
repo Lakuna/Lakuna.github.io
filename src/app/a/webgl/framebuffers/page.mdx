@@ -13,7 +13,7 @@ You may need to read [the article about textures](/a/webgl/textures) before this
 
 ---
 
-A framebuffer (also called a "framebuffer object" or "FBO") can be thought of as a collection of attachments, where each attachment is a buffers with a specific purpose. They can be used to render to textures and _renderbuffers_, which are objects that contain images. Renderbuffers differ from textures in that they support more formats but can't be sampled. Renderbuffers also support _multisampling_, which is a process for reducing _aliasing_, which is an effect that reduces the quality of images that are under-sampled. This means that multisampling is a form of _anti-aliasing_. As the name implies, renderbuffers are optimized for use as render targets.
+A framebuffer (also called a "framebuffer object" or "FBO") can be thought of as a collection of attachments, where each attachment is a buffer with a specific purpose. They can be used to render to textures and _renderbuffers_, which are objects that contain images. Renderbuffers differ from textures in that they support more formats but can't be sampled. Renderbuffers also support _multisampling_, which is a process for reducing _aliasing_, which is an effect that reduces the quality of images that are under-sampled. This means that multisampling is a form of _anti-aliasing_. As the name implies, renderbuffers are optimized for use as render targets.
 
 A [`WebGLRenderbuffer`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderbuffer) can be created with [`createRenderbuffer`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createRenderbuffer).
 
@@ -98,6 +98,8 @@ gl.framebufferRenderbuffer(
 	depth
 );
 ```
+
+Framebuffers can have one depth attachment, one stencil attachment, and an implementation-defined number of color attachments. Color attachments can be set as draw buffers with [`drawBuffers`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/drawBuffers), which means that fragment colors will be written into them corresponding to their layout in the fragment shader, with each output variable corresponding to a different draw buffer. Similarly, one color attachment can be set as the _read buffer_ with [`readBuffer`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/readBuffer), which means that it will be used as the pixel source for subsequent read operations. By default, only the first color attachment is set as a draw buffer, and the first color attachment is also set as the read buffer.
 
 ---
 

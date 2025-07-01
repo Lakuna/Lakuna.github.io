@@ -1,9 +1,11 @@
 import "styles/highlight.scss";
 import "styles/katex.scss";
+import type { JSX } from "react";
 import type LayoutProps from "types/LayoutProps";
+import type { Metadata } from "next";
 
-export default function Layout({ children }: LayoutProps) {
-	return children;
+export default function Layout({ children }: LayoutProps): JSX.Element {
+	return <>{children}</>;
 }
 
 export const metadata = {
@@ -11,4 +13,4 @@ export const metadata = {
 		default: "Article",
 		template: "%s | WebGL Tutorial | Lakuna"
 	}
-};
+} satisfies Metadata;

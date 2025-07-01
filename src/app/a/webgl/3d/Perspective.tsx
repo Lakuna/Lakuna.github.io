@@ -10,6 +10,7 @@ import {
 } from "@lakuna/umath/Matrix4";
 import type { JSX } from "react";
 import ReactCanvas from "@lakuna/react-canvas";
+import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 
 const vss = `\
 #version 300 es
@@ -80,7 +81,7 @@ const colorData = new Uint8Array([
 	160, 160, 220
 ]);
 
-export default function Perspective(props: JSX.IntrinsicElements["canvas"]) {
+export default function Perspective(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
 			init={(canvas) => {

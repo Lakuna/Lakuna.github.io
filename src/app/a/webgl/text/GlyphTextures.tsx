@@ -25,6 +25,7 @@ import {
 } from "@lakuna/umath/Matrix4";
 import type { JSX } from "react";
 import ReactCanvas from "@lakuna/react-canvas";
+import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 import domain from "util/domain";
 
 const vss = `\
@@ -394,7 +395,7 @@ class TextQuad {
 	}
 }
 
-export default function GlyphTextures(props: JSX.IntrinsicElements["canvas"]) {
+export default function GlyphTextures(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
 			init={(canvas) => {

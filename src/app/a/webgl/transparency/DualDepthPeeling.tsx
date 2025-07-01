@@ -23,6 +23,7 @@ import {
 } from "@lakuna/umath/Matrix4";
 import type { JSX } from "react";
 import ReactCanvas from "@lakuna/react-canvas";
+import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 import { epsilon } from "@lakuna/umath";
 
 const depthPeelVss = `\
@@ -176,9 +177,7 @@ const colorData = new Uint8Array([
 	220, 0x80
 ]);
 
-export default function DualDepthPeeling(
-	props: JSX.IntrinsicElements["canvas"]
-) {
+export default function DualDepthPeeling(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
 			init={(canvas) => {

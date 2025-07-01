@@ -1,12 +1,13 @@
 import "styles/global.scss";
 import type { Metadata, Viewport } from "next";
 import { monospace, sansSerif, serif } from "util/font";
+import type { JSX } from "react";
 import type LayoutProps from "types/LayoutProps";
 import Topnav from "./Topnav";
 import domain from "util/domain";
 import style from "./layout.module.scss";
 
-export default function Layout({ children }: LayoutProps) {
+export default function Layout({ children }: LayoutProps): JSX.Element {
 	return (
 		<html
 			lang="en-US"
@@ -17,18 +18,18 @@ export default function Layout({ children }: LayoutProps) {
 					<Topnav />
 				</header>
 				<main>{children}</main>
-				<footer></footer>
+				<footer />
 			</body>
 		</html>
 	);
 }
 
-export const viewport: Viewport = {
+export const viewport = {
 	colorScheme: "dark light",
 	themeColor: "#50c878"
-};
+} satisfies Viewport;
 
-export const metadata: Metadata = {
+export const metadata = {
 	authors: [{ name: "Travis Martin", url: new URL(domain) }],
 	creator: "Travis Martin",
 	metadataBase: new URL(domain),
@@ -45,4 +46,4 @@ export const metadata: Metadata = {
 		creatorId: "1117270419298496513",
 		siteId: "1117270419298496513"
 	}
-};
+} satisfies Metadata;

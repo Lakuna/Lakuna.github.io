@@ -27,6 +27,7 @@ import {
 } from "@lakuna/umath/Matrix4";
 import type { JSX } from "react";
 import ReactCanvas from "@lakuna/react-canvas";
+import type { UglCanvasProps } from "../UglCanvasProps";
 
 const vss = `\
 #version 300 es
@@ -130,7 +131,7 @@ const frustumIndexData = new Uint8Array([
 	0, 1, 1, 3, 3, 2, 2, 0, 4, 5, 5, 7, 7, 6, 6, 4, 0, 4, 1, 5, 3, 7, 2, 6
 ]);
 
-export default function ShadowMaps(props: JSX.IntrinsicElements["canvas"]) {
+export default function ShadowMaps(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
 			init={(canvas) => {

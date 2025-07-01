@@ -9,6 +9,7 @@ import {
 } from "@lakuna/ugl";
 import type { JSX } from "react";
 import ReactCanvas from "@lakuna/react-canvas";
+import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 
 const vss = `\
 #version 300 es
@@ -58,7 +59,7 @@ const indexData = new Uint8Array([
 	0, 2, 3
 ]);
 
-export default function Scaling(props: JSX.IntrinsicElements["canvas"]) {
+export default function Scaling(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
 			init={(canvas) => {

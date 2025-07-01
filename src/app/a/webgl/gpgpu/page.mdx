@@ -1,6 +1,6 @@
 ---
 title: "GPGPU"
-description: "An introduction to general-purpose GPU usage in WebGL."
+description: "An introduction to general-purpose GPU usage and transform feedback in WebGL."
 openGraph:
   url: "/a/webgl/gpgpu"
 ---
@@ -30,9 +30,11 @@ Similar to how the unpack alignment needs to be set to properly load image data 
 gl.pixelStorei(gl.PACK_ALIGNMENT, 1);
 ```
 
-Note that since we don't actually care how the result looks, we can use an [`OffscreenCanvas`](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas).
+Note that since we don't actually care how the result looks, we can use an [`OffscreenCanvas`](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas) for this type of task.
 
 ## GPGPU With Buffers
+
+In cases where you need one-dimensional output, it can be more intuitive to use transform feedback. _Transform feedback_ is the process of copying varying values into buffers.
 
 This article is a work-in-progress. In the meantime, consider reading these other articles about the same topic:
 

@@ -11,6 +11,7 @@ import {
 import { createMatrix4Like, identity, scale } from "@lakuna/umath/Matrix4";
 import type { JSX } from "react";
 import ReactCanvas from "@lakuna/react-canvas";
+import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 import domain from "util/domain";
 
 const vss = `\
@@ -51,7 +52,7 @@ const texcoordData = new Float32Array([0, 0, 0, 1, 1, 1, 1, 0]);
 
 const indexData = new Uint8Array([0, 1, 2, 0, 2, 3]);
 
-export default function Textures(props: JSX.IntrinsicElements["canvas"]) {
+export default function Textures(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
 			init={(canvas) => {

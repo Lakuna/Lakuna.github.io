@@ -2,6 +2,7 @@
 
 import { type JSX, useEffect, useState } from "react";
 import Link from "components/Link";
+import multiclass from "util/multiclass";
 import style from "./one-liner.module.scss";
 
 const oneLiners = [
@@ -74,7 +75,8 @@ const oneLiners = [
 		{"Also check out "}
 		<Link href="https://fluquor.com/">{"fluquor.com"}</Link>
 		{"!"}
-	</span>
+	</span>,
+	<span key={67}>{"Reticulating Splines"}</span>
 ];
 
 /*
@@ -103,29 +105,21 @@ const oneLiners = [
  * 63. ♪ The course of action is merely a by-product of my focus ♪
  */
 
+export type OneLinerProps = Omit<JSX.IntrinsicElements["p"], "children">;
+
 export default function OneLiner({
 	className,
 	...props
-}: JSX.IntrinsicElements["p"]) {
-	const oneLinerClassName = style["one-liner"];
-
-	const fullClassName = oneLinerClassName
-		? className
-			? `${oneLinerClassName} ${className}`
-			: oneLinerClassName
-		: className;
-
+}: OneLinerProps): JSX.Element {
 	const [i, setI] = useState(0);
 
-	const effectCallback = () => {
+	useEffect(() => {
 		// Minimum value of `1` so that the "Loading..." text doesn't get chosen.
 		setI(Math.floor(Math.random() * (oneLiners.length - 1) + 1));
-	};
-
-	useEffect(effectCallback, []);
+	}, []);
 
 	return (
-		<p className={fullClassName} {...props}>
+		<p className={multiclass(style["one-liner"], className)} {...props}>
 			{oneLiners[i]}
 		</p>
 	);
