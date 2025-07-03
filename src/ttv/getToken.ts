@@ -1,5 +1,3 @@
-"use server";
-
 import "util/env";
 import type Token from "types/ttv/Token";
 

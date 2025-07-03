@@ -1,3 +1,5 @@
+"use server";
+
 import type Streams from "types/ttv/Streams";
 import ttvFetch from "./ttvFetch";
 
