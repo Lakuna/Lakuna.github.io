@@ -1,5 +1,8 @@
+"use client";
+
+import { type JSX, useEffect, useState } from "react";
 import TwitchStream, { type TwitchStreamProps } from "./TwitchStream";
-import type { JSX } from "react";
+import type StreamData from "types/ttv/StreamData";
 import getStreams from "ttv/getStreams";
 
 /**
@@ -26,18 +29,21 @@ export interface TwitchStreamIfLiveProps
  * @throws `Error` if the channel name, video ID, and collection ID are all missing.
  * @public
  */
-export default async function TwitchStreamIfLive({
+export default function TwitchStreamIfLive({
 	userId,
 	id,
 	secret,
 	...props
-}: TwitchStreamIfLiveProps): Promise<JSX.Element | undefined> {
-	try {
-		const [streamData] = (await getStreams(userId, id, secret)).data;
-		return (
-			streamData && <TwitchStream channel={streamData.user_login} {...props} />
-		);
-	} catch {
-		return void 0;
-	}
+}: TwitchStreamIfLiveProps): JSX.Element | undefined {
+	const [streamData, setStreamData] = useState<StreamData | undefined>(void 0);
+
+	useEffect(() => {
+		void getStreams(userId, id, secret).then(({ data }) => {
+			setStreamData(data[0]);
+		});
+	}, [id, secret, userId]);
+
+	return (
+		streamData && <TwitchStream channel={streamData.user_login} {...props} />
+	);
 }

@@ -1,3 +1,5 @@
+"use server";
+
 import "util/env";
 import getToken from "./getToken";
 
