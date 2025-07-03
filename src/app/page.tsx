@@ -6,6 +6,12 @@ import { Suspense } from "react";
 import TwitchStreamIfLive from "components/TwitchStreamIfLive";
 import style from "./page.module.scss";
 
+/*
+Test Twitch IDs:
+riotgames: 36029255
+lakuna0: 262884468
+*/
+
 export default function Page() {
 	return (
 		<div className={style["content"]}>
@@ -13,7 +19,7 @@ export default function Page() {
 			<OneLiner />
 			<hr />
 			<Suspense>
-				<TwitchStreamIfLive userId="262884468" muted />
+				<TwitchStreamIfLive userId="36029255" muted />
 			</Suspense>
 			<ul className={style["socials"]}>
 				<Link href="https://github.com/Lakuna">
