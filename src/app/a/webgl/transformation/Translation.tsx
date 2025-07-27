@@ -14,14 +14,12 @@ import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
+in vec4 position;
 
-uniform vec4 u_translation;
-
-out vec4 v_color;
+uniform vec4 translation;
 
 void main() {
-	gl_Position = a_position + u_translation;
+	gl_Position = position + translation;
 }
 `;
 
@@ -72,17 +70,15 @@ export default function Translation(props: UglCanvasProps): JSX.Element {
 
 				const rectVao = new VertexArray(
 					program,
-					// eslint-disable-next-line camelcase
-					{ a_position: { size: 2, vbo: positionBuffer } },
+					{ position: { size: 2, vbo: positionBuffer } },
 					indexBuffer
 				);
 
 				return (now) => {
 					gl.resize();
-					gl.clear();
-					rectVao.draw({
-						// eslint-disable-next-line camelcase
-						u_translation: [0.8 * Math.cos(now * 0.001), 0, 0, 0]
+					gl.fbo.clear();
+					gl.fbo.draw(rectVao, {
+						translation: [0.8 * Math.cos(now * 0.001), 0, 0, 0]
 					});
 				};
 			}}

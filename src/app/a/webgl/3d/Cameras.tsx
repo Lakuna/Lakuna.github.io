@@ -20,16 +20,16 @@ import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
-in vec4 a_color;
+in vec4 position;
+in vec4 color;
 
-uniform mat4 u_worldViewProj;
+uniform mat4 worldViewProj;
 
-out vec4 v_color;
+out vec4 vColor;
 
 void main() {
-	gl_Position = u_worldViewProj * a_position;
-	v_color = a_color;
+	gl_Position = worldViewProj * position;
+	vColor = color;
 }
 `;
 
@@ -38,12 +38,12 @@ const fss = `\
 
 precision mediump float;
 
-in vec4 v_color;
+in vec4 vColor;
 
 out vec4 outColor;
 
 void main() {
-	outColor = v_color;
+	outColor = vColor;
 }
 `;
 
@@ -98,10 +98,8 @@ export default function Cameras(props: UglCanvasProps): JSX.Element {
 				const colorBuffer = new VertexBuffer(gl, colorData);
 
 				const fVao = new VertexArray(program, {
-					// eslint-disable-next-line camelcase
-					a_color: { normalized: true, vbo: colorBuffer },
-					// eslint-disable-next-line camelcase
-					a_position: positionBuffer
+					color: { normalized: true, vbo: colorBuffer },
+					position: positionBuffer
 				});
 
 				const matrices: Matrix4Like[] = [];
@@ -118,12 +116,13 @@ export default function Cameras(props: UglCanvasProps): JSX.Element {
 				const cam = createMatrix4Like();
 				const view = createMatrix4Like();
 				const viewProj = createMatrix4Like();
+				const worldViewProj = createMatrix4Like();
 
 				return (now) => {
 					gl.resize();
 					gl.doCullFace = true;
 					gl.doDepthTest = true;
-					gl.clear();
+					gl.fbo.clear();
 
 					const w = canvas.width;
 					const h = canvas.height;
@@ -136,10 +135,8 @@ export default function Cameras(props: UglCanvasProps): JSX.Element {
 					multiply(proj, view, viewProj);
 
 					for (const matrix of matrices) {
-						multiply(viewProj, matrix, cam);
-
-						// eslint-disable-next-line camelcase
-						fVao.draw({ u_worldViewProj: cam });
+						multiply(viewProj, matrix, worldViewProj);
+						gl.fbo.draw(fVao, { worldViewProj });
 					}
 				};
 			}}

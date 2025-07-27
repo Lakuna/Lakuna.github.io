@@ -32,16 +32,16 @@ import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
-in vec2 a_texcoord;
+in vec4 position;
+in vec2 texcoord;
 
-uniform mat4 u_matrix;
+uniform mat4 matrix;
 
-out vec2 v_texcoord;
+out vec2 vTexcoord;
 
 void main() {
-	gl_Position = u_matrix * a_position;
-	v_texcoord = a_texcoord;
+	gl_Position = matrix * position;
+	vTexcoord = texcoord;
 }
 `;
 
@@ -50,14 +50,14 @@ const fss = `\
 
 precision mediump float;
 
-in vec2 v_texcoord;
+in vec2 vTexcoord;
 
-uniform sampler2D u_texture;
+uniform sampler2D tex;
 
 out vec4 outColor;
 
 void main() {
-	outColor = texture(u_texture, v_texcoord);
+	outColor = texture(tex, vTexcoord);
 }
 `;
 
@@ -91,10 +91,8 @@ export default function Framebuffers(props: UglCanvasProps): JSX.Element {
 				const cubeVao = new VertexArray(
 					program,
 					{
-						// eslint-disable-next-line camelcase
-						a_position: positionBuffer,
-						// eslint-disable-next-line camelcase
-						a_texcoord: { size: 2, vbo: texcoordBuffer }
+						position: positionBuffer,
+						texcoord: { size: 2, vbo: texcoordBuffer }
 					},
 					indexBuffer
 				);
@@ -169,41 +167,13 @@ export default function Framebuffers(props: UglCanvasProps): JSX.Element {
 					gl.fitViewport(framebuffer);
 					gl.doCullFace = true;
 					gl.doDepthTest = true;
-					gl.clear([0, 0, 1, 1], 1, false, framebuffer);
-
-					cubeVao.draw(
-						{
-							// eslint-disable-next-line camelcase
-							u_matrix: redMat,
-							// eslint-disable-next-line camelcase
-							u_texture: redTexture
-						},
-						void 0,
-						void 0,
-						framebuffer
-					);
-
-					cubeVao.draw(
-						{
-							// eslint-disable-next-line camelcase
-							u_matrix: greenMat,
-							// eslint-disable-next-line camelcase
-							u_texture: greenTexture
-						},
-						void 0,
-						void 0,
-						framebuffer
-					);
+					framebuffer.clear([0, 0, 1, 1], 1, false);
+					framebuffer.draw(cubeVao, { matrix: redMat, tex: redTexture });
+					framebuffer.draw(cubeVao, { matrix: greenMat, tex: greenTexture });
 
 					gl.fitViewport();
-					gl.clear([0, 0, 0, 0]);
-
-					cubeVao.draw({
-						// eslint-disable-next-line camelcase
-						u_matrix: blueMat,
-						// eslint-disable-next-line camelcase
-						u_texture: renderTexture
-					});
+					gl.fbo.clear([0, 0, 0, 0]);
+					gl.fbo.draw(cubeVao, { matrix: blueMat, tex: renderTexture });
 				};
 			}}
 			{...props}

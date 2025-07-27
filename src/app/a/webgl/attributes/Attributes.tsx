@@ -8,10 +8,10 @@ import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
+in vec4 position;
 
 void main() {
-	gl_Position = a_position;
+	gl_Position = position;
 }
 `;
 
@@ -39,16 +39,14 @@ export default function Attributes(props: UglCanvasProps): JSX.Element {
 
 				const positionBuffer = new VertexBuffer(gl, positionData);
 
-				const rectVao = new VertexArray(
-					program,
-					// eslint-disable-next-line camelcase
-					{ a_position: { size: 2, vbo: positionBuffer } }
-				);
+				const rectVao = new VertexArray(program, {
+					position: { size: 2, vbo: positionBuffer }
+				});
 
 				return () => {
 					gl.resize();
-					gl.clear();
-					rectVao.draw();
+					gl.fbo.clear();
+					gl.fbo.draw(rectVao);
 				};
 			}}
 			{...props}

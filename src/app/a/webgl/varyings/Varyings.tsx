@@ -14,14 +14,14 @@ import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
-in vec4 a_color;
+in vec4 position;
+in vec4 color;
 
-out vec4 v_color;
+out vec4 vColor;
 
 void main() {
-	gl_Position = a_position;
-	v_color = a_color;
+	gl_Position = position;
+	vColor = color;
 }
 `;
 
@@ -30,12 +30,12 @@ const fss = `\
 
 precision mediump float;
 
-in vec4 v_color;
+in vec4 vColor;
 
 out vec4 outColor;
 
 void main() {
-	outColor = v_color;
+	outColor = vColor;
 }
 `;
 
@@ -90,18 +90,16 @@ export default function Indices(props: UglCanvasProps): JSX.Element {
 				const rectVao = new VertexArray(
 					program,
 					{
-						// eslint-disable-next-line camelcase
-						a_color: colorBuffer,
-						// eslint-disable-next-line camelcase
-						a_position: { size: 2, vbo: positionBuffer }
+						color: colorBuffer,
+						position: { size: 2, vbo: positionBuffer }
 					},
 					indexBuffer
 				);
 
 				return () => {
 					gl.resize();
-					gl.clear();
-					rectVao.draw();
+					gl.fbo.clear();
+					gl.fbo.draw(rectVao);
 				};
 			}}
 			{...props}

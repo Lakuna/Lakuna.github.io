@@ -17,16 +17,16 @@ import domain from "util/domain";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
-in vec2 a_texcoord;
+in vec4 position;
+in vec2 texcoord;
 
-uniform mat4 u_matrix;
+uniform mat4 matrix;
 
-out vec2 v_texcoord;
+out vec2 vTexcoord;
 
 void main() {
-	gl_Position = u_matrix * a_position;
-	v_texcoord = a_texcoord;
+	gl_Position = matrix * position;
+	vTexcoord = texcoord;
 }
 `;
 
@@ -35,14 +35,14 @@ const fss = `\
 
 precision mediump float;
 
-in vec2 v_texcoord;
+in vec2 vTexcoord;
 
-uniform sampler2D u_texture;
+uniform sampler2D tex;
 
 out vec4 outColor;
 
 void main() {
-	outColor = texture(u_texture, v_texcoord);
+	outColor = texture(tex, vTexcoord);
 }
 `;
 
@@ -67,15 +67,13 @@ export default function Textures(props: UglCanvasProps): JSX.Element {
 				const quadVao = new VertexArray(
 					program,
 					{
-						// eslint-disable-next-line camelcase
-						a_position: { size: 2, vbo: positionBuffer },
-						// eslint-disable-next-line camelcase
-						a_texcoord: { size: 2, vbo: texcoordBuffer }
+						position: { size: 2, vbo: positionBuffer },
+						texcoord: { size: 2, vbo: texcoordBuffer }
 					},
 					indexBuffer
 				);
 
-				const texture = Texture2d.fromImageUrl(
+				const tex = Texture2d.fromImageUrl(
 					gl,
 					new URL("/images/webgl-example-texture.png", domain).href
 				);
@@ -84,7 +82,7 @@ export default function Textures(props: UglCanvasProps): JSX.Element {
 
 				return () => {
 					gl.resize();
-					gl.clear();
+					gl.fbo.clear();
 
 					identity(matrix);
 					const w = canvas.width;
@@ -95,8 +93,7 @@ export default function Textures(props: UglCanvasProps): JSX.Element {
 						matrix
 					);
 
-					// eslint-disable-next-line camelcase
-					quadVao.draw({ u_matrix: matrix, u_texture: texture });
+					gl.fbo.draw(quadVao, { matrix, tex });
 				};
 			}}
 			{...props}

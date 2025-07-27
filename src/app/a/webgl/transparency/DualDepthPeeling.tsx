@@ -29,16 +29,16 @@ import { epsilon } from "@lakuna/umath";
 const depthPeelVss = `\
 #version 300 es
 
-in vec4 a_position;
-in vec4 a_color;
+in vec4 position;
+in vec4 color;
 
-uniform mat4 u_worldViewProjMat;
+uniform mat4 worldViewProj;
 
-out vec4 v_color;
+out vec4 vColor;
 
 void main() {
-	gl_Position = u_worldViewProjMat * a_position;
-	v_color = a_color;
+	gl_Position = worldViewProj * position;
+	vColor = color;
 }
 `;
 
@@ -47,11 +47,11 @@ const depthPeelFss = `\
 
 precision mediump float;
 
-in vec4 v_color;
+in vec4 vColor;
 
-uniform sampler2D u_depthTex;
-uniform sampler2D u_frontColorTex;
-uniform sampler2D u_backColorTex;
+uniform sampler2D depthTex;
+uniform sampler2D frontColorTex;
+uniform sampler2D backColorTex;
 
 layout(location = 0) out vec2 outDepth;
 layout(location = 1) out vec4 outFrontColor;
@@ -61,9 +61,9 @@ void main() {
 	float depth = gl_FragCoord.z;
 	ivec2 fragCoord = ivec2(gl_FragCoord.xy);
 	
-	vec2 lastDepth = texelFetch(u_depthTex, fragCoord, 0).rg;
-	vec4 lastFrontColor = texelFetch(u_frontColorTex, fragCoord, 0);
-	vec4 lastBackColor = texelFetch(u_backColorTex, fragCoord, 0);
+	vec2 lastDepth = texelFetch(depthTex, fragCoord, 0).rg;
+	vec4 lastFrontColor = texelFetch(frontColorTex, fragCoord, 0);
+	vec4 lastBackColor = texelFetch(backColorTex, fragCoord, 0);
 
 	float nearDepth = -lastDepth.r;
 	float farDepth = lastDepth.g;
@@ -82,24 +82,24 @@ void main() {
 	}
 
 	if (depth == nearDepth) {
-		outFrontColor += (1.0 - lastFrontColor.a) * v_color.a;
-		outFrontColor.rgb *= v_color.rgb;
+		outFrontColor += (1.0 - lastFrontColor.a) * vColor.a;
+		outFrontColor.rgb *= vColor.rgb;
 		return;
 	}
 
-	float alphaFactor = 1.0 - v_color.a;
-	outBackColor.rgb = v_color.a * v_color.rgb + alphaFactor * outBackColor.rgb;
-	outBackColor.a = v_color.a + alphaFactor * outBackColor.a;
+	float alphaFactor = 1.0 - vColor.a;
+	outBackColor.rgb = vColor.a * vColor.rgb + alphaFactor * outBackColor.rgb;
+	outBackColor.a = vColor.a + alphaFactor * outBackColor.a;
 }
 `;
 
 const finalVss = `\
 #version 300 es
 
-in vec4 a_position;
+in vec4 position;
 
 void main() {
-	gl_Position = a_position;
+	gl_Position = position;
 }
 `;
 
@@ -108,16 +108,16 @@ const finalFss = `\
 
 precision mediump float;
 
-uniform sampler2D u_frontColorTex;
-uniform sampler2D u_backColorTex;
+uniform sampler2D frontColorTex;
+uniform sampler2D backColorTex;
 
 out vec4 outColor;
 
 void main() {
 	ivec2 fragCoord = ivec2(gl_FragCoord.xy);
 
-	vec4 frontColor = texelFetch(u_frontColorTex, fragCoord, 0);
-	vec4 backColor = texelFetch(u_backColorTex, fragCoord, 0);
+	vec4 frontColor = texelFetch(frontColorTex, fragCoord, 0);
+	vec4 backColor = texelFetch(backColorTex, fragCoord, 0);
 
 	outColor.rgb = frontColor.rgb + (1.0 - frontColor.a) * backColor.rgb;
 	outColor.a = frontColor.a + backColor.a;
@@ -196,16 +196,13 @@ export default function DualDepthPeeling(props: UglCanvasProps): JSX.Element {
 				const colorBuffer = new VertexBuffer(gl, colorData);
 
 				const depthPeelVao = new VertexArray(depthPeelProgram, {
-					// eslint-disable-next-line camelcase
-					a_color: { normalized: true, size: 4, vbo: colorBuffer },
-					// eslint-disable-next-line camelcase
-					a_position: positionBuffer
+					color: { normalized: true, size: 4, vbo: colorBuffer },
+					position: positionBuffer
 				});
 
 				const finalPlaneVao = new VertexArray(
 					finalProgram,
-					// eslint-disable-next-line camelcase
-					{ a_position: { size: 2, vbo: planePositionBuffer } },
+					{ position: { size: 2, vbo: planePositionBuffer } },
 					planeIndexBuffer
 				);
 
@@ -288,21 +285,12 @@ export default function DualDepthPeeling(props: UglCanvasProps): JSX.Element {
 					backColorTarget: Texture2d,
 					depthPeelFbo: Framebuffer
 				) => {
-					depthPeelVao.draw(
-						{
-							// eslint-disable-next-line camelcase
-							u_backColorTex: backColorTarget,
-							// eslint-disable-next-line camelcase
-							u_depthTex: depthTarget,
-							// eslint-disable-next-line camelcase
-							u_frontColorTex: frontColorTarget,
-							// eslint-disable-next-line camelcase
-							u_worldViewProjMat: matrix
-						},
-						void 0,
-						void 0,
-						depthPeelFbo
-					);
+					depthPeelFbo.draw(depthPeelVao, {
+						backColorTex: backColorTarget,
+						depthTex: depthTarget,
+						frontColorTex: frontColorTarget,
+						worldViewProj: matrix
+					});
 				};
 
 				gl.doBlend = true;
@@ -325,21 +313,16 @@ export default function DualDepthPeeling(props: UglCanvasProps): JSX.Element {
 
 					// Initialize the min-max depth framebuffers.
 					depthPeelFbo1.drawBuffers = [0];
-					gl.clear([epsilon, 1 + epsilon, 0, 0], false, false, depthPeelFbo1);
+					depthPeelFbo1.clear([epsilon, 1 + epsilon, 0, 0], false, false);
 
 					depthPeelFbo1.drawBuffers = [1, 2];
-					gl.clear([0, 0, 0, 0], false, false, depthPeelFbo1);
+					depthPeelFbo1.clear([0, 0, 0, 0], false, false);
 
 					depthPeelFbo0.drawBuffers = [0];
-					gl.clear(
-						[-(1 + epsilon), -epsilon, 0, 0],
-						false,
-						false,
-						depthPeelFbo0
-					);
+					depthPeelFbo0.clear([-(1 + epsilon), -epsilon, 0, 0], false, false);
 
 					depthPeelFbo0.drawBuffers = [1, 2];
-					gl.clear([0, 0, 0, 0], false, false, depthPeelFbo0);
+					depthPeelFbo0.clear([0, 0, 0, 0], false, false);
 
 					depthPeelFbo0.drawBuffers = [0];
 					drawScene(
@@ -360,15 +343,10 @@ export default function DualDepthPeeling(props: UglCanvasProps): JSX.Element {
 							i % 2 === 0 ? backColorTarget0 : backColorTarget1;
 
 						depthPeelFbo.drawBuffers = [0];
-						gl.clear(
-							[-(1 + epsilon), -epsilon, 0, 0],
-							false,
-							false,
-							depthPeelFbo
-						);
+						depthPeelFbo.clear([-(1 + epsilon), -epsilon, 0, 0], false, false);
 
 						depthPeelFbo.drawBuffers = [1, 2];
-						gl.clear([0, 0, 0, 0], false, false, depthPeelFbo);
+						depthPeelFbo.clear([0, 0, 0, 0], false, false);
 
 						depthPeelFbo.drawBuffers = [0, 1, 2];
 						drawScene(
@@ -385,12 +363,10 @@ export default function DualDepthPeeling(props: UglCanvasProps): JSX.Element {
 					const backColorTarget =
 						passCount % 2 === 0 ? backColorTarget0 : backColorTarget1;
 
-					gl.clear([0, 0, 0, 0], false, false);
-					finalPlaneVao.draw({
-						// eslint-disable-next-line camelcase
-						u_backColorTex: backColorTarget,
-						// eslint-disable-next-line camelcase
-						u_frontColorTex: frontColorTarget
+					gl.fbo.clear([0, 0, 0, 0], false, false);
+					gl.fbo.draw(finalPlaneVao, {
+						backColorTex: backColorTarget,
+						frontColorTex: frontColorTarget
 					});
 				};
 			}}

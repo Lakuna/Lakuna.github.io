@@ -30,21 +30,21 @@ import domain from "util/domain";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
-in vec2 a_texcoord;
+in vec4 position;
+in vec2 texcoord;
 
-uniform mat4 u_world;
-uniform mat4 u_viewProj;
-uniform mat4 u_texMat;
+uniform mat4 world;
+uniform mat4 viewProj;
+uniform mat4 texMat;
 
-out vec2 v_texcoord;
-out vec4 v_projTexcoord;
+out vec2 vTexcoord;
+out vec4 projTexcoord;
 
 void main() {
-	vec4 worldPos = u_world * a_position;
-	gl_Position = u_viewProj * worldPos;
-	v_texcoord = a_texcoord;
-	v_projTexcoord = u_texMat * worldPos;
+	vec4 worldPos = world * position;
+	gl_Position = viewProj * worldPos;
+	vTexcoord = texcoord;
+	projTexcoord = texMat * worldPos;
 }
 `;
 
@@ -53,25 +53,25 @@ const fss = `\
 
 precision mediump float;
 
-in vec2 v_texcoord;
-in vec4 v_projTexcoord;
+in vec2 vTexcoord;
+in vec4 projTexcoord;
 
-uniform vec4 u_color;
-uniform sampler2D u_texture;
-uniform sampler2D u_projTex;
+uniform vec4 color;
+uniform sampler2D tex;
+uniform sampler2D projTex;
 
 out vec4 outColor;
 
 void main() {
-	vec2 projTexcoord = (v_projTexcoord.xyz / v_projTexcoord.w).xy;
+	vec2 projTexcoord = (projTexcoord.xyz / projTexcoord.w).xy;
 
 	bool inProj = projTexcoord.x >= 0.0
 		&& projTexcoord.x <= 1.0
 		&& projTexcoord.y >= 0.0
 		&& projTexcoord.y <= 1.0;
 	
-	vec4 projTexColor = texture(u_projTex, projTexcoord);
-	vec4 texColor = texture(u_texture, v_texcoord) * u_color;
+	vec4 projTexColor = texture(projTex, projTexcoord);
+	vec4 texColor = texture(tex, vTexcoord) * color;
 	outColor = inProj ? projTexColor : texColor;
 }
 `;
@@ -79,13 +79,13 @@ void main() {
 const solidVss = `\
 #version 300 es
 
-in vec4 a_position;
+in vec4 position;
 
-uniform mat4 u_world;
-uniform mat4 u_viewProj;
+uniform mat4 world;
+uniform mat4 viewProj;
 
 void main() {
-	gl_Position = u_viewProj * u_world * a_position;
+	gl_Position = viewProj * world * position;
 }
 `;
 
@@ -147,40 +147,35 @@ export default function ProjectionMapping(props: UglCanvasProps): JSX.Element {
 				const planeVao = new VertexArray(
 					program,
 					{
-						// eslint-disable-next-line camelcase
-						a_position: { size: 2, vbo: planePositionBuffer },
-						// eslint-disable-next-line camelcase
-						a_texcoord: { size: 2, vbo: planeTexcoordBuffer }
+						position: { size: 2, vbo: planePositionBuffer },
+						texcoord: { size: 2, vbo: planeTexcoordBuffer }
 					},
 					planeIndexBuffer
 				);
 				const cubeVao = new VertexArray(
 					program,
 					{
-						// eslint-disable-next-line camelcase
-						a_position: cubePositionBuffer,
-						// eslint-disable-next-line camelcase
-						a_texcoord: { size: 2, vbo: cubeTexcoordBuffer }
+						position: cubePositionBuffer,
+						texcoord: { size: 2, vbo: cubeTexcoordBuffer }
 					},
 					cubeIndexBuffer
 				);
 				const frustumVao = new VertexArray(
 					solidProgram,
-					// eslint-disable-next-line camelcase
-					{ a_position: frustumPositionBuffer },
+					{ position: frustumPositionBuffer },
 					frustumIndexBuffer
 				);
 
-				const texture = new Texture2d(gl);
-				texture.format = TextureFormat.LUMINANCE;
-				texture.setMip(
+				const tex = new Texture2d(gl);
+				tex.format = TextureFormat.LUMINANCE;
+				tex.setMip(
 					new Uint8Array([0x80, 0xc0, 0xc0, 0x80]),
 					void 0,
 					void 0,
 					[0, 0, 2, 2]
 				);
-				texture.minFilter = TextureFilter.NEAREST;
-				texture.magFilter = TextureFilter.NEAREST;
+				tex.minFilter = TextureFilter.NEAREST;
+				tex.magFilter = TextureFilter.NEAREST;
 				const projTex = Texture2d.fromImageUrl(
 					gl,
 					new URL("/images/webgl-example-texture.png", domain).href
@@ -219,7 +214,7 @@ export default function ProjectionMapping(props: UglCanvasProps): JSX.Element {
 					gl.resize();
 					gl.doCullFace = true;
 					gl.doDepthTest = true;
-					gl.clear();
+					gl.fbo.clear();
 
 					const w = canvas.width;
 					const h = canvas.height;
@@ -231,39 +226,27 @@ export default function ProjectionMapping(props: UglCanvasProps): JSX.Element {
 					invert(camCamMat, camViewMat);
 					multiply(camProjMat, camViewMat, camViewProjMat);
 
-					planeVao.draw({
-						// eslint-disable-next-line camelcase
-						u_color: [1, 0, 0, 1],
-						// eslint-disable-next-line camelcase
-						u_projTex: projTex,
-						// eslint-disable-next-line camelcase
-						u_texMat: texMat,
-						// eslint-disable-next-line camelcase
-						u_texture: texture,
-						// eslint-disable-next-line camelcase
-						u_viewProj: camViewProjMat,
-						// eslint-disable-next-line camelcase
-						u_world: planeMat
+					gl.fbo.draw(planeVao, {
+						color: [1, 0, 0, 1],
+						projTex,
+						tex,
+						texMat,
+						viewProj: camViewProjMat,
+						world: planeMat
 					});
 
-					cubeVao.draw({
-						// eslint-disable-next-line camelcase
-						u_color: [0, 1, 0, 1],
-						// eslint-disable-next-line camelcase
-						u_projTex: projTex,
-						// eslint-disable-next-line camelcase
-						u_texMat: texMat,
-						// eslint-disable-next-line camelcase
-						u_texture: texture,
-						// eslint-disable-next-line camelcase
-						u_viewProj: camViewProjMat,
-						// eslint-disable-next-line camelcase
-						u_world: cubeMat
+					gl.fbo.draw(cubeVao, {
+						color: [0, 1, 0, 1],
+						projTex,
+						tex,
+						texMat,
+						viewProj: camViewProjMat,
+						world: cubeMat
 					});
 
-					frustumVao.draw(
-						// eslint-disable-next-line camelcase
-						{ u_viewProj: camViewProjMat, u_world: frustumMat },
+					gl.fbo.draw(
+						frustumVao,
+						{ viewProj: camViewProjMat, world: frustumMat },
 						Primitive.LINES
 					);
 				};

@@ -35,27 +35,27 @@ import { createVector3Like } from "@lakuna/umath/Vector3";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
-in vec3 a_normal;
-in vec2 a_texcoord;
+in vec4 position;
+in vec3 normal;
+in vec2 texcoord;
 
-uniform mat4 u_viewProjMat;
-uniform mat4 u_worldMat;
-uniform mat4 u_texMat;
-uniform vec3 u_lightPos;
+uniform mat4 viewProj;
+uniform mat4 world;
+uniform mat4 texMat;
+uniform vec3 lightPos;
 
-out vec2 v_texcoord;
-out vec3 v_normal;
-out vec3 v_dirToLight;
-out vec4 v_projTexcoord;
+out vec2 vTexcoord;
+out vec3 vNormal;
+out vec3 vDirToLight;
+out vec4 vProjTexcoord;
 
 void main() {
-	vec4 worldPos = u_worldMat * a_position;
-	gl_Position = u_viewProjMat * worldPos;
-	v_texcoord = a_texcoord;
-	v_normal = a_normal;
-	v_dirToLight = u_lightPos - worldPos.xyz;
-	v_projTexcoord = u_texMat * worldPos;
+	vec4 worldPos = world * position;
+	gl_Position = viewProj * worldPos;
+	vTexcoord = texcoord;
+	vNormal = normal;
+	vDirToLight = lightPos - worldPos.xyz;
+	vProjTexcoord = texMat * worldPos;
 }
 `;
 
@@ -64,23 +64,23 @@ const fss = `\
 
 precision mediump float;
 
-in vec2 v_texcoord;
-in vec3 v_normal;
-in vec3 v_dirToLight;
-in vec4 v_projTexcoord;
+in vec2 vTexcoord;
+in vec3 vNormal;
+in vec3 vDirToLight;
+in vec4 vProjTexcoord;
 
-uniform vec4 u_color;
-uniform sampler2D u_texture;
-uniform sampler2D u_projTexture;
-uniform float u_biasMin;
-uniform float u_biasMax;
+uniform vec4 color;
+uniform sampler2D tex;
+uniform sampler2D projTex;
+uniform float biasMin;
+uniform float biasMax;
 
 out vec4 outColor;
 
 void main() {
-	vec3 projTexcoord = v_projTexcoord.xyz / v_projTexcoord.w;
-	vec3 dirToLight = normalize(v_dirToLight);
-	float bias = max(u_biasMax * (1.0 - dot(v_normal, dirToLight)), u_biasMin);
+	vec3 projTexcoord = vProjTexcoord.xyz / vProjTexcoord.w;
+	vec3 dirToLight = normalize(vDirToLight);
+	float bias = max(biasMax * (1.0 - dot(vNormal, dirToLight)), biasMin);
 	float depth = projTexcoord.z + bias;
 
 	bool inShadow = projTexcoord.x >= 0.0
@@ -89,17 +89,17 @@ void main() {
 		&& projTexcoord.y <= 1.0;
 
 	float shadowLight = 0.0;
-	vec2 texelSize = 1.0 / vec2(textureSize(u_projTexture, 0));
+	vec2 texelSize = 1.0 / vec2(textureSize(projTex, 0));
 	for (int x = -1; x <= 1; x++) {
 		for (int y = -1; y <= 1; y++) {
-			float projDepth = texture(u_projTexture,
+			float projDepth = texture(projTex,
 				projTexcoord.xy + vec2(x, y) * texelSize).r;
 			shadowLight += inShadow && projDepth <= depth ? 0.2 : 1.0;
 		}
 	}
 	shadowLight /= 9.0;
 
-	outColor = texture(u_texture, v_texcoord) * u_color;
+	outColor = texture(tex, vTexcoord) * color;
 	outColor.rgb *= shadowLight;
 }
 `;
@@ -107,13 +107,13 @@ void main() {
 const solidVss = `\
 #version 300 es
 
-in vec4 a_position;
+in vec4 position;
 
-uniform mat4 u_worldMat;
-uniform mat4 u_viewProjMat;
+uniform mat4 world;
+uniform mat4 viewProj;
 
 void main() {
-	gl_Position = u_viewProjMat * u_worldMat * a_position;
+	gl_Position = viewProj * world * position;
 }
 `;
 
@@ -185,12 +185,9 @@ export default function PercentageCloserFiltering(
 				const cubeVao = new VertexArray(
 					program,
 					{
-						// eslint-disable-next-line camelcase
-						a_normal: cubeNormalBuffer,
-						// eslint-disable-next-line camelcase
-						a_position: cubePositionBuffer,
-						// eslint-disable-next-line camelcase
-						a_texcoord: { size: 2, vbo: cubeTexcoordBuffer }
+						normal: cubeNormalBuffer,
+						position: cubePositionBuffer,
+						texcoord: { size: 2, vbo: cubeTexcoordBuffer }
 					},
 					cubeIndexBuffer
 				);
@@ -198,64 +195,58 @@ export default function PercentageCloserFiltering(
 				const planeVao = new VertexArray(
 					program,
 					{
-						// eslint-disable-next-line camelcase
-						a_normal: planeNormalBuffer,
-						// eslint-disable-next-line camelcase
-						a_position: { size: 2, vbo: planePositionBuffer },
-						// eslint-disable-next-line camelcase
-						a_texcoord: { size: 2, vbo: planeTexcoordBuffer }
+						normal: planeNormalBuffer,
+						position: { size: 2, vbo: planePositionBuffer },
+						texcoord: { size: 2, vbo: planeTexcoordBuffer }
 					},
 					planeIndexBuffer
 				);
 
 				const solidCubeVao = new VertexArray(
 					solidProgram,
-					// eslint-disable-next-line camelcase
-					{ a_position: cubePositionBuffer },
+					{ position: cubePositionBuffer },
 					cubeIndexBuffer
 				);
 
 				const solidPlaneVao = new VertexArray(
 					solidProgram,
-					// eslint-disable-next-line camelcase
-					{ a_position: { size: 2, vbo: planePositionBuffer } },
+					{ position: { size: 2, vbo: planePositionBuffer } },
 					planeIndexBuffer
 				);
 
 				const frustumVao = new VertexArray(
 					solidProgram,
-					// eslint-disable-next-line camelcase
-					{ a_position: frustumPositionBuffer },
+					{ position: frustumPositionBuffer },
 					frustumIndexBuffer
 				);
 
-				const texture = new Texture2d(gl);
-				texture.format = TextureFormat.LUMINANCE;
-				texture.setMip(
+				const tex = new Texture2d(gl);
+				tex.format = TextureFormat.LUMINANCE;
+				tex.setMip(
 					new Uint8Array([0x80, 0xc0, 0xc0, 0x80]),
 					0,
 					void 0,
 					[0, 0, 2, 2]
 				);
-				texture.minFilter = TextureFilter.NEAREST;
-				texture.magFilter = TextureFilter.NEAREST;
+				tex.minFilter = TextureFilter.NEAREST;
+				tex.magFilter = TextureFilter.NEAREST;
 
-				const projTexture = new Texture2d(gl);
-				projTexture.format = TextureFormat.DEPTH_COMPONENT32F;
-				projTexture.setMip(void 0, 0, void 0, [0, 0, 0x80, 0x80]);
-				projTexture.minFilter = TextureFilter.NEAREST;
-				projTexture.magFilter = TextureFilter.NEAREST;
+				const projTex = new Texture2d(gl);
+				projTex.format = TextureFormat.DEPTH_COMPONENT32F;
+				projTex.setMip(void 0, 0, void 0, [0, 0, 0x80, 0x80]);
+				projTex.minFilter = TextureFilter.NEAREST;
+				projTex.magFilter = TextureFilter.NEAREST;
 
 				const framebuffer = new Framebuffer(gl);
-				framebuffer.attach(FramebufferAttachment.Depth, projTexture);
+				framebuffer.attach(FramebufferAttachment.Depth, projTex);
 
-				const planeMat = identity(createMatrix4Like());
-				rotateX(planeMat, (Math.PI * 3) / 2, planeMat);
-				const cubeMat = identity(createMatrix4Like());
-				scale(cubeMat, [0.1, 0.1, 0.1], cubeMat);
-				translate(cubeMat, [1, 2, 1], cubeMat);
-				rotateY(cubeMat, Math.PI / 4, cubeMat);
-				const lightProjMat = ortho(
+				const plane = identity(createMatrix4Like());
+				rotateX(plane, (Math.PI * 3) / 2, plane);
+				const cube = identity(createMatrix4Like());
+				scale(cube, [0.1, 0.1, 0.1], cube);
+				translate(cube, [1, 2, 1], cube);
+				rotateY(cube, Math.PI / 4, cube);
+				const lightProj = ortho(
 					-0.5,
 					0.5,
 					-0.5,
@@ -264,116 +255,88 @@ export default function PercentageCloserFiltering(
 					3,
 					createMatrix4Like()
 				);
-				const lightCamMat = identity(createMatrix4Like());
-				rotateX(lightCamMat, -Math.PI / 5, lightCamMat);
-				translate(lightCamMat, [0, 0, 2], lightCamMat);
-				const lightPos = getTranslation(lightCamMat, createVector3Like());
-				const lightViewMat = invert(lightCamMat, createMatrix4Like());
-				const lightViewProjMat = multiply(
-					lightProjMat,
-					lightViewMat,
+				const lightCam = identity(createMatrix4Like());
+				rotateX(lightCam, -Math.PI / 5, lightCam);
+				translate(lightCam, [0, 0, 2], lightCam);
+				const lightPos = getTranslation(lightCam, createVector3Like());
+				const lightView = invert(lightCam, createMatrix4Like());
+				const lightViewProj = multiply(
+					lightProj,
+					lightView,
 					createMatrix4Like()
 				);
 				const texMat = identity(createMatrix4Like());
 				translate(texMat, [0.5, 0.5, 0.5], texMat);
 				scale(texMat, [0.5, 0.5, 0.5], texMat);
-				multiply(texMat, lightViewProjMat, texMat);
-				const frustumMat = invert(lightViewProjMat, createMatrix4Like());
-				const projMat = createMatrix4Like();
-				const camMat = createMatrix4Like();
-				const viewMat = createMatrix4Like();
-				const viewProjMat = createMatrix4Like();
+				multiply(texMat, lightViewProj, texMat);
+				const frustum = invert(lightViewProj, createMatrix4Like());
+				const proj = createMatrix4Like();
+				const cam = createMatrix4Like();
+				const view = createMatrix4Like();
+				const viewProj = createMatrix4Like();
 
 				return (now) => {
 					gl.fitDrawingBuffer();
 
 					const w = canvas.width;
 					const h = canvas.height;
-					perspective(Math.PI / 4, w / (h || 1), 0.1, 5, projMat);
-					identity(camMat);
-					rotateY(camMat, now * 0.0003, camMat);
-					rotateX(camMat, -Math.PI / 5, camMat);
-					translate(camMat, [0, 0, 2], camMat);
-					invert(camMat, viewMat);
-					multiply(projMat, viewMat, viewProjMat);
+					perspective(Math.PI / 4, w / (h || 1), 0.1, 5, proj);
+					identity(cam);
+					rotateY(cam, now * 0.0003, cam);
+					rotateX(cam, -Math.PI / 5, cam);
+					translate(cam, [0, 0, 2], cam);
+					invert(cam, view);
+					multiply(proj, view, viewProj);
 
 					gl.fitViewport(framebuffer);
 					gl.doCullFace = true;
 					gl.cullFace = Face.FRONT;
 					gl.doDepthTest = true;
-					gl.clear(true, true, false, framebuffer);
+					framebuffer.clear(true, true, false);
 
-					solidPlaneVao.draw(
-						// eslint-disable-next-line camelcase
-						{ u_viewProjMat: lightViewProjMat, u_worldMat: planeMat },
-						void 0,
-						void 0,
-						framebuffer
-					);
+					framebuffer.draw(solidPlaneVao, {
+						viewProj: lightViewProj,
+						world: plane
+					});
 
-					solidCubeVao.draw(
-						// eslint-disable-next-line camelcase
-						{ u_viewProjMat: lightViewProjMat, u_worldMat: cubeMat },
-						void 0,
-						void 0,
-						framebuffer
-					);
+					framebuffer.draw(solidCubeVao, {
+						viewProj: lightViewProj,
+						world: cube
+					});
 
 					gl.fitViewport();
 					gl.doCullFace = true;
 					gl.cullFace = Face.BACK;
 					gl.doDepthTest = true;
-					gl.clear();
+					gl.fbo.clear();
 
-					planeVao.draw({
-						// eslint-disable-next-line camelcase
-						u_biasMax: 0,
-						// eslint-disable-next-line camelcase
-						u_biasMin: 0,
-						// eslint-disable-next-line camelcase
-						u_color: [1, 0, 0, 1],
-						// eslint-disable-next-line camelcase
-						u_lightPos: lightPos,
-						// eslint-disable-next-line camelcase
-						u_projTexture: projTexture,
-						// eslint-disable-next-line camelcase
-						u_texMat: texMat,
-						// eslint-disable-next-line camelcase
-						u_texture: texture,
-						// eslint-disable-next-line camelcase
-						u_viewProjMat: viewProjMat,
-						// eslint-disable-next-line camelcase
-						u_worldMat: planeMat
+					gl.fbo.draw(planeVao, {
+						biasMax: 0,
+						biasMin: 0,
+						color: [1, 0, 0, 1],
+						lightPos,
+						projTex,
+						tex,
+						texMat,
+						viewProj,
+						world: plane
 					});
 
-					cubeVao.draw({
-						// eslint-disable-next-line camelcase
-						u_biasMax: 0.01,
-						// eslint-disable-next-line camelcase
-						u_biasMin: 0,
-						// eslint-disable-next-line camelcase
-						u_color: [0, 1, 0, 1],
-						// eslint-disable-next-line camelcase
-						u_lightPos: lightPos,
-						// eslint-disable-next-line camelcase
-						u_projTexture: projTexture,
-						// eslint-disable-next-line camelcase
-						u_texMat: texMat,
-						// eslint-disable-next-line camelcase
-						u_texture: texture,
-						// eslint-disable-next-line camelcase
-						u_viewProjMat: viewProjMat,
-						// eslint-disable-next-line camelcase
-						u_worldMat: cubeMat
+					gl.fbo.draw(cubeVao, {
+						biasMax: 0.01,
+						biasMin: 0,
+						color: [0, 1, 0, 1],
+						lightPos,
+						projTex,
+						tex,
+						texMat,
+						viewProj,
+						world: cube
 					});
 
-					frustumVao.draw(
-						{
-							// eslint-disable-next-line camelcase
-							u_viewProjMat: viewProjMat,
-							// eslint-disable-next-line camelcase
-							u_worldMat: frustumMat
-						},
+					gl.fbo.draw(
+						frustumVao,
+						{ viewProj, world: frustum },
 						Primitive.LINES
 					);
 				};

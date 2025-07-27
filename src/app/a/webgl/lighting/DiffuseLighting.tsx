@@ -30,18 +30,18 @@ import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
-in vec3 a_normal;
+in vec4 position;
+in vec3 normal;
 
-uniform mat4 u_viewProj;
-uniform mat4 u_world;
-uniform mat3 u_normalMat;
+uniform mat4 viewProj;
+uniform mat4 world;
+uniform mat3 normalMat;
 
-out vec3 v_normal;
+out vec3 vNormal;
 
 void main() {
-	gl_Position = u_viewProj * u_world * a_position;
-	v_normal = u_normalMat * a_normal;
+	gl_Position = viewProj * world * position;
+	vNormal = normalMat * normal;
 }
 `;
 
@@ -50,19 +50,19 @@ const fss = `\
 
 precision mediump float;
 
-in vec3 v_normal;
+in vec3 vNormal;
 
-uniform vec3 u_reverseLightDir;
-uniform vec4 u_color;
+uniform vec3 reverseLightDir;
+uniform vec4 color;
 
 out vec4 outColor;
 
 void main() {
-	vec3 normal = normalize(v_normal);
+	vec3 normal = normalize(vNormal);
 
-	float brightness = dot(normal, u_reverseLightDir);
+	float brightness = dot(normal, reverseLightDir);
 
-	outColor = u_color;
+	outColor = color;
 	outColor.rgb *= brightness;
 }
 `;
@@ -97,51 +97,41 @@ export default function DiffuseLighting(props: UglCanvasProps): JSX.Element {
 
 				const cubeVao = new VertexArray(
 					program,
-					{
-						// eslint-disable-next-line camelcase
-						a_normal: normalBuffer,
-						// eslint-disable-next-line camelcase
-						a_position: positionBuffer
-					},
+					{ normal: normalBuffer, position: positionBuffer },
 					indexBuffer
 				);
 
-				const camMat = identity(createMatrix4Like());
-				rotateX(camMat, -Math.PI / 5, camMat);
-				translate(camMat, [0, 0, 5], camMat);
-				const viewMat = invert(camMat, createMatrix4Like());
+				const cam = identity(createMatrix4Like());
+				rotateX(cam, -Math.PI / 5, cam);
+				translate(cam, [0, 0, 5], cam);
+				const view = invert(cam, createMatrix4Like());
 				const lightPos = fromValues(1, 1.4, 2, createVector3Like());
 				const reverseLightDir = normalize(lightPos, createVector3Like());
-				const worldMat = createMatrix4Like();
-				const projMat = createMatrix4Like();
-				const viewProjMat = createMatrix4Like();
+				const world = createMatrix4Like();
+				const proj = createMatrix4Like();
+				const viewProj = createMatrix4Like();
 				const normalMat = createMatrix3Like();
 
 				return (now) => {
 					gl.resize();
 					gl.doCullFace = true;
 					gl.doDepthTest = true;
-					gl.clear();
+					gl.fbo.clear();
 
 					const w = canvas.width;
 					const h = canvas.height;
-					perspective(Math.PI / 4, w / (h || 1), 1, 10, projMat);
-					multiply(projMat, viewMat, viewProjMat);
-					identity(worldMat);
-					rotateY(worldMat, now * 0.001, worldMat);
-					normalFromMatrix4(worldMat, normalMat);
+					perspective(Math.PI / 4, w / (h || 1), 1, 10, proj);
+					multiply(proj, view, viewProj);
+					identity(world);
+					rotateY(world, now * 0.001, world);
+					normalFromMatrix4(world, normalMat);
 
-					cubeVao.draw({
-						// eslint-disable-next-line camelcase
-						u_color: [1, 1, 1, 1],
-						// eslint-disable-next-line camelcase
-						u_normalMat: normalMat,
-						// eslint-disable-next-line camelcase
-						u_reverseLightDir: reverseLightDir,
-						// eslint-disable-next-line camelcase
-						u_viewProj: viewProjMat,
-						// eslint-disable-next-line camelcase
-						u_world: worldMat
+					gl.fbo.draw(cubeVao, {
+						color: [1, 1, 1, 1],
+						normalMat,
+						reverseLightDir,
+						viewProj,
+						world
 					});
 				};
 			}}

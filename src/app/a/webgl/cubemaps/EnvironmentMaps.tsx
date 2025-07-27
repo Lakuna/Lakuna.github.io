@@ -30,21 +30,21 @@ import domain from "util/domain";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
-in vec3 a_normal;
+in vec4 position;
+in vec3 normal;
 
-uniform mat4 u_viewProjMat;
-uniform mat4 u_worldMat;
-uniform mat3 u_normalMat;
+uniform mat4 viewProj;
+uniform mat4 world;
+uniform mat3 normalMat;
 
-out vec3 v_worldPos;
-out vec3 v_normal;
+out vec3 vWorldPos;
+out vec3 vNormal;
 
 void main() {
-	vec4 worldPos = u_worldMat * a_position;
-	gl_Position = u_viewProjMat * worldPos;
-	v_worldPos = worldPos.xyz;
-	v_normal = u_normalMat * a_normal;
+	vec4 worldPos = world * position;
+	gl_Position = viewProj * worldPos;
+	vWorldPos = worldPos.xyz;
+	vNormal = normalMat * normal;
 }
 `;
 
@@ -53,19 +53,19 @@ const fss = `\
 
 precision mediump float;
 
-in vec3 v_worldPos;
-in vec3 v_normal;
+in vec3 vWorldPos;
+in vec3 vNormal;
 
-uniform samplerCube u_texture;
-uniform vec3 u_camPos;
+uniform samplerCube tex;
+uniform vec3 camPos;
 
 out vec4 outColor;
 
 void main() {
-	vec3 normal = normalize(v_normal);
-	vec3 camToSurfaceDir = normalize(v_worldPos - u_camPos);
+	vec3 normal = normalize(vNormal);
+	vec3 camToSurfaceDir = normalize(vWorldPos - camPos);
 	vec3 reflectDir = reflect(camToSurfaceDir, normal);
-	outColor = texture(u_texture, reflectDir);
+	outColor = texture(tex, reflectDir);
 }
 `;
 
@@ -99,16 +99,11 @@ export default function EnvironmentMaps(props: UglCanvasProps): JSX.Element {
 
 				const vao = new VertexArray(
 					program,
-					{
-						// eslint-disable-next-line camelcase
-						a_normal: normalBuffer,
-						// eslint-disable-next-line camelcase
-						a_position: positionBuffer
-					},
+					{ normal: normalBuffer, position: positionBuffer },
 					indexBuffer
 				);
 
-				const texture = TextureCubemap.fromImageUrls(
+				const tex = TextureCubemap.fromImageUrls(
 					gl,
 					new URL("/images/webgl-example-environment-map/px.png", domain).href,
 					new URL("/images/webgl-example-environment-map/nx.png", domain).href,
@@ -117,45 +112,34 @@ export default function EnvironmentMaps(props: UglCanvasProps): JSX.Element {
 					new URL("/images/webgl-example-environment-map/pz.png", domain).href,
 					new URL("/images/webgl-example-environment-map/nz.png", domain).href
 				);
-				texture.minFilter = TextureFilter.LINEAR_MIPMAP_LINEAR;
-				texture.magFilter = TextureFilter.LINEAR;
+				tex.minFilter = TextureFilter.LINEAR_MIPMAP_LINEAR;
+				tex.magFilter = TextureFilter.LINEAR;
 
-				const camMat = identity(createMatrix4Like());
-				translate(camMat, [0, 0, 5], camMat);
-				const camPos = getTranslation(camMat, createVector3Like());
-				const viewMat = invert(camMat, createMatrix4Like());
-				const worldMat = createMatrix4Like();
-				const projMat = createMatrix4Like();
-				const viewProjMat = createMatrix4Like();
+				const cam = identity(createMatrix4Like());
+				translate(cam, [0, 0, 5], cam);
+				const camPos = getTranslation(cam, createVector3Like());
+				const view = invert(cam, createMatrix4Like());
+				const world = createMatrix4Like();
+				const proj = createMatrix4Like();
+				const viewProj = createMatrix4Like();
 				const normalMat = createMatrix3Like();
 
 				return (now) => {
 					gl.resize();
 					gl.doCullFace = true;
 					gl.doDepthTest = true;
-					gl.clear();
+					gl.fbo.clear();
 
 					const w = canvas.width;
 					const h = canvas.height;
-					perspective(Math.PI / 4, w / (h || 1), 1, 10, projMat);
-					multiply(projMat, viewMat, viewProjMat);
-					identity(worldMat);
-					rotateY(worldMat, now * 0.0001, worldMat);
-					rotateZ(worldMat, now * 0.0002, worldMat);
-					normalFromMatrix4(worldMat, normalMat);
+					perspective(Math.PI / 4, w / (h || 1), 1, 10, proj);
+					multiply(proj, view, viewProj);
+					identity(world);
+					rotateY(world, now * 0.0001, world);
+					rotateZ(world, now * 0.0002, world);
+					normalFromMatrix4(world, normalMat);
 
-					vao.draw({
-						// eslint-disable-next-line camelcase
-						u_camPos: camPos,
-						// eslint-disable-next-line camelcase
-						u_normalMat: normalMat,
-						// eslint-disable-next-line camelcase
-						u_texture: texture,
-						// eslint-disable-next-line camelcase
-						u_viewProjMat: viewProjMat,
-						// eslint-disable-next-line camelcase
-						u_worldMat: worldMat
-					});
+					gl.fbo.draw(vao, { camPos, normalMat, tex, viewProj, world });
 				};
 			}}
 			{...props}

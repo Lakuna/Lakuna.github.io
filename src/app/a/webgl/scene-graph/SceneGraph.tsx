@@ -21,14 +21,12 @@ import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
+in vec4 position;
 
-uniform mat4 u_world;
-
-out vec4 v_color;
+uniform mat4 world;
 
 void main() {
-	gl_Position = u_world * a_position;
+	gl_Position = world * position;
 }
 `;
 
@@ -79,32 +77,28 @@ export default function SceneGraph(props: UglCanvasProps): JSX.Element {
 
 				const rectVao = new VertexArray(
 					program,
-					// eslint-disable-next-line camelcase
-					{ a_position: { size: 2, vbo: positionBuffer } },
+					{ position: { size: 2, vbo: positionBuffer } },
 					indexBuffer
 				);
 
-				const matrix = createMatrix4Like();
+				const world = createMatrix4Like();
 
 				return (now) => {
 					gl.resize();
-					gl.clear();
+					gl.fbo.clear();
 
 					const w = canvas.width;
 					const h = canvas.height;
 					const min = Math.min(w, h);
-					ortho(0, w, 0, h, -1, 1, matrix);
-					translate(matrix, [w / 2, min / 5, 0], matrix);
-					scale(matrix, [min / 20, min / 20, 1], matrix);
+					ortho(0, w, 0, h, -1, 1, world);
+					translate(world, [w / 2, min / 5, 0], world);
+					scale(world, [min / 20, min / 20, 1], world);
 					for (let i = 0; i < 20; i++) {
-						translate(matrix, [10 * Math.sin(now * 0.001), 0, 0], matrix);
-						rotateZ(matrix, now * 0.001, matrix);
-						scale(matrix, [0.9, 0.9, 1], matrix);
+						translate(world, [10 * Math.sin(now * 0.001), 0, 0], world);
+						rotateZ(world, now * 0.001, world);
+						scale(world, [0.9, 0.9, 1], world);
 
-						rectVao.draw({
-							// eslint-disable-next-line camelcase
-							u_world: matrix
-						});
+						gl.fbo.draw(rectVao, { world });
 					}
 				};
 			}}

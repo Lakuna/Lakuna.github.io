@@ -118,7 +118,10 @@ class TextQuad {
 	 * @param texture - The glyph texture (texture atlas) to use with the text quad.
 	 * @param glyphs - The glyph map that corresponds to the glyph texture.
 	 */
-	constructor(texture: Texture2d, glyphs: Map<string, Rectangle & number[]>) {
+	public constructor(
+		texture: Texture2d,
+		glyphs: Map<string, Rectangle & number[]>
+	) {
 		this.texture = texture;
 		this.glyphs = glyphs;
 		this.widthCache = 0;
@@ -139,7 +142,7 @@ class TextQuad {
 		this.ebo = new ElementBuffer(
 			texture.context,
 			new Uint8Array(),
-			BufferUsage.DYNAMIC_DRAW
+			BufferUsage.DYNAMIC_READ
 		);
 		this.vao = new VertexArray(
 			this.program,
@@ -157,43 +160,43 @@ class TextQuad {
 	 * The glyph texture (texture atlas) to use with the text quad.
 	 * @internal
 	 */
-	private texture;
+	private readonly texture;
 
 	/**
 	 * The glyph map that corresponds to the glyph texture.
 	 * @internal
 	 */
-	private glyphs;
+	private readonly glyphs;
 
 	/**
 	 * The position data buffer.
 	 * @internal
 	 */
-	private posBuffer;
+	private readonly posBuffer;
 
 	/**
 	 * The texture coordinate data buffer.
 	 * @internal
 	 */
-	private texcoordBuffer;
+	private readonly texcoordBuffer;
 
 	/**
 	 * The element buffer object (indices).
 	 * @internal
 	 */
-	private ebo;
+	private readonly ebo;
 
 	/**
 	 * The shader program to use for rendering this text quad.
 	 * @internal
 	 */
-	private program;
+	private readonly program;
 
 	/**
 	 * The vertex array object of this text quad.
 	 * @internal
 	 */
-	private vao;
+	private readonly vao;
 
 	/**
 	 * The number of letters to render on this text quad.
@@ -384,10 +387,10 @@ class TextQuad {
 	 * @param worldViewProjMat - The world view projection matrix to render with.
 	 */
 	public render(worldViewProjMat: Matrix4Like & Float32Array) {
-		this.vao.draw(
+		this.vao.context.fbo.draw(
+			this.vao,
 			// eslint-disable-next-line camelcase
 			{ u_texture: this.texture, u_worldViewProjMat: worldViewProjMat },
-			void 0,
 			void 0,
 			void 0,
 			this.lettersToRender * 6
@@ -452,7 +455,7 @@ export default function GlyphTextures(props: UglCanvasProps): JSX.Element {
 						BlendFunction.SRC_ALPHA,
 						BlendFunction.ONE_MINUS_SRC_ALPHA
 					];
-					gl.clear();
+					gl.fbo.clear();
 
 					// Update text.
 					textQuad.text = Math.floor(now).toString();
@@ -472,8 +475,12 @@ export default function GlyphTextures(props: UglCanvasProps): JSX.Element {
 					translate(textMat, [-textQuad.width / 2, 0, 1], textMat);
 					multiply(viewProjMat, textMat, textMat);
 
-					// eslint-disable-next-line camelcase
-					quadVao.draw({ u_texture: texture, u_worldViewProjMat: quadMat });
+					gl.fbo.draw(quadVao, {
+						// eslint-disable-next-line camelcase
+						u_texture: texture,
+						// eslint-disable-next-line camelcase
+						u_worldViewProjMat: quadMat
+					});
 
 					textQuad.render(textMat);
 				};

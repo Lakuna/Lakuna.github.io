@@ -21,14 +21,12 @@ import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
+in vec4 position;
 
-uniform mat4 u_matrix;
-
-out vec4 v_color;
+uniform mat4 matrix;
 
 void main() {
-	gl_Position = u_matrix * a_position;
+	gl_Position = matrix * position;
 }
 `;
 
@@ -79,8 +77,7 @@ export default function Matrices(props: UglCanvasProps): JSX.Element {
 
 				const rectVao = new VertexArray(
 					program,
-					// eslint-disable-next-line camelcase
-					{ a_position: { size: 2, vbo: positionBuffer } },
+					{ position: { size: 2, vbo: positionBuffer } },
 					indexBuffer
 				);
 
@@ -88,7 +85,7 @@ export default function Matrices(props: UglCanvasProps): JSX.Element {
 
 				return (now) => {
 					gl.resize();
-					gl.clear();
+					gl.fbo.clear();
 
 					const w = canvas.width;
 					const h = canvas.height;
@@ -99,8 +96,7 @@ export default function Matrices(props: UglCanvasProps): JSX.Element {
 					const s = ((1 + Math.cos(now * 0.001) / 2) * Math.min(w, h)) / 10;
 					scale(matrix, [s, s, 1], matrix);
 
-					// eslint-disable-next-line camelcase
-					rectVao.draw({ u_matrix: matrix });
+					gl.fbo.draw(rectVao, { matrix });
 				};
 			}}
 			{...props}

@@ -31,28 +31,28 @@ import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
-in vec3 a_normal;
+in vec4 position;
+in vec3 normal;
 
-uniform mat4 u_viewProj;
-uniform mat4 u_world;
-uniform mat3 u_normalMat;
-uniform vec3 u_lightPos;
-uniform vec3 u_camPos;
+uniform mat4 viewProj;
+uniform mat4 world;
+uniform mat3 normalMat;
+uniform vec3 lightPos;
+uniform vec3 camPos;
 
-out vec3 v_normal;
-out vec3 v_dirToLight;
-out vec3 v_dirToCam;
+out vec3 vNormal;
+out vec3 vDirToLight;
+out vec3 vDirToCam;
 
 void main() {
-	vec4 worldPos = u_world * a_position;
-	gl_Position = u_viewProj * worldPos;
+	vec4 worldPos = world * position;
+	gl_Position = viewProj * worldPos;
 
-	v_normal = u_normalMat * a_normal;
+	vNormal = normalMat * normal;
 
 	vec3 surfacePos = worldPos.xyz;
-	v_dirToLight = u_lightPos - surfacePos;
-	v_dirToCam = u_camPos - surfacePos;
+	vDirToLight = lightPos - surfacePos;
+	vDirToCam = camPos - surfacePos;
 }
 `;
 
@@ -61,28 +61,28 @@ const fss = `\
 
 precision mediump float;
 
-in vec3 v_normal;
-in vec3 v_dirToLight;
-in vec3 v_dirToCam;
+in vec3 vNormal;
+in vec3 vDirToLight;
+in vec3 vDirToCam;
 
-uniform vec3 u_reverseLightDir;
-uniform vec4 u_color;
-uniform float u_ambientBrightness;
-uniform float u_dullness;
+uniform vec3 reverseLightDir;
+uniform vec4 color;
+uniform float ambientBrightness;
+uniform float dullness;
 
 out vec4 outColor;
 
 void main() {
-	vec3 normal = normalize(v_normal);
-	vec3 dirToLight = normalize(v_dirToLight);
-	vec3 dirToCam = normalize(v_dirToCam);
+	vec3 normal = normalize(vNormal);
+	vec3 dirToLight = normalize(vDirToLight);
+	vec3 dirToCam = normalize(vDirToCam);
 	vec3 halfVector = normalize(dirToLight + dirToCam);
 
-	float diffuseBrightness = dot(normal, u_reverseLightDir);
-	float specularBrightness = pow(max(dot(normal, halfVector), 0.0), u_dullness);
-	float brightness = diffuseBrightness * 0.7 + specularBrightness + u_ambientBrightness;
+	float diffuseBrightness = dot(normal, reverseLightDir);
+	float specularBrightness = pow(max(dot(normal, halfVector), 0.0), dullness);
+	float brightness = diffuseBrightness * 0.7 + specularBrightness + ambientBrightness;
 
-	outColor = u_color;
+	outColor = color;
 	outColor.rgb *= brightness;
 }
 `;
@@ -117,60 +117,46 @@ export default function PhongLighting(props: UglCanvasProps): JSX.Element {
 
 				const cubeVao = new VertexArray(
 					program,
-					{
-						// eslint-disable-next-line camelcase
-						a_normal: normalBuffer,
-						// eslint-disable-next-line camelcase
-						a_position: positionBuffer
-					},
+					{ normal: normalBuffer, position: positionBuffer },
 					indexBuffer
 				);
 
-				const camMat = identity(createMatrix4Like());
-				rotateX(camMat, -Math.PI / 5, camMat);
-				translate(camMat, [0, 0, 5], camMat);
-				const camPos = getTranslation(camMat, createVector3Like());
-				const viewMat = invert(camMat, createMatrix4Like());
+				const cam = identity(createMatrix4Like());
+				rotateX(cam, -Math.PI / 5, cam);
+				translate(cam, [0, 0, 5], cam);
+				const camPos = getTranslation(cam, createVector3Like());
+				const view = invert(cam, createMatrix4Like());
 				const lightPos = fromValues(1, 1.4, 2, createVector3Like());
 				const reverseLightDir = normalize(lightPos, createVector3Like());
-				const worldMat = createMatrix4Like();
-				const projMat = createMatrix4Like();
-				const viewProjMat = createMatrix4Like();
+				const world = createMatrix4Like();
+				const proj = createMatrix4Like();
+				const viewProj = createMatrix4Like();
 				const normalMat = createMatrix3Like();
 
 				return (now) => {
 					gl.resize();
 					gl.doCullFace = true;
 					gl.doDepthTest = true;
-					gl.clear();
+					gl.fbo.clear();
 
 					const w = canvas.width;
 					const h = canvas.height;
-					perspective(Math.PI / 4, w / (h || 1), 1, 10, projMat);
-					multiply(projMat, viewMat, viewProjMat);
-					identity(worldMat);
-					rotateY(worldMat, now * 0.001, worldMat);
-					normalFromMatrix4(worldMat, normalMat);
+					perspective(Math.PI / 4, w / (h || 1), 1, 10, proj);
+					multiply(proj, view, viewProj);
+					identity(world);
+					rotateY(world, now * 0.001, world);
+					normalFromMatrix4(world, normalMat);
 
-					cubeVao.draw({
-						// eslint-disable-next-line camelcase
-						u_ambientBrightness: 0.1,
-						// eslint-disable-next-line camelcase
-						u_camPos: camPos,
-						// eslint-disable-next-line camelcase
-						u_color: [1, 1, 1, 1],
-						// eslint-disable-next-line camelcase
-						u_dullness: 8,
-						// eslint-disable-next-line camelcase
-						u_lightPos: lightPos,
-						// eslint-disable-next-line camelcase
-						u_normalMat: normalMat,
-						// eslint-disable-next-line camelcase
-						u_reverseLightDir: reverseLightDir,
-						// eslint-disable-next-line camelcase
-						u_viewProj: viewProjMat,
-						// eslint-disable-next-line camelcase
-						u_world: worldMat
+					gl.fbo.draw(cubeVao, {
+						ambientBrightness: 0.1,
+						camPos,
+						color: [1, 1, 1, 1],
+						dullness: 8,
+						lightPos,
+						normalMat,
+						reverseLightDir,
+						viewProj,
+						world
 					});
 				};
 			}}

@@ -15,16 +15,16 @@ import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
-in vec4 a_color;
+in vec4 position;
+in vec4 color;
 
-uniform mat4 u_world;
+uniform mat4 world;
 
-out vec4 v_color;
+out vec4 vColor;
 
 void main() {
-	gl_Position = u_world * a_position;
-	v_color = a_color;
+	gl_Position = world * position;
+	vColor = color;
 }
 `;
 
@@ -33,12 +33,12 @@ const fss = `\
 
 precision mediump float;
 
-in vec4 v_color;
+in vec4 vColor;
 
 out vec4 outColor;
 
 void main() {
-	outColor = v_color;
+	outColor = vColor;
 }
 `;
 
@@ -93,28 +93,25 @@ export default function PolygonCulling(props: UglCanvasProps): JSX.Element {
 				const colorBuffer = new VertexBuffer(gl, colorData);
 
 				const fVao = new VertexArray(program, {
-					// eslint-disable-next-line camelcase
-					a_color: { normalized: true, vbo: colorBuffer },
-					// eslint-disable-next-line camelcase
-					a_position: positionBuffer
+					color: { normalized: true, vbo: colorBuffer },
+					position: positionBuffer
 				});
 
-				const matrix = createMatrix4Like();
+				const world = createMatrix4Like();
 
 				return (now) => {
 					gl.resize();
 					gl.doCullFace = true;
-					gl.clear();
+					gl.fbo.clear();
 
 					const w = canvas.width;
 					const h = canvas.height;
-					ortho(0, w, 0, h, 0, 1000, matrix);
-					translate(matrix, [w / 2, h / 2, -500], matrix);
-					rotateZ(matrix, now * 0.001, matrix);
-					rotateX(matrix, now * 0.0007, matrix);
+					ortho(0, w, 0, h, 0, 1000, world);
+					translate(world, [w / 2, h / 2, -500], world);
+					rotateZ(world, now * 0.001, world);
+					rotateX(world, now * 0.0007, world);
 
-					// eslint-disable-next-line camelcase
-					fVao.draw({ u_world: matrix });
+					gl.fbo.draw(fVao, { world });
 				};
 			}}
 			{...props}

@@ -19,20 +19,20 @@ import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
-in vec4 a_color;
+in vec4 position;
+in vec4 color;
 
-uniform mat4 u_projMat;
-uniform mat4 u_viewMat;
-uniform mat4 u_worldMat;
+uniform mat4 proj;
+uniform mat4 view;
+uniform mat4 world;
 
-out vec4 v_color;
-out vec4 v_worldViewPos;
+out vec4 vColor;
+out vec4 worldViewPos;
 
 void main() {
-	v_worldViewPos = u_viewMat * u_worldMat * a_position;
-	gl_Position = u_projMat * v_worldViewPos;
-	v_color = a_color;
+	worldViewPos = view * world * position;
+	gl_Position = proj * worldViewPos;
+	vColor = color;
 }
 `;
 
@@ -41,18 +41,18 @@ const fss = `\
 
 precision mediump float;
 
-in vec4 v_color;
-in vec4 v_worldViewPos;
+in vec4 vColor;
+in vec4 worldViewPos;
 
-uniform vec4 u_fogColor;
-uniform float u_fogDensity;
+uniform vec4 fogColor;
+uniform float fogDensity;
 
 out vec4 outColor;
 
 void main() {
-	float fogDepth = length(v_worldViewPos);
-	float fogAmount = clamp(1.0 - exp2(-u_fogDensity * u_fogDensity * fogDepth * fogDepth * 1.442695), 0.0, 1.0);
-	outColor = mix(v_color, u_fogColor, fogAmount);
+	float fogDepth = length(worldViewPos);
+	float fogAmount = clamp(1.0 - exp2(-fogDensity * fogDensity * fogDepth * fogDepth * 1.442695), 0.0, 1.0);
+	outColor = mix(vColor, fogColor, fogAmount);
 }
 `;
 
@@ -107,10 +107,8 @@ export default function Fog(props: UglCanvasProps): JSX.Element {
 				const colorBuffer = new VertexBuffer(gl, colorData);
 
 				const fVao = new VertexArray(program, {
-					// eslint-disable-next-line camelcase
-					a_color: { normalized: true, vbo: colorBuffer },
-					// eslint-disable-next-line camelcase
-					a_position: positionBuffer
+					color: { normalized: true, vbo: colorBuffer },
+					position: positionBuffer
 				});
 
 				const matrices: (Float32Array & Matrix4Like)[] = [];
@@ -131,7 +129,7 @@ export default function Fog(props: UglCanvasProps): JSX.Element {
 					gl.resize();
 					gl.doCullFace = true;
 					gl.doDepthTest = true;
-					gl.clear();
+					gl.fbo.clear();
 
 					const w = canvas.width;
 					const h = canvas.height;
@@ -142,18 +140,13 @@ export default function Fog(props: UglCanvasProps): JSX.Element {
 					translate(cam, [0, 0, 500], cam);
 					invert(cam, view);
 
-					for (const matrix of matrices) {
-						fVao.draw({
-							// eslint-disable-next-line camelcase
-							u_fogColor: [0, 0, 0, 0],
-							// eslint-disable-next-line camelcase
-							u_fogDensity: 0.003,
-							// eslint-disable-next-line camelcase
-							u_projMat: proj,
-							// eslint-disable-next-line camelcase
-							u_viewMat: view,
-							// eslint-disable-next-line camelcase
-							u_worldMat: matrix
+					for (const world of matrices) {
+						gl.fbo.draw(fVao, {
+							fogColor: [0, 0, 0, 0],
+							fogDensity: 0.003,
+							proj,
+							view,
+							world
 						});
 					}
 				};

@@ -14,20 +14,18 @@ import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
+in vec4 position;
 
-uniform float u_rotation;
-
-out vec4 v_color;
+uniform float rotation;
 
 void main() {
-	float s = sin(u_rotation);
-	float c = cos(u_rotation);
+	float s = sin(rotation);
+	float c = cos(rotation);
 
-	float x = a_position.x * s + a_position.y * c;
-	float y = a_position.y * s - a_position.x * c;
+	float x = position.x * s + position.y * c;
+	float y = position.y * s - position.x * c;
 
-	gl_Position = vec4(x, y, a_position.zw);
+	gl_Position = vec4(x, y, position.zw);
 }
 `;
 
@@ -78,16 +76,14 @@ export default function Rotation(props: UglCanvasProps): JSX.Element {
 
 				const rectVao = new VertexArray(
 					program,
-					// eslint-disable-next-line camelcase
-					{ a_position: { size: 2, vbo: positionBuffer } },
+					{ position: { size: 2, vbo: positionBuffer } },
 					indexBuffer
 				);
 
 				return (now) => {
 					gl.resize();
-					gl.clear();
-					// eslint-disable-next-line camelcase
-					rectVao.draw({ u_rotation: now * 0.001 });
+					gl.fbo.clear();
+					gl.fbo.draw(rectVao, { rotation: now * 0.001 });
 				};
 			}}
 			{...props}

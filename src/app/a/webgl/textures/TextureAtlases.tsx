@@ -27,16 +27,16 @@ import domain from "util/domain";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
-in vec2 a_texcoord;
+in vec4 position;
+in vec2 texcoord;
 
-uniform mat4 u_matrix;
+uniform mat4 matrix;
 
-out vec2 v_texcoord;
+out vec2 vTexcoord;
 
 void main() {
-	gl_Position = u_matrix * a_position;
-	v_texcoord = a_texcoord;
+	gl_Position = matrix * position;
+	vTexcoord = texcoord;
 }
 `;
 
@@ -45,14 +45,14 @@ const fss = `\
 
 precision mediump float;
 
-in vec2 v_texcoord;
+in vec2 vTexcoord;
 
-uniform sampler2D u_texture;
+uniform sampler2D tex;
 
 out vec4 outColor;
 
 void main() {
-	outColor = texture(u_texture, v_texcoord);
+	outColor = texture(tex, vTexcoord);
 }
 `;
 
@@ -89,20 +89,18 @@ export default function TextureAtlases(props: UglCanvasProps): JSX.Element {
 				const cubeVao = new VertexArray(
 					program,
 					{
-						// eslint-disable-next-line camelcase
-						a_position: positionBuffer,
-						// eslint-disable-next-line camelcase
-						a_texcoord: { size: 2, vbo: texcoordBuffer }
+						position: positionBuffer,
+						texcoord: { size: 2, vbo: texcoordBuffer }
 					},
 					indexBuffer
 				);
 
-				const texture = Texture2d.fromImageUrl(
+				const tex = Texture2d.fromImageUrl(
 					gl,
 					new URL("/images/webgl-example-texture-atlas.png", domain).href
 				);
-				texture.minFilter = TextureFilter.NEAREST;
-				texture.magFilter = TextureFilter.NEAREST;
+				tex.minFilter = TextureFilter.NEAREST;
+				tex.magFilter = TextureFilter.NEAREST;
 
 				const proj = createMatrix4Like();
 				const cam = createMatrix4Like();
@@ -117,7 +115,7 @@ export default function TextureAtlases(props: UglCanvasProps): JSX.Element {
 					gl.resize();
 					gl.doCullFace = true;
 					gl.doDepthTest = true;
-					gl.clear();
+					gl.fbo.clear();
 
 					const w = canvas.width;
 					const h = canvas.height;
@@ -128,8 +126,7 @@ export default function TextureAtlases(props: UglCanvasProps): JSX.Element {
 					rotateY(matrix, now * 0.001, matrix);
 					multiply(viewProj, matrix, matrix);
 
-					// eslint-disable-next-line camelcase
-					cubeVao.draw({ u_matrix: matrix, u_texture: texture });
+					gl.fbo.draw(cubeVao, { matrix, tex });
 				};
 			}}
 			{...props}
