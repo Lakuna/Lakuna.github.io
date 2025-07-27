@@ -31,16 +31,16 @@ import domain from "util/domain";
 const vss = `\
 #version 300 es
 
-in vec4 a_position;
-in vec2 a_texcoord;
+in vec4 position;
+in vec2 texcoord;
 
-uniform mat4 u_worldViewProjMat;
+uniform mat4 worldViewProj;
 
-out vec2 v_texcoord;
+out vec2 vTexcoord;
 
 void main() {
-	gl_Position = u_worldViewProjMat * a_position;
-	v_texcoord = a_texcoord;
+	gl_Position = worldViewProj * position;
+	vTexcoord = texcoord;
 }
 `;
 
@@ -49,14 +49,14 @@ const fss = `\
 
 precision mediump float;
 
-in vec2 v_texcoord;
+in vec2 vTexcoord;
 
-uniform sampler2D u_texture;
+uniform sampler2D tex;
 
 out vec4 outColor;
 
 void main() {
-	outColor = texture(u_texture, v_texcoord);
+	outColor = texture(tex, vTexcoord);
 }
 `;
 
@@ -147,10 +147,8 @@ class TextQuad {
 		this.vao = new VertexArray(
 			this.program,
 			{
-				// eslint-disable-next-line camelcase
-				a_position: { size: 2, vbo: this.posBuffer },
-				// eslint-disable-next-line camelcase
-				a_texcoord: { size: 2, vbo: this.texcoordBuffer }
+				position: { size: 2, vbo: this.posBuffer },
+				texcoord: { size: 2, vbo: this.texcoordBuffer }
 			},
 			this.ebo
 		);
@@ -384,13 +382,12 @@ class TextQuad {
 
 	/**
 	 * Render this text quad.
-	 * @param worldViewProjMat - The world view projection matrix to render with.
+	 * @param worldViewProj - The world view projection matrix to render with.
 	 */
-	public render(worldViewProjMat: Matrix4Like & Float32Array) {
+	public render(worldViewProj: Matrix4Like & Float32Array) {
 		this.vao.context.fbo.draw(
 			this.vao,
-			// eslint-disable-next-line camelcase
-			{ u_texture: this.texture, u_worldViewProjMat: worldViewProjMat },
+			{ tex: this.texture, worldViewProj },
 			void 0,
 			void 0,
 			this.lettersToRender * 6
@@ -413,15 +410,13 @@ export default function GlyphTextures(props: UglCanvasProps): JSX.Element {
 				const quadVao = new VertexArray(
 					program,
 					{
-						// eslint-disable-next-line camelcase
-						a_position: { size: 2, vbo: quadPosBuffer },
-						// eslint-disable-next-line camelcase
-						a_texcoord: { size: 2, vbo: quadTexcoordBuffer }
+						position: { size: 2, vbo: quadPosBuffer },
+						texcoord: { size: 2, vbo: quadTexcoordBuffer }
 					},
 					quadIndexBuffer
 				);
 
-				const texture = Texture2d.fromImageUrl(
+				const tex = Texture2d.fromImageUrl(
 					gl,
 					new URL("/images/webgl-example-texture.png", domain).href
 				);
@@ -436,15 +431,15 @@ export default function GlyphTextures(props: UglCanvasProps): JSX.Element {
 
 				const textQuad = new TextQuad(glyphTexture, defaultGlyphs);
 
-				const projMat = createMatrix4Like();
-				const camMat = createMatrix4Like();
-				const viewMat = createMatrix4Like();
-				const viewProjMat = createMatrix4Like();
-				const quadMat = createMatrix4Like();
-				const textMat = createMatrix4Like();
-				identity(camMat);
-				translate(camMat, [0, 0, 5], camMat);
-				invert(camMat, viewMat);
+				const proj = createMatrix4Like();
+				const cam = createMatrix4Like();
+				const view = createMatrix4Like();
+				const viewProj = createMatrix4Like();
+				const quad = createMatrix4Like();
+				const text = createMatrix4Like();
+				identity(cam);
+				translate(cam, [0, 0, 5], cam);
+				invert(cam, view);
 
 				return (now) => {
 					gl.resize();
@@ -463,26 +458,21 @@ export default function GlyphTextures(props: UglCanvasProps): JSX.Element {
 					// Update matrices.
 					const w = canvas.width;
 					const h = canvas.height;
-					perspective(Math.PI / 4, w / (h || 1), 1, 10, projMat);
-					multiply(projMat, viewMat, viewProjMat);
-					identity(quadMat);
-					multiply(viewProjMat, quadMat, quadMat);
-					identity(textMat);
-					rotateY(textMat, now * 0.001, textMat);
-					translate(textMat, [0, 0, 3], textMat);
-					rotateY(textMat, now * -0.001, textMat);
-					scale(textMat, [1 / 40, 1 / 40, 0], textMat);
-					translate(textMat, [-textQuad.width / 2, 0, 1], textMat);
-					multiply(viewProjMat, textMat, textMat);
+					perspective(Math.PI / 4, w / (h || 1), 1, 10, proj);
+					multiply(proj, view, viewProj);
+					identity(quad);
+					multiply(viewProj, quad, quad);
+					identity(text);
+					rotateY(text, now * 0.001, text);
+					translate(text, [0, 0, 3], text);
+					rotateY(text, now * -0.001, text);
+					scale(text, [1 / 40, 1 / 40, 0], text);
+					translate(text, [-textQuad.width / 2, 0, 1], text);
+					multiply(viewProj, text, text);
 
-					gl.fbo.draw(quadVao, {
-						// eslint-disable-next-line camelcase
-						u_texture: texture,
-						// eslint-disable-next-line camelcase
-						u_worldViewProjMat: quadMat
-					});
+					gl.fbo.draw(quadVao, { tex, worldViewProj: quad });
 
-					textQuad.render(textMat);
+					textQuad.render(text);
 				};
 			}}
 			{...props}
