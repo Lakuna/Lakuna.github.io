@@ -124,24 +124,25 @@ class TextQuad {
 	) {
 		this.texture = texture;
 		this.glyphs = glyphs;
+		this.context = this.texture.context;
 		this.widthCache = 0;
 		this.heightCache = 0;
 		this.textCache = "";
 		this.lettersToRender = this.textCache.length;
-		this.program = Program.fromSource(texture.context, vss, fss);
+		this.program = Program.fromSource(this.context, vss, fss);
 		this.posBuffer = new VertexBuffer(
-			texture.context,
+			this.context,
 			new Float32Array(),
 			BufferUsage.DYNAMIC_DRAW
 		);
 		this.texcoordBuffer = new VertexBuffer(
-			texture.context,
+			this.context,
 			new Float32Array(),
 			BufferUsage.DYNAMIC_DRAW
 		);
 		this.ebo = new ElementBuffer(
-			texture.context,
-			new Uint8Array(),
+			this.context,
+			new Uint32Array(),
 			BufferUsage.DYNAMIC_READ
 		);
 		this.vao = new VertexArray(
@@ -153,6 +154,12 @@ class TextQuad {
 			this.ebo
 		);
 	}
+
+	/**
+	 * The rendering context of the text quad.
+	 * @internal
+	 */
+	private readonly context;
 
 	/**
 	 * The glyph texture (texture atlas) to use with the text quad.
@@ -385,7 +392,7 @@ class TextQuad {
 	 * @param worldViewProj - The world view projection matrix to render with.
 	 */
 	public render(worldViewProj: Matrix4Like & Float32Array) {
-		this.vao.context.fbo.draw(
+		this.context.fbo.draw(
 			this.vao,
 			{ tex: this.texture, worldViewProj },
 			void 0,
