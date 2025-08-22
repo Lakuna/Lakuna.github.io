@@ -78,6 +78,14 @@ export default function Page(): JSX.Element {
 						}
 					</p>
 				</Card>
+				<Card href="/a/webgl/gpgpu">
+					<h2>{"General-Purpose GPU"}</h2>
+					<p>
+						{
+							"An introduction to general-purpose GPU usage and transform feedback in OpenGL."
+						}
+					</p>
+				</Card>
 				<Card href="/a/webgl/text">
 					<h2>{"OpenGL Text"}</h2>
 					<GlyphTextures />

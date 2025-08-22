@@ -1,6 +1,6 @@
 ---
 title: "GPGPU"
-description: "An introduction to general-purpose GPU usage and transform feedback in WebGL."
+description: "An introduction to general-purpose GPU usage and transform feedback in OpenGL."
 openGraph:
   url: "/a/webgl/gpgpu"
 ---
@@ -30,15 +30,57 @@ Similar to how the unpack alignment needs to be set to properly load image data 
 gl.pixelStorei(gl.PACK_ALIGNMENT, 1);
 ```
 
-Note that since we don't actually care how the result looks, we can use an [`OffscreenCanvas`](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas) for this type of task.
+Note that if you don't actually care how the result looks, you can use an [`OffscreenCanvas`](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas) for this type of task. Alternatively, you can enable rasterizer discarding, which causes fragments to be discarded right before the rasterization step.
+
+```js
+gl.enable(gl.RASTERIZER_DISCARD);
+```
 
 ## GPGPU With Buffers
 
 In cases where you need one-dimensional output, it can be more intuitive to use transform feedback. _Transform feedback_ is the process of copying varying values into buffers.
 
-This article is a work-in-progress. In the meantime, consider reading these other articles about the same topic:
+To read the values of varyings, those varyings need to be marked as transform feedback varyings with [`transformFeedbackVaryings`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/transformFeedbackVaryings) prior to linking the shader program on which transform feedback will be performed.
 
-- [GPGPU](https://webgl2fundamentals.org/webgl/lessons/webgl-gpgpu.html).
+```js
+const program = gl.createProgram();
+gl.attachShader(program, vs);
+gl.attachShader(program, fs);
+gl.transformFeedbackVaryings(program, ["v_out"], gl.SEPARATE_ATTRIBS);
+gl.linkProgram(program);
+```
+
+Transform feedback can use one of two modes. In separate attributes mode, each varying will have its values written to a separate buffer. In interleaved attributes mode, all of the values will be written to the same buffer, interleaved in the order that the varying names were passed to `transformFeedbackVaryings`.
+
+Using a transform feedback object for output is an analogue of using a vertex array object for input. A transform feedback object can be created with [`createTransformFeedback`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/createTransformFeedback) and bound with [`bindTransformFeedback`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/bindTransformFeedback). Output buffers can be bound to varyings with [`bindBufferBase`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/bindBufferBase) or [`bindBufferRange`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/bindBufferRange), which takes as its second argument the index of the corresponding varying in the array of varying names passed to `transformFeedbackVaryings`.
+
+```js
+const tf = gl.createTransformFeedback();
+gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, tf);
+gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, outBuffer);
+```
+
+To actually perform the transform feedback, activate the transform feedback object with [`beginTransformFeedback`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/beginTransformFeedback) after using its shader program and before calling a rendering function and deactivate it with [`endTransformFeedback`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/endTransformFeedback) after calling the rendering function.
+
+```js
+gl.useProgram(program);
+gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, tf);
+gl.beginTransformFeedback(gl.POINTS);
+
+gl.bindVertexArray(vao);
+gl.drawElements(gl.POINTS, count, type, offset);
+
+gl.endTransformFeedback();
+```
+
+**Buffers that will be used to store transform feedback output can't be bound to any other binding point.** Specifically, buffers that are bound to a transform feedback object can't also be bound to another binding point when any rendering function or function that uses that binding point is called while that transform feedback object is bound. To read the data from the buffers, use [`getBufferSubData`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/getBufferSubData), ensuring that you first unbind the transform feedback object.
+
+```js
+const out = new Uint8Array(size);
+gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, null); // Unbind the TFO.
+gl.bindBuffer(gl.TRANSFORM_FEEDBACK_BUFFER, outBuffer);
+gl.getBufferSubData(gl.TRANSFORM_FEEDBACK_BUFFER, offset, out);
+```
 
 ---
 
