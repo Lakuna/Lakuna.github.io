@@ -62,8 +62,7 @@ export default config(
 			parser,
 			parserOptions: {
 				ecmaVersion: "latest",
-				project: true,
-				tsconfigRootDir: "."
+				project: true
 			}
 		},
 		plugins: {

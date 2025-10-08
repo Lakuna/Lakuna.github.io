@@ -3,7 +3,7 @@
 import { type JSX, useEffect, useState } from "react";
 import TwitchStream, { type TwitchStreamProps } from "./TwitchStream";
 import type StreamData from "types/ttv/StreamData";
-import getStreams from "ttv/getStreams";
+import getStreams from "util/ttv/getStreams";
 
 /**
  * Properties that can be passed to a potential Twitch stream embed.
