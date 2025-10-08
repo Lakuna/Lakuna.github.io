@@ -316,11 +316,11 @@ export default function Page(): JSX.Element {
 			<h2>{"Work Experience"}</h2>
 			<CardList>
 				<Card href="https://www.nitelusa.com/">
-					<h3>{"Nitel"}</h3>
+					<h3>{"Nitel (Comcast)"}</h3>
 					<Image src={nitel} alt="Nitel logo." />
 					<p>
 						{
-							"I work as a software engineer at Nitel, focusing primarily on developing integrations. This includes both internal-facing projects such as active directory synchronization and external-facing projects such as revamping the proactive alerts system to notify over 6,600 clients about network outages in real time."
+							"I work as a software engineer at Nitel (now acquired by Comcast Business), focusing primarily on developing integrations. This includes both internal-facing projects such as active directory synchronization and external-facing projects such as revamping the proactive alerts system to notify over 6,600 clients about network outages in real time."
 						}
 					</p>
 					<p>
