@@ -1,5 +1,6 @@
-import { config, configs, parser, plugin } from "typescript-eslint";
+import { configs, parser, plugin } from "typescript-eslint";
 import { FlatCompat } from "@eslint/eslintrc";
+import { defineConfig } from "eslint/config";
 import { dirname } from "node:path";
 import eslint from "@eslint/js";
 import { fileURLToPath } from "node:url";
@@ -7,9 +8,10 @@ import prettier from "eslint-plugin-prettier/recommended";
 
 /**
  * ESLint configuration options.
+ * @type {import("@eslint/core").ConfigObject[]}
  * @internal
  */
-export default config(
+const out = defineConfig(
 	// Next.js ESLint rules.
 	...new FlatCompat({
 		baseDirectory: dirname(fileURLToPath(import.meta.url))
@@ -76,3 +78,5 @@ export default config(
 	// Enable the Prettier plugin.
 	prettier // Includes `eslint-config-prettier` and `eslint-plugin-prettier`.
 );
+
+export default out;
