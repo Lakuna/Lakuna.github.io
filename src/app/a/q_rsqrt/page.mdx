@@ -5,7 +5,10 @@ openGraph:
   url: "/a/q_rsqrt"
 ---
 
+{/* @ts-expect-error Global stylesheets don't have types. */}
 import "styles/highlight.scss";
+
+{/* @ts-expect-error Global stylesheets don't have types. */}
 import "styles/katex.scss";
 
 # Fast Inverse Square Root
