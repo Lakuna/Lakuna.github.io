@@ -33,17 +33,8 @@ export const metadata = {
 	authors: [{ name: "Travis Martin", url: new URL(domain) }],
 	creator: "Travis Martin",
 	metadataBase: new URL(domain),
-	openGraph: {
-		siteName: "Lakuna",
-		type: "website"
-	},
+	openGraph: { siteName: "Lakuna", type: "website" },
 	publisher: "Travis Martin",
-	title: {
-		default: "Page",
-		template: "%s | Lakuna"
-	},
-	twitter: {
-		creatorId: "1117270419298496513",
-		siteId: "1117270419298496513"
-	}
+	title: { default: "Page", template: "%s | Lakuna" },
+	twitter: { creatorId: "1117270419298496513", siteId: "1117270419298496513" }
 } satisfies Metadata;

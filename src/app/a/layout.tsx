@@ -8,8 +8,5 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
 }
 
 export const metadata = {
-	title: {
-		default: "Article",
-		template: "%s | Blog | Lakuna"
-	}
+	title: { default: "Article", template: "%s | Blog | Lakuna" }
 } satisfies Metadata;

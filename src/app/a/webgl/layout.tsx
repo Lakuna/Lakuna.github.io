@@ -9,8 +9,5 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
 }
 
 export const metadata = {
-	title: {
-		default: "Article",
-		template: "%s | WebGL Tutorial | Lakuna"
-	}
+	title: { default: "Article", template: "%s | WebGL Tutorial | Lakuna" }
 } satisfies Metadata;

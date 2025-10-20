@@ -58,7 +58,10 @@ Every other number can be created by adding ones.
 
 ```js
 // Only non-negative numbers are needed.
-const _number = (n) => (n == 0 ? _0 : n == 1 ? _1 : `${_1}${_number(n - 1)}`);
+const _number = (n) =>
+	n == 0 ? _0
+	: n == 1 ? _1
+	: `${_1}${_number(n - 1)}`;
 ```
 
 Note that the original video created the above function by combining ones with `" + "`. This includes spaces, which are not part of the allowed thirteen characters. The spaces cannot be removed because then the leading pluses in the one strings would combine with the combining pluses to make increment operators (`++`). This issue can be resolved in various ways.

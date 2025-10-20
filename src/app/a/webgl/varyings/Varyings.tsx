@@ -89,10 +89,7 @@ export default function Indices(props: UglCanvasProps): JSX.Element {
 
 				const rectVao = new VertexArray(
 					program,
-					{
-						color: colorBuffer,
-						position: { size: 2, vbo: positionBuffer }
-					},
+					{ color: colorBuffer, position: { size: 2, vbo: positionBuffer } },
 					indexBuffer
 				);
 

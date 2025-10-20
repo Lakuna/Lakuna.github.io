@@ -22,9 +22,7 @@ export default async function getToken(
 		new URL("/oauth2/token", "https://id.twitch.tv/").href,
 		{
 			body: `client_id=${id}&client_secret=${secret}&grant_type=client_credentials`,
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded"
-			},
+			headers: { "Content-Type": "application/x-www-form-urlencoded" },
 			method: "POST"
 		}
 	);

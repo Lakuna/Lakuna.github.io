@@ -18,13 +18,11 @@ export type CardProps =
  * @public
  */
 export default function Card({ children, className, ...props }: CardProps) {
-	return "href" in props ? (
-		<Link className={multiclass(className, style["card"])} {...props}>
-			<div>{children}</div>
-		</Link>
-	) : (
-		<div className={multiclass(className, style["card"])} {...props}>
-			<div>{children}</div>
-		</div>
-	);
+	return "href" in props ?
+			<Link className={multiclass(className, style["card"])} {...props}>
+				<div>{children}</div>
+			</Link>
+		:	<div className={multiclass(className, style["card"])} {...props}>
+				<div>{children}</div>
+			</div>;
 }

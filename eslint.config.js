@@ -62,17 +62,10 @@ const out = defineConfig(
 	{
 		languageOptions: {
 			parser,
-			parserOptions: {
-				ecmaVersion: "latest",
-				project: true
-			}
+			parserOptions: { ecmaVersion: "latest", project: true }
 		},
-		plugins: {
-			"@typescript-eslint": plugin
-		},
-		rules: {
-			"@typescript-eslint/no-shadow": "error"
-		}
+		plugins: { "@typescript-eslint": plugin },
+		rules: { "@typescript-eslint/no-shadow": "error" }
 	},
 
 	// Enable the Prettier plugin.
