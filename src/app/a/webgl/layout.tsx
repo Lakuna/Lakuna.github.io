@@ -1,6 +1,4 @@
-// @ts-expect-error Global stylesheets don't have types.
 import "styles/highlight.scss";
-// @ts-expect-error Global stylesheets don't have types.
 import "styles/katex.scss";
 import type { JSX } from "react";
 import type LayoutProps from "types/LayoutProps";

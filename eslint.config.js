@@ -1,9 +1,8 @@
 import { configs, parser, plugin } from "typescript-eslint";
-import { FlatCompat } from "@eslint/eslintrc";
 import { defineConfig } from "eslint/config";
-import { dirname } from "node:path";
 import eslint from "@eslint/js";
-import { fileURLToPath } from "node:url";
+// @ts-expect-error Next.js core web vitals are untyped.
+import nextVitals from "eslint-config-next/core-web-vitals";
 import prettier from "eslint-plugin-prettier/recommended";
 
 /**
@@ -13,9 +12,8 @@ import prettier from "eslint-plugin-prettier/recommended";
  */
 const out = defineConfig(
 	// Next.js ESLint rules.
-	...new FlatCompat({
-		baseDirectory: dirname(fileURLToPath(import.meta.url))
-	}).extends("next/core-web-vitals", "next/typescript"),
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+	...nextVitals,
 
 	// Enable all ESLint rules.
 	eslint.configs.all,

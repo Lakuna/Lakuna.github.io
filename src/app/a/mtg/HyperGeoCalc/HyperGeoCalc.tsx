@@ -5,7 +5,6 @@ import {
 	type Dispatch,
 	type JSX,
 	type SetStateAction,
-	useEffect,
 	useState
 } from "react";
 import { hypergeometricPmf, summation } from "@lakuna/umath";
@@ -29,19 +28,9 @@ export default function HyperGeoCalc({
 	const [n, setn] = useState(7);
 	const [k, setk] = useState(1);
 
-	const [e, sete] = useState(0);
-	const [lt, setlt] = useState(0);
-	const [gt, setgt] = useState(0);
-
-	useEffect(() => {
-		const eOut = hypergeometricPmf(N, K, n, k);
-		const ltOut = summation(0, k - 1, (k2) => hypergeometricPmf(N, K, n, k2));
-		const gtOut = summation(k + 1, K, (k2) => hypergeometricPmf(N, K, n, k2));
-
-		sete(eOut);
-		setlt(ltOut);
-		setgt(gtOut);
-	}, [N, K, n, k]);
+	const e = hypergeometricPmf(N, K, n, k);
+	const lt = summation(0, k - 1, (k2) => hypergeometricPmf(N, K, n, k2));
+	const gt = summation(k + 1, K, (k2) => hypergeometricPmf(N, K, n, k2));
 
 	return (
 		<form className={multiclass(style["hyper-geo-calc"], className)} {...props}>

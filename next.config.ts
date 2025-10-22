@@ -16,6 +16,7 @@ import remarkMdxFrontmatter from "remark-mdx-frontmatter";
  * @internal
  */
 export default createMDX({
+	// These options can't be serializable, so must use Webpack over Turbopack for now.
 	options: {
 		rehypePlugins: [
 			rehypeKatex,

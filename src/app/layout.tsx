@@ -1,4 +1,3 @@
-// @ts-expect-error Global stylesheets don't have types.
 import "styles/global.scss";
 import type { Metadata, Viewport } from "next";
 import { monospace, sansSerif, serif } from "util/font";

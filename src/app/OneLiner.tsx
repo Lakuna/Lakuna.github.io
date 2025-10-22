@@ -115,6 +115,8 @@ export default function OneLiner({
 
 	useEffect(() => {
 		// Minimum value of `1` so that the "Loading..." text doesn't get chosen.
+		// Setting the state in an effect is necessary here due to `Math.random` being called.
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setI(Math.floor(Math.random() * (oneLiners.length - 1) + 1));
 	}, []);
 
