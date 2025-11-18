@@ -11,7 +11,6 @@ import prettier from "eslint-plugin-prettier/recommended";
  */
 const out = defineConfig(
 	// Next.js ESLint rules.
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 	...nextVitals,
 
 	// Enable all ESLint rules.
