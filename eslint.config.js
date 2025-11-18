@@ -1,7 +1,6 @@
 import { configs, parser, plugin } from "typescript-eslint";
 import { defineConfig } from "eslint/config";
 import eslint from "@eslint/js";
-// @ts-expect-error Next.js core web vitals are untyped.
 import nextVitals from "eslint-config-next/core-web-vitals";
 import prettier from "eslint-plugin-prettier/recommended";
 
