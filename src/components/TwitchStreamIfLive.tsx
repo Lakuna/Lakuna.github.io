@@ -10,8 +10,10 @@ import getStreams from "util/ttv/getStreams";
  * @see {@link https://dev.twitch.tv/docs/embed/video-and-clips/ | Embedding Video and Clips}
  * @public
  */
-export interface TwitchStreamIfLiveProps
-	extends Omit<TwitchStreamProps, "channel"> {
+export interface TwitchStreamIfLiveProps extends Omit<
+	TwitchStreamProps,
+	"channel"
+> {
 	/** The ID of the user to get the stream of. */
 	userId: string;
 
