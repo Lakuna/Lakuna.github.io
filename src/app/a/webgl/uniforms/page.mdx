@@ -43,6 +43,12 @@ A uniform's value can be updated by calling the function that corresponds to the
 gl.uniform4fv(location, [1, 0, 0, 1]);
 ```
 
+In μGL, uniform values are set by passing a map of uniform names to values to the `draw` call.
+
+```js
+gl.fbo.draw(vao, { u_color: [1, 0, 0, 1] });
+```
+
 <Uniforms style={{ width: "100%" }} />
 
 ---

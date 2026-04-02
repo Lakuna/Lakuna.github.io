@@ -30,7 +30,14 @@ const gl = canvas.getContext("webgl2");
 
 Documentation for the WebGL API can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API).
 
-It can be helpful to use a library such as [μGL](https://ugl.lakuna.pw/) to make working with the WebGL API less tedious.
+# μGL
+
+It can be helpful to use a library such as [μGL](https://ugl.lakuna.pw/) to make working with the WebGL API less tedious. Throughout this tutorial series, there will be examples that demonstrate how to do something with μGL after it is demonstrated with vanilla WebGL. The entrypoint to μGL is a [`Context`](https://ugl.lakuna.pw/classes/Context.html), which is similar in function to a `WebGL2RenderingContext`.
+
+```js
+const canvas = document.querySelector("canvas");
+const gl = Context.get(canvas);
+```
 
 ---
 

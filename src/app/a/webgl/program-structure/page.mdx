@@ -53,6 +53,12 @@ canvas.height = canvas.clientHeight;
 gl.viewport(0, 0, canvas.width, canvas.height);
 ```
 
+In μGL, resizing the viewport is done with the [`viewport`](https://ugl.lakuna.pw/classes/Context.html#viewport) accessor.
+
+```js
+gl.viewport = [0, 0, canvas.width, canvas.height];
+```
+
 ### Clearing Color Buffers
 
 Before rendering a new frame, the draw buffer should be cleared of the fragments from the previous frame. A value can be set for fragments in the draw buffer to be cleared to with [`clearColor`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clearColor). WebGL can be told which buffers to clear with [`clear`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clear).
@@ -60,6 +66,12 @@ Before rendering a new frame, the draw buffer should be cleared of the fragments
 ```js
 gl.clearColor(0, 0, 0, 0);
 gl.clear(gl.COLOR_BUFFER_BIT);
+```
+
+μGL is more explicit about the fact that this modifies the contents of the framebuffer, so clearing color buffers is done with the [`clear`](https://ugl.lakuna.pw/classes/Framebuffer.html#clear) method on the [`Framebuffer`](https://ugl.lakuna.pw/classes/Framebuffer.html). The default framebuffer object can be accessed via the [`fbo`](https://ugl.lakuna.pw/classes/Context.html#fbo) property. The clear color can be set via the [`clearColor`](https://ugl.lakuna.pw/classes/Context.html#clearcolor) accessor or by passing a color to `clear`.
+
+```js
+gl.fbo.clear([0, 0, 0, 0]);
 ```
 
 ## Cheat Sheet

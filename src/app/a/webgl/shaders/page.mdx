@@ -83,6 +83,16 @@ if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
 }
 ```
 
+In μGL, shaders are represented by [`Shader`](https://ugl.lakuna.pw/classes/Shader.html) objects.
+
+```js
+const vertexShader = new Shader(
+	gl,
+	ShaderType.VERTEX_SHADER,
+	vertexShaderSource
+);
+```
+
 The process for creating a shader program with the WebGL API is very similar to the process for creating a shader. First, a [`WebGLProgram`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLProgram) must be created with [`createProgram`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createProgram). Then, it must be assigned a vertex shader and a fragment shader with [`attachShader`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/attachShader) and linked together with [`linkProgram`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/linkProgram). Optionally, the shader program's link status can be checked with [`getProgramParameter`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getProgramParameter) and logged with [`getProgramInfoLog`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getProgramInfoLog).
 
 ```js
@@ -100,6 +110,24 @@ It is good practice to delete WebGL objects as soon as you are done with them, s
 ```js
 gl.deleteShader(vertexShader);
 gl.deleteShader(fragmentShader);
+```
+
+In μGL, shader programs are represented by [`Program`](https://ugl.lakuna.pw/classes/Program.html) objects. A `Program` can be created by passing in `Shader`s.
+
+```js
+const program = new Program(gl, [vertexShader, fragmentShader]);
+vertexShader.delete();
+fragmentShader.delete();
+```
+
+If you don't plan on reusing the shaders for anything else, it can be more convenient to instead use the `Program.fromSource` static method, which automatically handles creating and deleting the shaders for you.
+
+```js
+const program = Program.fromSource(
+	gl,
+	vertexShaderSource,
+	fragmentShaderSource
+);
 ```
 
 ---

@@ -40,6 +40,8 @@ Alternatively, the attribute's location can be set ahead of time with either [`b
 layout(location = 2) in vec4 a_position;
 ```
 
+If you need to set an attribute's location explicitly in μGL, you can pass a map of attribute names to locations to the [`Program`](https://ugl.lakuna.pw/classes/Program.html) constructor or you can use a layout qualifier.
+
 ## Vertex Buffer Objects
 
 In order to manipulate a buffer with the WebGL API, it first needs to be pointed at with a type of pointer called a _binding point_. Each binding point has a specific purpose. For example, the `ARRAY_BUFFER` binding point is used to specify a buffer that contains vertex attributes. A buffer that is bound to the `ARRAY_BUFFER` binding point is called a _vertex buffer object_ (VBO).
@@ -56,6 +58,12 @@ gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
 Notice that `buffer` is not passed to `bufferData`. This is because it is first bound to `ARRAY_BUFFER`, which is then passed in its stead.
 
 [`Float32Array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) is a type of [`TypedArray`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray) that contains 32-bit floating-point values. Although JavaScript is aware of the type of data in the `Float32Array`, this context is lost when the data is stored as raw binary data in the buffer.
+
+One of the primary features of μGL is that it completely abstracts away binding points from the developer. Binding points are managed so as to minimize the number of calls to the WebGL API, and wrapper objects can be used in any place where a binding point would be used in vanilla WebGL. The object that represents vertex buffers is [`VertexBuffer`](https://ugl.lakuna.pw/classes/VertexBuffer.html), and the constructor can be passed the data that should go in the buffer directly. The data can be modified at a later point via the [`data`](https://ugl.lakuna.pw/classes/VertexBuffer.html#data) accessor.
+
+```js
+const buffer = new VertexBuffer(gl, data);
+```
 
 ## Vertex Array Objects
 
@@ -87,6 +95,18 @@ The `type` is set to `FLOAT` because the data in the buffer came from a `Float32
 
 The `stride` being set to `0` tells WebGL that the data is _tightly-packed_, meaning that the number of bytes from the start of one element to the next is the same as the byte size of the element. The `offset` and `stride` values can be used in conjunction with each other to retrieve different types of vertex data from one buffer.
 
+μGL represents VAOs with [`VertexArray`](https://ugl.lakuna.pw/classes/VertexArray.html)s. μGL abstracts away variable locations, so attribute names can be used to refer to attributes in the constructor or at a later time by using [`setAttribute`](https://ugl.lakuna.pw/classes/VertexArray.html#setattribute).
+
+```js
+const vao = new VertexArray(program, { a_position: { size: 2, vbo: buffer } });
+```
+
+μGL assumes that data is non-normalized, tightly-packed, and 3-dimensional by default. If all of these things are true for your use case, you can pass the buffer to the attribute directly.
+
+```js
+const vao = new VertexArray(program, { a_position: buffer });
+```
+
 ## Rendering
 
 The data stored in a VAO can be rendered by using the correct shader program with [`useProgram`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/useProgram), binding the correct VAO, then executing one of a few rendering functions, such as [`drawArrays`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawArrays).
@@ -95,6 +115,12 @@ The data stored in a VAO can be rendered by using the correct shader program wit
 gl.useProgram(program);
 gl.bindVertexArray(vao);
 gl.drawArrays(gl.TRIANGLES, 0, 3);
+```
+
+Like when clearing the screen, μGL is explicit about which framebuffer is being modified by draw calls, so drawing is done with the framebuffer's [`draw`](https://ugl.lakuna.pw/classes/Framebuffer.html#draw) method. μGL automatically handles using the correct shader program and binding the correct VAO, and it draws all of the data in the VAO as triangles by default (although this can be overridden with arguments).
+
+```js
+gl.fbo.draw(vao);
 ```
 
 <Attributes style={{ width: "100%" }} />
@@ -135,9 +161,15 @@ When a VAO has an EBO, the [`drawElements`](https://developer.mozilla.org/en-US/
 gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_BYTE, 0);
 ```
 
-<Indices style={{ width: "100%" }} />
-
 Notice that the type of data stored in the element array buffer is never passed to the VAO, so it must be passed to `drawElements` instead.
+
+In μGL, element buffers are represented by [`ElementBuffer`](https://ugl.lakuna.pw/classes/ElementBuffer.html)s. A VAO's EBO can be set by passing it to the VAO's constructor or by using the [`ebo`](https://ugl.lakuna.pw/classes/VertexArray.html#ebo) accessor. When a `VertexArray` has an EBO, μGL automatically utilizes indexed drawing without requiring the user to modify their `draw` call.
+
+```js
+vao.ebo = new ElementBuffer(gl, indices);
+```
+
+<Indices style={{ width: "100%" }} />
 
 ---
 

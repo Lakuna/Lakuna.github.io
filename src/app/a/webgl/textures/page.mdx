@@ -65,12 +65,27 @@ image.crossOrigin = "";
 image.src = "https://www.lakuna.pw/images/webgl-example-texture.png";
 ```
 
+2D textures in μGL are represented by [`Texture2d`](https://ugl.lakuna.pw/classes/Texture2d.html)s. To load an image into a texture, you can use [`fromImageUrl`](https://ugl.lakuna.pw/classes/Texture2d.html#fromimageurl) (which mirrors the behavior above) or [`fromImageUrlPromise`](https://ugl.lakuna.pw/classes/Texture2d.html#fromimageurlpromise), which returns a promise that resolves when the image is loaded.
+
+```js
+const texture = Texture2d.fromImageUrl(
+	gl,
+	"https://www.lakuna.pw/images/webgl-example-texture.png"
+);
+```
+
 To pass a texture to a sampler uniform, it must be bound to a _texture unit_ that represents it. The active texture unit can be specified with [`activeTexture`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/activeTexture), after which point binding a texture to a binding point assigns it to that texture unit. The texture unit is passed to the shader program instead of the texture.
 
 ```js
 gl.activeTexture(gl.TEXTURE0);
 gl.bindTexture(gl.TEXTURE_2D, texture);
 gl.uniform1i(imageUniformLocation, 0);
+```
+
+μGL abstracts away both binding points and texture units, so texture values can be passed directly to uniform names in the `draw` call.
+
+```js
+gl.fbo.draw(vao, { u_texture: texture });
 ```
 
 <Textures style={{ width: "100%" }} />
@@ -100,11 +115,15 @@ A _mipmap_ is a collection of _mips_, which are smaller versions of a texture th
 
 Since the magnification filter is only used when rendering larger than the largest mip, it can only be `NEAREST` or `LINEAR`.
 
+μGL [`Texture`](https://ugl.lakuna.pw/classes/Texture.html)s have accessors that correspond to each parameter.
+
 In order for a texture to be sampled, it must be _texture complete_, meaning that only the largest mip is sampled from (the minification filter is either `NEAREST` or `LINEAR`) or the texture has a complete mipmap. The easiest way to generate a complete mipmap is with [`generateMipmap`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/generateMipmap).
 
 ```js
 gl.generateMipmap(gl.TEXTURE_2D);
 ```
+
+If you attempt to sample a μGL texture that isn't texture complete, a mipmap will automatically be generated for that texture first. You can also manually generate a mipmap with the [`generateMipmap`](https://ugl.lakuna.pw/classes/Texture.html#generatemipmap) method.
 
 ## Texture Atlases
 
@@ -117,17 +136,15 @@ A _texture atlas_ is a texture that contains multiple images. Using a texture at
 Rather than loading texture data from an image, texture data can also be supplied from an array or buffer. The way that the data is interpreted depends on the internal format of the texture. For example, setting the internal format to `R8` causes the texture to expect one unsigned byte per texel, which it normalizes to color space. Each internal format has a corresponding format and data type that must also be specified. For example, with an internal format of `R8`, the format must be set to `RED` and the data type must be set to `UNSIGNED_BYTE`.
 
 ```js
-gl.texImage2D(
-	gl.TEXTURE_2D,
-	0,
-	gl.R8,
-	3,
-	2,
-	0,
-	gl.RED,
-	gl.UNSIGNED_BYTE,
-	new Uint8Array([0x80, 0x40, 0x80, 0x00, 0xc0, 0x00])
-);
+const data = new Uint8Array([0x80, 0x40, 0x80, 0x00, 0xc0, 0x00]);
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, 3, 2, 0, gl.RED, gl.UNSIGNED_BYTE, data);
+```
+
+μGL textures can have their format set via the [`format`](https://ugl.lakuna.pw/classes/Texture.html#format) accessor and the internal format and data type will be automatically determined. Then, data can be passed to the texture with the [`setMip`](https://ugl.lakuna.pw/classes/Texture.html#setmip) method.
+
+```js
+texture.format = TextureFormat.R8;
+texture.setMip(data, 0, void 0, [0, 0, 3, 2]);
 ```
 
 Textures will be malformed if their row alignment is not a multiple of the _unpack alignment_, which specifies the expected alignment of the rows in the supplied texture data. The unpack alignment defaults to four in order to maintain backwards compatibility, but it can be set to one, two, four, or eight.
@@ -137,6 +154,8 @@ For example, the texture above has a width of three pixels per row and uses one 
 ```js
 gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
 ```
+
+μGL automatically adjusts the unpack alignment as needed, but it can be overridden via a parameter on `setMip`.
 
 <DataTextures style={{ width: "100%" }} />
 

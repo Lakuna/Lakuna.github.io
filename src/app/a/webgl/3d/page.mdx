@@ -32,6 +32,13 @@ gl.enable(gl.CULL_FACE);
 gl.cullFace(gl.BACK);
 ```
 
+μGL has equivalent accessors [`doCullFace`](https://ugl.lakuna.pw/classes/Context.html#docullface) and [`cullFace`](https://ugl.lakuna.pw/classes/Context.html#cullface), respectively.
+
+```js
+gl.doCullFace = true;
+gl.cullFace = Face.BACK;
+```
+
 Enabling polygon culling will make any triangles that are defined in the wrong orientation invisible. The orientation of a triangle can be reversed by swapping the order of the last two vertices.
 
 <PolygonCulling style={{ width: "100%" }} />
@@ -46,6 +53,12 @@ Depth testing can be enabled with `enable`.
 gl.enable(gl.DEPTH_TEST);
 ```
 
+In μGL, depth testing can be enabled with the [`doDepthTest`](https://ugl.lakuna.pw/classes/Context.html#dodepthtest) accessor.
+
+```js
+gl.doDepthTest = true;
+```
+
 Like the color buffer, the depth buffer should be cleared at the beginning of every frame. A value can be set for fragments to be cleared to with [`clearDepth`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/clearDepth).
 
 ```js
@@ -57,6 +70,12 @@ The color and depth buffers can be cleared at the same time with a bitwise or op
 
 ```js
 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+```
+
+In μGL, the depth buffer is typically cleared by passing an extra value to [`clear`](https://ugl.lakuna.pw/classes/Framebuffer.html#clear) representing the value to clear to. It can also be set via the [`clearDepth`](https://ugl.lakuna.pw/classes/Context.html#cleardepth) accessor.
+
+```js
+gl.clear(true, 1); // `true` means "use previous value."
 ```
 
 <DepthTesting style={{ width: "100%" }} />

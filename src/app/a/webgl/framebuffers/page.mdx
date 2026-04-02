@@ -28,6 +28,17 @@ gl.bindRenderbuffer(gl.RENDERBUFFER, renderbuffer);
 gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT24, 0x100, 0x100);
 ```
 
+μGL renderbuffers are represented by the [`Renderbuffer`](https://ugl.lakuna.pw/classes/Renderbuffer.html) class.
+
+```js
+const renderbuffer = new Renderbuffer(
+	gl,
+	RenderbufferFormat.DEPTH_COMPONENT24,
+	0x100,
+	0x100
+);
+```
+
 A [`WebGLFramebuffer`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLFramebuffer) can be created with [`createFramebuffer`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/createFramebuffer).
 
 ```js
@@ -55,6 +66,13 @@ gl.framebufferTexture2D(
 );
 ```
 
+μGL framebuffers are represented by the [`Framebuffer`](https://ugl.lakuna.pw/classes/Framebuffer.html) class. Attachments can be added with the [`attach`](https://ugl.lakuna.pw/classes/Framebuffer.html#attach) method.
+
+```js
+const framebuffer = new Framebuffer(gl);
+framebuffer.attach(0, texture);
+```
+
 ## Rendering to Textures
 
 Rather than writing to the default framebuffer and having that data rendered to the rendering context, it is possible to write to a custom framebuffer to store that data in textures or renderbuffers.
@@ -77,6 +95,8 @@ gl.texImage2D(
 	gl.UNSIGNED_BYTE,
 	null
 );
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
 const depth = gl.createRenderbuffer();
 gl.bindRenderbuffer(gl.RENDERBUFFER, depth);
@@ -99,7 +119,28 @@ gl.framebufferRenderbuffer(
 );
 ```
 
+```js
+const color = new Texture2d(gl);
+color.format = TextureFormat.RGBA;
+color.setMip(void 0, 0, void 0, [0, 0, 0x100, 0x100]);
+color.minFilter = TextureFilter.NEAREST;
+color.magFilter = TextureFilter.NEAREST;
+
+const depth = new Renderbuffer(
+	gl,
+	RenderbufferFormat.DEPTH_COMPONENT24,
+	0x100,
+	0x100
+);
+
+const framebuffer = new Framebuffer(gl);
+framebuffer.attach(0, color);
+framebuffer.attach(FramebufferAttachment.DEPTH, depth);
+```
+
 Framebuffers can have one depth attachment, one stencil attachment, and an implementation-defined number of color attachments. Color attachments can be set as draw buffers with [`drawBuffers`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/drawBuffers), which means that fragment colors will be written into them corresponding to their layout in the fragment shader, with each output variable corresponding to a different draw buffer. Similarly, one color attachment can be set as the _read buffer_ with [`readBuffer`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL2RenderingContext/readBuffer), which means that it will be used as the pixel source for subsequent read operations. By default, only the first color attachment is set as a draw buffer, and the first color attachment is also set as the read buffer.
+
+μGL has corresponding [`drawBuffers`](https://ugl.lakuna.pw/classes/Framebuffer.html#drawbuffers) and [`readBuffer`](https://ugl.lakuna.pw/classes/Framebuffer.html#readbuffer) accessors to handle this functionality.
 
 ---
 
