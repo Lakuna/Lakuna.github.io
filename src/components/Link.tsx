@@ -1,16 +1,17 @@
+import type { JSX } from "react/jsx-runtime";
+
+import domain from "#/util/domain.js";
 import {
 	default as NextLink,
 	type LinkProps as NextLinkProps
 } from "next/link";
-import type { JSX } from "react";
-import domain from "util/domain";
 
 /**
  * Equivalent to the props that can be passed to a Next.js link or an anchor element.
  * @public
  */
-export type LinkProps = Omit<NextLinkProps, keyof JSX.IntrinsicElements["a"]> &
-	JSX.IntrinsicElements["a"];
+export type LinkProps = JSX.IntrinsicElements["a"] &
+	Omit<NextLinkProps, keyof JSX.IntrinsicElements["a"]>;
 
 /**
  * Create a hyperlink. Uses Next.js-style preloading for internal links and HTML anchor elements for external links.
@@ -18,11 +19,12 @@ export type LinkProps = Omit<NextLinkProps, keyof JSX.IntrinsicElements["a"]> &
  * @returns The link.
  * @public
  */
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function Link({
 	href,
+	onClick,
 	onMouseEnter,
 	onTouchStart,
-	onClick,
 	...props
 }: LinkProps): JSX.Element {
 	// Ensure that required properties are present.

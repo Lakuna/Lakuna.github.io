@@ -1,5 +1,6 @@
-import type { JSX } from "react";
 import type { Metadata } from "next";
+import type { JSX } from "react/jsx-runtime";
+
 import style from "./page.module.scss";
 
 export default function NotFound(): JSX.Element {
@@ -11,7 +12,7 @@ export default function NotFound(): JSX.Element {
 	);
 }
 
-export const metadata = {
+export const metadata: Metadata = {
 	description: "Page not found.",
 	title: "404 Not Found"
-} satisfies Metadata;
+};

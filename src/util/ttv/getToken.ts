@@ -1,5 +1,15 @@
-import "util/env";
-import type Token from "types/ttv/Token";
+import "#/util/env.js";
+import type Token from "#/types/ttv/Token.js";
+
+import { number, object, string } from "zod";
+
+/* eslint-disable @typescript-eslint/naming-convention */
+const tokenSchema = object({
+	access_token: string(),
+	expires_in: number(),
+	token_type: string()
+});
+/* eslint-enable @typescript-eslint/naming-convention */
 
 /**
  * Get a Twitch app access token.
@@ -22,6 +32,7 @@ export default async function getToken(
 		new URL("/oauth2/token", "https://id.twitch.tv/").href,
 		{
 			body: `client_id=${id}&client_secret=${secret}&grant_type=client_credentials`,
+			// eslint-disable-next-line @typescript-eslint/naming-convention
 			headers: { "Content-Type": "application/x-www-form-urlencoded" },
 			method: "POST"
 		}
@@ -32,5 +43,10 @@ export default async function getToken(
 		);
 	}
 
-	return (await response.json()) as Token;
+	const out = tokenSchema.safeParse(await response.json());
+	if (!out.success) {
+		throw new Error("Invalid Twitch token.");
+	}
+
+	return out.data;
 }

@@ -1,5 +1,6 @@
-import type PageProps from "./PageProps";
 import type { ReactNode } from "react";
+
+import type PageProps from "./PageProps";
 
 /**
  * The properties that are passed to all layouts.

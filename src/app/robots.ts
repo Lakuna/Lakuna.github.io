@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import domain from "util/domain";
+
+import domain from "#/util/domain.js";
 
 /**
  * The website's robots file.

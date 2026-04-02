@@ -1,5 +1,10 @@
 "use client";
 
+import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
+import type { JSX } from "react/jsx-runtime";
+
+import domain from "#/util/domain.js";
+import ReactCanvas from "@lakuna/react-canvas";
 import {
 	Context,
 	ElementBuffer,
@@ -9,10 +14,6 @@ import {
 	VertexBuffer
 } from "@lakuna/ugl";
 import { createMatrix4Like, identity, scale } from "@lakuna/umath/Matrix4";
-import type { JSX } from "react";
-import ReactCanvas from "@lakuna/react-canvas";
-import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
-import domain from "util/domain";
 
 const vss = `\
 #version 300 es
@@ -52,9 +53,11 @@ const texcoordData = new Float32Array([0, 0, 0, 1, 1, 1, 1, 0]);
 
 const indexData = new Uint8Array([0, 1, 2, 0, 2, 3]);
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function Textures(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
+			// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 			init={(canvas) => {
 				const gl = Context.get(canvas);
 

@@ -1,5 +1,9 @@
 "use client";
 
+import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
+import type { JSX } from "react/jsx-runtime";
+
+import ReactCanvas from "@lakuna/react-canvas";
 import {
 	Context,
 	ElementBuffer,
@@ -27,9 +31,6 @@ import {
 	scale,
 	translate
 } from "@lakuna/umath/Matrix4";
-import type { JSX } from "react";
-import ReactCanvas from "@lakuna/react-canvas";
-import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 import { createVector3Like } from "@lakuna/umath/Vector3";
 
 const vss = `\
@@ -161,10 +162,12 @@ const frustumIndexData = new Uint8Array([
 ]);
 
 export default function PercentageCloserFiltering(
+	// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 	props: UglCanvasProps
 ): JSX.Element {
 	return (
 		<ReactCanvas
+			// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 			init={(canvas) => {
 				const gl = Context.get(canvas);
 
@@ -238,7 +241,7 @@ export default function PercentageCloserFiltering(
 				projTex.magFilter = TextureFilter.NEAREST;
 
 				const framebuffer = new Framebuffer(gl);
-				framebuffer.attach(FramebufferAttachment.Depth, projTex);
+				framebuffer.attach(FramebufferAttachment.DEPTH, projTex);
 
 				const plane = identity(createMatrix4Like());
 				rotateX(plane, (Math.PI * 3) / 2, plane);

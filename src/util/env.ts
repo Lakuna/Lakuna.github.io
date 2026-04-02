@@ -1,7 +1,13 @@
-import { loadEnvConfig } from "@next/env";
+import { type Env, type LoadedEnvFiles, loadEnvConfig } from "@next/env";
 
 /**
  * Environment details, as loaded from `.env*` files.
  * @public
  */
-export default loadEnvConfig(process.cwd());
+const out: {
+	combinedEnv: Env;
+	loadedEnvFiles: LoadedEnvFiles;
+	parsedEnv: Env | undefined;
+} = loadEnvConfig(process.cwd());
+
+export default out;

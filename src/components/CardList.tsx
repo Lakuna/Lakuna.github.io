@@ -1,5 +1,7 @@
-import type { JSX } from "react";
-import multiclass from "util/multiclass";
+import type { JSX } from "react/jsx-runtime";
+
+import multiclass from "#/util/multiclass.js";
+
 import style from "./styles/card-list.module.scss";
 
 export type CardListProps = JSX.IntrinsicElements["ul"];
@@ -10,7 +12,11 @@ export type CardListProps = JSX.IntrinsicElements["ul"];
  * @returns The card list.
  * @public
  */
-export default function CardList({ className, ...props }: CardListProps) {
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+export default function CardList({
+	className,
+	...props
+}: CardListProps): JSX.Element {
 	return (
 		<ul className={multiclass(className, style["card-list"])} {...props} />
 	);

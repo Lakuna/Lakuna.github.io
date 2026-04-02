@@ -1,7 +1,43 @@
 "use server";
 
-import type Streams from "types/ttv/Streams";
+import type Streams from "#/types/ttv/Streams.js";
+
+import {
+	array,
+	boolean,
+	enum as enum_,
+	number,
+	object,
+	optional,
+	string
+} from "zod";
+
 import ttvFetch from "./ttvFetch";
+
+/* eslint-disable @typescript-eslint/naming-convention */
+const streamsSchema = object({
+	data: array(
+		object({
+			game_id: string(),
+			game_name: string(),
+			id: string(),
+			is_mature: boolean(),
+			language: string(),
+			started_at: string(),
+			tag_ids: array(string()),
+			tags: array(string()),
+			thumbnail_url: string(),
+			title: string(),
+			type: enum_(["", "live"]),
+			user_id: string(),
+			user_login: string(),
+			user_name: string(),
+			viewer_count: number()
+		})
+	),
+	pagination: object({ cursor: optional(string()) })
+});
+/* eslint-enable @typescript-eslint/naming-convention */
 
 /**
  * Get a list of streams.
@@ -20,5 +56,12 @@ export default async function getStreams(
 	const url = new URL("/helix/streams", "https://api.twitch.tv/");
 	url.searchParams.set("user_id", userId);
 
-	return (await (await ttvFetch(url, void 0, id, secret)).json()) as Streams;
+	const out = streamsSchema.safeParse(
+		await (await ttvFetch(url, void 0, id, secret)).json()
+	);
+	if (!out.success) {
+		throw new Error("Invalid Twitch streams.");
+	}
+
+	return out.data;
 }

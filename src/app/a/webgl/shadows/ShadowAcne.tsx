@@ -1,5 +1,9 @@
 "use client";
 
+import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
+import type { JSX } from "react/jsx-runtime";
+
+import ReactCanvas from "@lakuna/react-canvas";
 import {
 	Context,
 	ElementBuffer,
@@ -27,9 +31,6 @@ import {
 	scale,
 	translate
 } from "@lakuna/umath/Matrix4";
-import type { JSX } from "react";
-import ReactCanvas from "@lakuna/react-canvas";
-import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 import { createVector3Like } from "@lakuna/umath/Vector3";
 
 const vss = `\
@@ -152,9 +153,11 @@ const frustumIndexData = new Uint8Array([
 	0, 1, 1, 3, 3, 2, 2, 0, 4, 5, 5, 7, 7, 6, 6, 4, 0, 4, 1, 5, 3, 7, 2, 6
 ]);
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function ShadowAcne(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
+			// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 			init={(canvas) => {
 				const gl = Context.get(canvas);
 
@@ -228,7 +231,7 @@ export default function ShadowAcne(props: UglCanvasProps): JSX.Element {
 				projTex.magFilter = TextureFilter.NEAREST;
 
 				const framebuffer = new Framebuffer(gl);
-				framebuffer.attach(FramebufferAttachment.Depth, projTex);
+				framebuffer.attach(FramebufferAttachment.DEPTH, projTex);
 
 				const plane = identity(createMatrix4Like());
 				rotateX(plane, (Math.PI * 3) / 2, plane);

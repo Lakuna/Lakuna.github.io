@@ -1,17 +1,20 @@
 import "styles/global.scss";
+import type LayoutProps from "#/types/LayoutProps.js";
 import type { Metadata, Viewport } from "next";
-import { monospace, sansSerif, serif } from "util/font";
-import type { JSX } from "react";
-import type LayoutProps from "types/LayoutProps";
-import Topnav from "./Topnav";
-import domain from "util/domain";
-import style from "./layout.module.scss";
+import type { JSX } from "react/jsx-runtime";
 
+import domain from "#/util/domain.js";
+import { monospace, sansSerif, serif } from "#/util/font.js";
+
+import style from "./layout.module.scss";
+import Topnav from "./Topnav";
+
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function Layout({ children }: LayoutProps): JSX.Element {
 	return (
 		<html
-			lang="en-US"
 			className={`${serif.variable} ${sansSerif.variable} ${monospace.variable}`}
+			lang="en-US"
 		>
 			<body className={style["spacer"]}>
 				<header>
@@ -24,12 +27,12 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
 	);
 }
 
-export const viewport = {
+export const viewport: Viewport = {
 	colorScheme: "dark light",
 	themeColor: "#50c878"
-} satisfies Viewport;
+};
 
-export const metadata = {
+export const metadata: Metadata = {
 	authors: [{ name: "Travis Martin", url: new URL(domain) }],
 	creator: "Travis Martin",
 	metadataBase: new URL(domain),
@@ -37,4 +40,4 @@ export const metadata = {
 	publisher: "Travis Martin",
 	title: { default: "Page", template: "%s | Lakuna" },
 	twitter: { creatorId: "1117270419298496513", siteId: "1117270419298496513" }
-} satisfies Metadata;
+};

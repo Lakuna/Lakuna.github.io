@@ -1,19 +1,22 @@
-import { BsGithub, BsLinkedin, BsTwitch } from "react-icons/bs";
-import Link from "components/Link";
 import type { Metadata } from "next";
-import OneLiner from "./OneLiner";
+import type { JSX } from "react/jsx-runtime";
+
+import Link from "#/components/Link.js";
+import TwitchStreamIfLive from "#/components/TwitchStreamIfLive.js";
 import { Suspense } from "react";
-import TwitchStreamIfLive from "components/TwitchStreamIfLive";
+import { BsGithub, BsLinkedin, BsTwitch } from "react-icons/bs";
+
+import OneLiner from "./OneLiner";
 import style from "./page.module.scss";
 
-export default function Page() {
+export default function Page(): JSX.Element {
 	return (
 		<div className={style["content"]}>
 			<h1>{"Travis Martin"}</h1>
 			<OneLiner />
 			<hr />
 			<Suspense>
-				<TwitchStreamIfLive userId="262884468" muted />
+				<TwitchStreamIfLive muted userId="262884468" />
 			</Suspense>
 			<ul className={style["socials"]}>
 				<Link href="https://github.com/Lakuna">
@@ -33,8 +36,8 @@ export default function Page() {
 	);
 }
 
-export const metadata = {
+export const metadata: Metadata = {
 	description: "Travis Martin's website.",
 	openGraph: { url: "/" },
 	title: "Lakuna"
-} satisfies Metadata;
+};

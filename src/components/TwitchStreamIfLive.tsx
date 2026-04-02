@@ -1,9 +1,12 @@
 "use client";
 
-import { type JSX, useEffect, useState } from "react";
+import type StreamData from "#/types/ttv/StreamData.js";
+import type { JSX } from "react/jsx-runtime";
+
+import getStreams from "#/util/ttv/getStreams.js";
+import { useEffect, useState } from "react";
+
 import TwitchStream, { type TwitchStreamProps } from "./TwitchStream";
-import type StreamData from "types/ttv/StreamData";
-import getStreams from "util/ttv/getStreams";
 
 /**
  * Properties that can be passed to a potential Twitch stream embed.
@@ -14,14 +17,14 @@ export interface TwitchStreamIfLiveProps extends Omit<
 	TwitchStreamProps,
 	"channel"
 > {
-	/** The ID of the user to get the stream of. */
-	userId: string;
-
 	/** The Twitch client ID to use. */
 	id?: string;
 
 	/** The Twitch client secret to use. */
 	secret?: string;
+
+	/** The ID of the user to get the stream of. */
+	userId: string;
 }
 
 /**
@@ -31,15 +34,17 @@ export interface TwitchStreamIfLiveProps extends Omit<
  * @throws `Error` if the channel name, video ID, and collection ID are all missing.
  * @public
  */
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function TwitchStreamIfLive({
-	userId,
 	id,
 	secret,
+	userId,
 	...props
 }: TwitchStreamIfLiveProps): JSX.Element | undefined {
 	const [streamData, setStreamData] = useState<StreamData | undefined>(void 0);
 
 	useEffect(() => {
+		// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 		void getStreams(userId, id, secret).then(({ data }) => {
 			setStreamData(data[0]);
 		});

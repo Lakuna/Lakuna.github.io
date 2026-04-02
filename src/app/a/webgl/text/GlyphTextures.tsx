@@ -1,5 +1,10 @@
 "use client";
 
+import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
+import type { JSX } from "react/jsx-runtime";
+
+import domain from "#/util/domain.js";
+import ReactCanvas from "@lakuna/react-canvas";
 import {
 	BlendFunction,
 	BufferUsage,
@@ -13,20 +18,16 @@ import {
 	VertexBuffer
 } from "@lakuna/ugl";
 import {
-	type Matrix4Like,
 	createMatrix4Like,
 	identity,
 	invert,
+	type Matrix4Like,
 	multiply,
 	perspective,
 	rotateY,
 	scale,
 	translate
 } from "@lakuna/umath/Matrix4";
-import type { JSX } from "react";
-import ReactCanvas from "@lakuna/react-canvas";
-import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
-import domain from "util/domain";
 
 const vss = `\
 #version 300 es
@@ -64,7 +65,22 @@ const quadPosData = new Float32Array([-1, 1, -1, -1, 1, -1, 1, 1]);
 const quadTexcoordData = new Float32Array([0, 0, 0, 1, 1, 1, 1, 0]);
 const quadIndexData = new Uint8Array([0, 1, 2, 0, 2, 3]);
 
-const defaultGlyphs = new Map<string, Rectangle & number[]>([
+const defaultGlyphs = new Map<string, number[] & Rectangle>([
+	["0", [16, 24, 8, 8]],
+	["1", [24, 24, 8, 8]],
+	["2", [32, 24, 8, 8]],
+	["3", [40, 24, 8, 8]],
+	["4", [48, 24, 8, 8]],
+	["5", [56, 24, 8, 8]],
+	["6", [0, 32, 8, 8]],
+	["7", [8, 32, 8, 8]],
+	["8", [16, 32, 8, 8]],
+	["9", [24, 32, 8, 8]],
+	["!", [48, 32, 8, 8]],
+	[" ", [0, 0, 8, 0]], // Just make spaces have no height since they aren't on the bitmap font.
+	["-", [32, 32, 8, 8]],
+	["©", [56, 32, 8, 8]],
+	["×", [40, 32, 8, 8]],
 	["A", [0, 0, 8, 8]],
 	["B", [8, 0, 8, 8]],
 	["C", [16, 0, 8, 8]],
@@ -90,22 +106,7 @@ const defaultGlyphs = new Map<string, Rectangle & number[]>([
 	["W", [48, 16, 8, 8]],
 	["X", [56, 16, 8, 8]],
 	["Y", [0, 24, 8, 8]],
-	["Z", [8, 24, 8, 8]],
-	["0", [16, 24, 8, 8]],
-	["1", [24, 24, 8, 8]],
-	["2", [32, 24, 8, 8]],
-	["3", [40, 24, 8, 8]],
-	["4", [48, 24, 8, 8]],
-	["5", [56, 24, 8, 8]],
-	["6", [0, 32, 8, 8]],
-	["7", [8, 32, 8, 8]],
-	["8", [16, 32, 8, 8]],
-	["9", [24, 32, 8, 8]],
-	["-", [32, 32, 8, 8]],
-	["×", [40, 32, 8, 8]],
-	["!", [48, 32, 8, 8]],
-	["©", [56, 32, 8, 8]],
-	[" ", [0, 0, 8, 0]] // Just make spaces have no height since they aren't on the bitmap font.
+	["Z", [8, 24, 8, 8]]
 ]);
 
 /**
@@ -113,159 +114,10 @@ const defaultGlyphs = new Map<string, Rectangle & number[]>([
  * @public
  */
 class TextQuad {
-	/**
-	 * Create a text quad.
-	 * @param texture - The glyph texture (texture atlas) to use with the text quad.
-	 * @param glyphs - The glyph map that corresponds to the glyph texture.
-	 */
-	public constructor(
-		texture: Texture2d,
-		glyphs: Map<string, Rectangle & number[]>
-	) {
-		this.texture = texture;
-		this.glyphs = glyphs;
-		this.context = this.texture.context;
-		this.widthCache = 0;
-		this.heightCache = 0;
-		this.textCache = "";
-		this.lettersToRender = this.textCache.length;
-		this.program = Program.fromSource(this.context, vss, fss);
-		this.posBuffer = new VertexBuffer(
-			this.context,
-			new Float32Array(),
-			BufferUsage.DYNAMIC_DRAW
-		);
-		this.texcoordBuffer = new VertexBuffer(
-			this.context,
-			new Float32Array(),
-			BufferUsage.DYNAMIC_DRAW
-		);
-		this.ebo = new ElementBuffer(
-			this.context,
-			new Uint32Array(),
-			BufferUsage.DYNAMIC_READ
-		);
-		this.vao = new VertexArray(
-			this.program,
-			{
-				position: { size: 2, vbo: this.posBuffer },
-				texcoord: { size: 2, vbo: this.texcoordBuffer }
-			},
-			this.ebo
-		);
-	}
-
-	/**
-	 * The rendering context of the text quad.
-	 * @internal
-	 */
-	private readonly context;
-
-	/**
-	 * The glyph texture (texture atlas) to use with the text quad.
-	 * @internal
-	 */
-	private readonly texture;
-
-	/**
-	 * The glyph map that corresponds to the glyph texture.
-	 * @internal
-	 */
-	private readonly glyphs;
-
-	/**
-	 * The position data buffer.
-	 * @internal
-	 */
-	private readonly posBuffer;
-
-	/**
-	 * The texture coordinate data buffer.
-	 * @internal
-	 */
-	private readonly texcoordBuffer;
-
-	/**
-	 * The element buffer object (indices).
-	 * @internal
-	 */
-	private readonly ebo;
-
-	/**
-	 * The shader program to use for rendering this text quad.
-	 * @internal
-	 */
-	private readonly program;
-
-	/**
-	 * The vertex array object of this text quad.
-	 * @internal
-	 */
-	private readonly vao;
-
-	/**
-	 * The number of letters to render on this text quad.
-	 * @internal
-	 */
-	private lettersToRender;
-
-	/**
-	 * The width of the text on this quad.
-	 * @internal
-	 */
-	private widthCache;
-
-	/** The width of the text on this quad. */
-	public get width() {
-		return this.widthCache;
-	}
-
-	/**
-	 * The height of the text on this quad.
-	 * @internal
-	 */
-	private heightCache;
-
 	/** The height of the text on this quad. */
-	public get height() {
+	public get height(): number {
 		return this.heightCache;
 	}
-
-	/**
-	 * Change the maximum length of the string that this text quad can display.
-	 * @param length - The length of the string to display in characters.
-	 * @throws `Error` if this vertex array's element buffer or either of this vertex array's expected vertex buffers is not defined.
-	 * @returns The arrays to fill with indices, positions, and texture coordinates, respectively.
-	 * @internal
-	 */
-	private resize(length: number): [Uint32Array, Float32Array, Float32Array] {
-		const currentLength = this.ebo.data.byteLength / 4 / 6; // `Uint32Array` has 4 bytes per element. Letters each require 6 indices.
-		if (currentLength < length) {
-			// Current arrays are not large enough; return new ones.
-
-			// Each letter requires 4 vertices.
-			const vertexCount = length * 4;
-
-			// Each letter requires 6 indices. Each vertex requires 2 positions and 2 texture coordinates.
-			return [
-				new Uint32Array(length * 6),
-				new Float32Array(vertexCount * 2),
-				new Float32Array(vertexCount * 2)
-			];
-		}
-
-		return [
-			this.ebo.data as Uint32Array,
-			this.posBuffer.data as Float32Array,
-			this.texcoordBuffer.data as Float32Array
-		];
-	}
-
-	/**
-	 * The string displayed by this text quad.
-	 * @internal
-	 */
-	private textCache;
 
 	/** The string displayed by this text quad. */
 	public get text(): string {
@@ -387,11 +239,133 @@ class TextQuad {
 		this.lettersToRender = j;
 	}
 
+	/** The width of the text on this quad. */
+	public get width(): number {
+		return this.widthCache;
+	}
+
+	/**
+	 * The rendering context of the text quad.
+	 * @internal
+	 */
+	private readonly context;
+
+	/**
+	 * The element buffer object (indices).
+	 * @internal
+	 */
+	private readonly ebo;
+
+	/**
+	 * The glyph map that corresponds to the glyph texture.
+	 * @internal
+	 */
+	private readonly glyphs;
+
+	/**
+	 * The height of the text on this quad.
+	 * @internal
+	 */
+	private heightCache;
+
+	/**
+	 * The number of letters to render on this text quad.
+	 * @internal
+	 */
+	private lettersToRender;
+
+	/**
+	 * The position data buffer.
+	 * @internal
+	 */
+	private readonly posBuffer;
+
+	/**
+	 * The shader program to use for rendering this text quad.
+	 * @internal
+	 */
+	private readonly program;
+
+	/**
+	 * The texture coordinate data buffer.
+	 * @internal
+	 */
+	private readonly texcoordBuffer;
+
+	/**
+	 * The string displayed by this text quad.
+	 * @internal
+	 */
+	private textCache;
+
+	/**
+	 * The glyph texture (texture atlas) to use with the text quad.
+	 * @internal
+	 */
+	private readonly texture;
+
+	/**
+	 * The vertex array object of this text quad.
+	 * @internal
+	 */
+	private readonly vao;
+
+	/**
+	 * The width of the text on this quad.
+	 * @internal
+	 */
+	private widthCache;
+
+	/**
+	 * Create a text quad.
+	 * @param texture - The glyph texture (texture atlas) to use with the text quad.
+	 * @param glyphs - The glyph map that corresponds to the glyph texture.
+	 */
+	public constructor(
+		// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+		texture: Texture2d,
+		// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+		glyphs: Map<string, number[] & Rectangle>
+	) {
+		this.texture = texture;
+		this.glyphs = glyphs;
+		this.context = this.texture.context;
+		this.widthCache = 0;
+		this.heightCache = 0;
+		this.textCache = "";
+		this.lettersToRender = this.textCache.length;
+		this.program = Program.fromSource(this.context, vss, fss);
+		this.posBuffer = new VertexBuffer(
+			this.context,
+			new Float32Array(),
+			BufferUsage.DYNAMIC_DRAW
+		);
+		this.texcoordBuffer = new VertexBuffer(
+			this.context,
+			new Float32Array(),
+			BufferUsage.DYNAMIC_DRAW
+		);
+		this.ebo = new ElementBuffer(
+			this.context,
+			new Uint32Array(),
+			BufferUsage.DYNAMIC_READ
+		);
+		this.vao = new VertexArray(
+			this.program,
+			{
+				position: { size: 2, vbo: this.posBuffer },
+				texcoord: { size: 2, vbo: this.texcoordBuffer }
+			},
+			this.ebo
+		);
+	}
+
 	/**
 	 * Render this text quad.
 	 * @param worldViewProj - The world view projection matrix to render with.
 	 */
-	public render(worldViewProj: Matrix4Like & Float32Array) {
+	// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+	public render(worldViewProj: Float32Array & Matrix4Like): void {
 		this.context.fbo.draw(
 			this.vao,
 			{ tex: this.texture, worldViewProj },
@@ -400,11 +374,47 @@ class TextQuad {
 			this.lettersToRender * 6
 		);
 	}
+
+	/**
+	 * Change the maximum length of the string that this text quad can display.
+	 * @param length - The length of the string to display in characters.
+	 * @throws `Error` if this vertex array's element buffer or either of this vertex array's expected vertex buffers is not defined.
+	 * @returns The arrays to fill with indices, positions, and texture coordinates, respectively.
+	 * @internal
+	 */
+	private resize(length: number): [Uint32Array, Float32Array, Float32Array] {
+		const currentLength = this.ebo.data.byteLength / 4 / 6; // `Uint32Array` has 4 bytes per element. Letters each require 6 indices.
+		if (currentLength < length) {
+			// Current arrays are not large enough; return new ones.
+
+			// Each letter requires 4 vertices.
+			const vertexCount = length * 4;
+
+			// Each letter requires 6 indices. Each vertex requires 2 positions and 2 texture coordinates.
+			return [
+				new Uint32Array(length * 6),
+				new Float32Array(vertexCount * 2),
+				new Float32Array(vertexCount * 2)
+			];
+		}
+
+		if (
+			!(this.ebo.data instanceof Uint32Array) ||
+			!(this.posBuffer.data instanceof Float32Array) ||
+			!(this.texcoordBuffer.data instanceof Float32Array)
+		) {
+			throw new Error("Incorrect data type.");
+		}
+
+		return [this.ebo.data, this.posBuffer.data, this.texcoordBuffer.data];
+	}
 }
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function GlyphTextures(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
+			// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 			init={(canvas) => {
 				const gl = Context.get(canvas);
 

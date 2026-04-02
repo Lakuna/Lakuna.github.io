@@ -1,8 +1,11 @@
 "use client";
 
-import { type JSX, useEffect, useState } from "react";
-import Link from "components/Link";
-import multiclass from "util/multiclass";
+import type { JSX } from "react/jsx-runtime";
+
+import Link from "#/components/Link.js";
+import multiclass from "#/util/multiclass.js";
+import { useEffect, useState } from "react";
+
 import style from "./one-liner.module.scss";
 
 const oneLiners = [
@@ -107,6 +110,7 @@ const oneLiners = [
 
 export type OneLinerProps = Omit<JSX.IntrinsicElements["p"], "children">;
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function OneLiner({
 	className,
 	...props

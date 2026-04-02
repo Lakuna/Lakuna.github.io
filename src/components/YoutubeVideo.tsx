@@ -1,5 +1,7 @@
-import type { JSX } from "react";
-import multiclass from "util/multiclass";
+import type { JSX } from "react/jsx-runtime";
+
+import multiclass from "#/util/multiclass.js";
+
 import style from "./styles/youtube-video.module.scss";
 
 /**
@@ -8,18 +10,15 @@ import style from "./styles/youtube-video.module.scss";
  */
 export interface YoutubeVideoProps extends Omit<
 	JSX.IntrinsicElements["iframe"],
-	"src" | "allow" | "children"
+	"allow" | "children" | "src"
 > {
-	/** The ID of the YouTube video to embed. */
-	id: string;
-
 	/** Change `allow` functionality to support a list of strings. */
 	allow?: string[] | undefined;
 
-	// Parameters documented at https://developers.google.com/youtube/player_parameters.
-
 	/** Whether or not to auto-play the video. Requires that `allow` contains `"autoplay"`. */
 	autoPlay?: boolean | undefined;
+
+	// Parameters documented at https://developers.google.com/youtube/player_parameters.
 
 	/** The ISO 639-1 two-letter language code of the preferred language for closed captions. */
 	ccLangPref?: string | undefined;
@@ -48,6 +47,9 @@ export interface YoutubeVideoProps extends Omit<
 	/** The ISO 639-1 two-letter language code of the interface language. */
 	hl?: string | undefined;
 
+	/** The ID of the YouTube video to embed. */
+	id: string;
+
 	/** Whether or not to show video annotations by default. */
 	ivLoadPolicy?: boolean | undefined;
 
@@ -59,6 +61,9 @@ export interface YoutubeVideoProps extends Omit<
 
 	/** Whether or not to loop the initial video. */
 	loop?: boolean | undefined;
+
+	/** Whether or not to mute the video by default. */
+	mute?: boolean | undefined;
 
 	/** A security measure for the IFrame API. When using the IFrame API, always set this to this website's domain. */
 	origin?: string | undefined;
@@ -72,19 +77,16 @@ export interface YoutubeVideoProps extends Omit<
 	/** Whether or not related videos should not be required to come from the same channel as the video that was just played. */
 	relYt?: boolean | undefined;
 
+	/** A tracking token. */
+	si?: string | undefined;
+
+	// Undocumented parameters.
+
 	/** The time (measured in seconds from the start of the video) at which the player should start playing the video. */
 	start?: number | undefined;
 
 	/** The URL at which the video is embedded. */
 	widgetReferrer?: string | undefined;
-
-	// Undocumented parameters.
-
-	/** Whether or not to mute the video by default. */
-	mute?: boolean | undefined;
-
-	/** A tracking token. */
-	si?: string | undefined;
 }
 
 /**
@@ -93,12 +95,14 @@ export interface YoutubeVideoProps extends Omit<
  * @returns The embed.
  * @public
  */
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function YoutubeVideo({
-	// Use YouTube video ID instead of source URL.
-	id,
+	// Properties with modified functionality.
+	allow,
 	autoPlay,
 	ccLangPref,
 	ccLoadPolicy,
+	className,
 	color,
 	controls,
 	disableKeyboard,
@@ -106,22 +110,21 @@ export default function YoutubeVideo({
 	end,
 	fs,
 	hl,
+	// Use YouTube video ID instead of source URL.
+	id,
 	ivLoadPolicy,
 	list,
 	listType,
 	loop,
+	mute,
 	origin,
 	playlist,
 	playsInline,
 	relYt,
-	start,
-	widgetReferrer,
-	mute,
 	si,
 
-	// Properties with modified functionality.
-	allow,
-	className,
+	start,
+	widgetReferrer,
 
 	// Remaining properties.
 	...props
@@ -199,9 +202,9 @@ export default function YoutubeVideo({
 
 	return (
 		<iframe
-			src={src.href}
 			allow={allow?.join(";")}
 			className={multiclass(className, style["embed"])}
+			src={src.href}
 			{...props}
 		/>
 	);

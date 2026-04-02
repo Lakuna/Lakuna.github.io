@@ -1,4 +1,5 @@
-import "util/env";
+import "#/util/env.js";
+
 import getToken from "./getToken";
 
 /**
@@ -12,7 +13,9 @@ import getToken from "./getToken";
  * @public
  */
 export default async function ttvFetch(
+	// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 	input: Request | RequestInfo | URL,
+	// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 	init?: RequestInit,
 	id: string | undefined = process.env["TWITCH_CLIENT_ID"],
 	secret: string | undefined = process.env["TWITCH_CLIENT_SECRET"]

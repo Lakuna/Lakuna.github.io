@@ -1,5 +1,9 @@
 "use client";
 
+import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
+import type { JSX } from "react/jsx-runtime";
+
+import ReactCanvas from "@lakuna/react-canvas";
 import {
 	Context,
 	ElementBuffer,
@@ -23,9 +27,6 @@ import {
 	fromValues,
 	normalize
 } from "@lakuna/umath/Vector3";
-import type { JSX } from "react";
-import ReactCanvas from "@lakuna/react-canvas";
-import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 
 const vss = `\
 #version 300 es
@@ -83,9 +84,11 @@ const indexData = new Uint8Array([
 	15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23
 ]);
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function DiffuseLighting(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
+			// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 			init={(canvas) => {
 				const gl = Context.get(canvas);
 

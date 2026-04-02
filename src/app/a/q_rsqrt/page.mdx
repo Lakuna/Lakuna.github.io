@@ -5,11 +5,8 @@ openGraph:
   url: "/a/q_rsqrt"
 ---
 
-{/* @ts-expect-error Global stylesheets don't have types. */}
-import "styles/highlight.scss";
-
-{/* @ts-expect-error Global stylesheets don't have types. */}
-import "styles/katex.scss";
+import "#/styles/highlight.scss";
+import "#/styles/katex.scss";
 
 # Fast Inverse Square Root
 
@@ -17,7 +14,7 @@ import "styles/katex.scss";
 
 If you prefer, there is also an excellent video covering this topic [here](https://youtu.be/p8u_k2LIZyo).
 
-Although the algorithm has been made mostly obsolete due to advances in hardware technology, it was previously used to quickly and accurately (with a maximum of 1% error) calculate the multiplicative inverse of the square root of a number $x$ ($\frac{1}{\sqrt{x}}$).
+Although the algorithm has been made mostly obsolete due to advances in hardware technology, it was previously used to quickly and accurately (with a maximum of 1% error) calculate the multiplicative inverse of the square root of a number $$x$$ ($$\frac{1}{\sqrt{x}}$$).
 
 ```c
 float y = 1 / sqrt(x);

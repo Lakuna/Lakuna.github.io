@@ -1,5 +1,7 @@
+import type { JSX } from "react/jsx-runtime";
+
 import NextImage, { type ImageProps as NextImageProps } from "next/image";
-import type { JSX } from "react";
+
 import defaultBlur from "./assets/default-blur.png";
 
 /**
@@ -20,6 +22,7 @@ export type ImageProps = Omit<NextImageProps, "children"> & {
  * @returns The image.
  * @public
  */
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function Image({
 	untrusted,
 	...props

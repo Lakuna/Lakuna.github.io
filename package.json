@@ -1,53 +1,58 @@
 {
-	"private": true,
-	"type": "module",
-	"scripts": {
-		"dev": "next dev --webpack",
-		"build": "next build --webpack",
-		"start": "next start",
-		"lint": "eslint src",
-		"beautify": "prettier . --write"
-	},
 	"dependencies": {
-		"@lakuna/react-canvas": "^2.0.5",
-		"@lakuna/ugl": "^26.1.4",
-		"@lakuna/umath": "^2.0.0",
+		"@lakuna/react-canvas": "^2.0.7",
+		"@lakuna/ugl": "^27.0.0",
+		"@lakuna/umath": "^4.0.5",
 		"@mdx-js/loader": "^3.1.1",
 		"@mdx-js/react": "^3.1.1",
-		"@next/env": "^16.1.6",
-		"@next/mdx": "^16.1.6",
-		"@svgr/webpack": "^8.1.0",
+		"@next/env": "^16.2.2",
+		"@next/mdx": "^16.2.2",
 		"highlight.js": "^11.11.1",
-		"next": "16.1.6",
+		"next": "16.2.2",
 		"react": "^19.2.4",
 		"react-dom": "^19.2.4",
-		"react-icons": "^5.5.0",
+		"react-icons": "^5.6.0",
 		"rehype-highlight": "^7.0.2",
 		"rehype-katex": "^7.0.1",
 		"remark-frontmatter": "^5.0.0",
 		"remark-math": "^6.0.0",
 		"remark-mdx-frontmatter": "^5.2.0",
-		"sharp": "^0.34.5"
+		"sharp": "^0.34.5",
+		"zod": "^4.3.6"
 	},
 	"devDependencies": {
-		"@eslint/eslintrc": "^3.3.3",
-		"@eslint/js": "^9.39.2",
+		"@eslint/js": "^9.39.4",
+		"@svgr/webpack": "^8.1.0",
 		"@types/eslint": "^9.6.1",
 		"@types/eslint-config-prettier": "^6.11.3",
 		"@types/mdx": "^2.0.13",
-		"@types/node": "^25.0.10",
-		"@types/react": "^19.2.10",
+		"@types/node": "^25.5.0",
+		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
 		"@types/webpack": "^5.28.5",
-		"@typescript-eslint/eslint-plugin": "^8.54.0",
-		"@typescript-eslint/parser": "^8.54.0",
-		"eslint": "^9.39.2",
-		"eslint-config-next": "16.1.6",
+		"babel-plugin-react-compiler": "^1.0.0",
+		"eslint": "^9.39.4",
+		"eslint-config-next": "16.2.2",
 		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-perfectionist": "^5.7.0",
 		"eslint-plugin-prettier": "^5.5.5",
+		"eslint-plugin-tsdoc": "^0.5.2",
+		"globals": "^17.4.0",
 		"prettier": "^3.8.1",
-		"sass": "^1.97.3",
-		"typescript": "^5.9.3",
-		"typescript-eslint": "^8.54.0"
-	}
+		"sass": "^1.98.0",
+		"typescript": "^6.0.2",
+		"typescript-eslint": "^8.58.0"
+	},
+	"imports": {
+		"#/*": "./src/*"
+	},
+	"private": true,
+	"scripts": {
+		"build": "next build --webpack",
+		"dev": "next dev --webpack",
+		"lint": "eslint",
+		"fix": "eslint --fix",
+		"start": "next start"
+	},
+	"type": "module"
 }

@@ -1,7 +1,10 @@
+import type { NextConfig } from "next";
 import type { Configuration } from "webpack";
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+import createMDX from "@next/mdx";
 import bash from "highlight.js/lib/languages/bash";
 import c from "highlight.js/lib/languages/c";
-import createMDX from "@next/mdx";
 import glsl from "highlight.js/lib/languages/glsl";
 import javascript from "highlight.js/lib/languages/javascript";
 import python from "highlight.js/lib/languages/python";
@@ -15,7 +18,7 @@ import remarkMdxFrontmatter from "remark-mdx-frontmatter";
  * Next.js configuration options.
  * @internal
  */
-export default createMDX({
+const out: NextConfig = createMDX({
 	// These options can't be serializable, so must use Webpack over Turbopack for now.
 	options: {
 		rehypePlugins: [
@@ -30,11 +33,17 @@ export default createMDX({
 	}
 })({
 	pageExtensions: ["mdx", "ts", "tsx"],
+	reactCompiler: true,
 	trailingSlash: false,
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	turbopack: { rules: { "*.svg": { as: "*.js", loaders: ["@svgr/webpack"] } } },
+	// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 	webpack: (config: Configuration) => {
+		// https://react-svgr.com/docs/next/
+
 		// Find the existing rule that handles SVG imports.
-		const fileLoaderRule = config.module?.rules?.find(
+		const svgRule = config.module?.rules?.find(
+			// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 			(rule) =>
 				typeof rule === "object" &&
 				rule?.test instanceof RegExp &&
@@ -42,31 +51,34 @@ export default createMDX({
 		);
 
 		if (
-			typeof fileLoaderRule === "object" &&
-			fileLoaderRule?.issuer &&
-			typeof fileLoaderRule.resourceQuery === "object" &&
-			"not" in fileLoaderRule.resourceQuery
+			typeof svgRule === "object" &&
+			svgRule?.issuer &&
+			typeof svgRule.resourceQuery === "object" &&
+			"not" in svgRule.resourceQuery &&
+			Array.isArray(svgRule.resourceQuery.not)
 		) {
 			// Use the existing rule only for SVG imports ending in `"?url"`.
 			config.module?.rules?.push({
-				...fileLoaderRule,
+				...svgRule,
 				resourceQuery: /url/u,
 				test: /\.svg$/iu
 			});
 
 			// Convert all other SVG imports to React components.
 			config.module?.rules?.push({
-				issuer: fileLoaderRule.issuer,
-				resourceQuery: { not: [fileLoaderRule.resourceQuery.not, /url/u] },
+				issuer: svgRule.issuer,
+				resourceQuery: { not: [...svgRule.resourceQuery.not, /url/u] },
 				test: /\.svg$/iu,
 				use: ["@svgr/webpack"]
 			});
 
 			// Modify the file loader rule to ignore SVG imports since we handle it now.
-			fileLoaderRule.exclude = /\.svg$/iu;
+			svgRule.exclude = /\.svg$/iu;
 		}
 
 		// Return the modified configuration.
 		return config;
 	}
 });
+
+export default out;

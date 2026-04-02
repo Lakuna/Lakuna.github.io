@@ -1,9 +1,10 @@
 "use client";
 
-import { Context, Program, VertexArray, VertexBuffer } from "@lakuna/ugl";
-import type { JSX } from "react";
+import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
+import type { JSX } from "react/jsx-runtime";
+
 import ReactCanvas from "@lakuna/react-canvas";
-import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
+import { Context, Program, VertexArray, VertexBuffer } from "@lakuna/ugl";
 
 const vss = `\
 #version 300 es
@@ -29,9 +30,11 @@ void main() {
 
 const positionData = new Float32Array([0, 0.5, 0, 0, 0.7, 0]);
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function Attributes(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
+			// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 			init={(canvas) => {
 				const gl = Context.get(canvas);
 

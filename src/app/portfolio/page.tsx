@@ -1,25 +1,27 @@
-import Card from "components/Card";
-import CardList from "components/CardList";
-import Gcs from "./gcs.svg";
-import Image from "components/Image";
-import type { JSX } from "react";
-import Link from "components/Link";
 import type { Metadata } from "next";
-import PhongLighting from "app/a/webgl/lighting/PhongLighting";
-import YoutubeVideo from "components/YoutubeVideo";
+import type { JSX } from "react/jsx-runtime";
+
+import PhongLighting from "#/app/a/webgl/lighting/PhongLighting.js";
+import Card from "#/components/Card.js";
+import CardList from "#/components/CardList.js";
+import Image from "#/components/Image.js";
+import Link from "#/components/Link.js";
+import YoutubeVideo from "#/components/YoutubeVideo.js";
+
 import christmasHats from "./christmas-hats.png";
 import cityViewer from "./city-viewer.gif";
 import codehs from "./codehs.png";
 import edikt from "./edikt.png";
 import elytraTrinket from "./elytra-trinket.png";
+import Gcs from "./gcs.svg";
 import mmwd from "./mmwd.png";
 import nitel from "./nitel.webp";
+import style from "./page.module.scss";
 import pdx from "./pdx.jpg";
 import poseidon from "./poseidon.jpg";
 import prepareModerately from "./prepare-moderately.png";
 import rayTracer from "./ray-tracer.png";
 import riseOfCivilizations from "./rise-of-civilizations.png";
-import style from "./page.module.scss";
 import wellMet from "./well-met.png";
 
 export default function Page(): JSX.Element {
@@ -122,8 +124,8 @@ export default function Page(): JSX.Element {
 				<Card href="https://steamcommunity.com/sharedfiles/filedetails/?id=2057362949">
 					<h3>{"Prepare Moderately"}</h3>
 					<Image
-						src={prepareModerately}
 						alt="The Prepare Moderately preview image."
+						src={prepareModerately}
 					/>
 					<p>
 						{
@@ -132,8 +134,8 @@ export default function Page(): JSX.Element {
 					</p>
 					<Image
 						alt="Prepare Moderately subscriber count."
-						src="https://img.shields.io/steam/subscriptions/2057362949?style=for-the-badge&logo=steam"
 						className={style["shield"]}
+						src="https://img.shields.io/steam/subscriptions/2057362949?style=for-the-badge&logo=steam"
 						untrusted
 					/>
 				</Card>
@@ -182,7 +184,7 @@ export default function Page(): JSX.Element {
 				</Card>
 				<Card>
 					<h3>{"Poseidon"}</h3>
-					<Image src={poseidon} alt="UIC's Poseidon rover." />
+					<Image alt="UIC's Poseidon rover." src={poseidon} />
 					<p>
 						{"UIC's 2024 submission to NASA's "}
 						<Link href="https://www.nasa.gov/learning-resources/lunabotics-challenge/">
@@ -215,8 +217,8 @@ export default function Page(): JSX.Element {
 				<Card href="https://modrinth.com/mod/elytra_trinket">
 					<h3>{"Elytra Trinket"}</h3>
 					<Image
-						src={elytraTrinket}
 						alt="A Minecraft character wearing an Elytra and a chestplate at the same time."
+						src={elytraTrinket}
 					/>
 					<p>
 						{
@@ -225,8 +227,8 @@ export default function Page(): JSX.Element {
 					</p>
 					<Image
 						alt="Elytra Trinket download count."
-						src="https://img.shields.io/modrinth/dt/elytra_trinket?style=for-the-badge&logo=modrinth"
 						className={style["shield"]}
+						src="https://img.shields.io/modrinth/dt/elytra_trinket?style=for-the-badge&logo=modrinth"
 						untrusted
 					/>
 				</Card>
@@ -267,7 +269,7 @@ export default function Page(): JSX.Element {
 				</Card>
 				<Card href="https://steamcommunity.com/sharedfiles/filedetails/?id=2553173153">
 					<h3>{"Well Met"}</h3>
-					<Image src={wellMet} alt="The Well Met preview image." />
+					<Image alt="The Well Met preview image." src={wellMet} />
 					<p>
 						{
 							"A RimWorld mod that hides pawns' traits until you get to know them. Written in C# and fully backwards compatible since version 1.0."
@@ -275,14 +277,14 @@ export default function Page(): JSX.Element {
 					</p>
 					<Image
 						alt="Well Met subscriber count."
-						src="https://img.shields.io/steam/subscriptions/2553173153?style=for-the-badge&logo=steam"
 						className={style["shield"]}
+						src="https://img.shields.io/steam/subscriptions/2553173153?style=for-the-badge&logo=steam"
 						untrusted
 					/>
 				</Card>
 				<Card href="https://steamcommunity.com/sharedfiles/filedetails/?id=1947309066">
 					<h3>{"RimWorld Christmas Hats"}</h3>
-					<Image src={christmasHats} alt="The Christmas Hats preview image." />
+					<Image alt="The Christmas Hats preview image." src={christmasHats} />
 					<p>
 						{
 							"A version 1.x port of Drizzly's Christmas Hats mod for RimWorld. Written using only XML and fully backwards compatible since version 1.0."
@@ -290,8 +292,8 @@ export default function Page(): JSX.Element {
 					</p>
 					<Image
 						alt="RimWorld Christmas Hats subscriber count."
-						src="https://img.shields.io/steam/subscriptions/1947309066?style=for-the-badge&logo=steam"
 						className={style["shield"]}
+						src="https://img.shields.io/steam/subscriptions/1947309066?style=for-the-badge&logo=steam"
 						untrusted
 					/>
 				</Card>
@@ -317,7 +319,7 @@ export default function Page(): JSX.Element {
 			<CardList>
 				<Card href="https://www.nitelusa.com/">
 					<h3>{"Nitel (Comcast)"}</h3>
-					<Image src={nitel} alt="Nitel logo." />
+					<Image alt="Nitel logo." src={nitel} />
 					<p>
 						{
 							"I work as a software engineer at Nitel (now acquired by Comcast Business), focusing primarily on developing integrations. This includes both internal-facing projects such as active directory synchronization and external-facing projects such as revamping the proactive alerts system to notify over 6,600 clients about network outages in real time."
@@ -331,7 +333,7 @@ export default function Page(): JSX.Element {
 				</Card>
 				<Card href="https://codehs.com/">
 					<h3>{"CodeHS"}</h3>
-					<Image src={codehs} alt="CodeHS logo." />
+					<Image alt="CodeHS logo." src={codehs} />
 					<p>
 						{
 							"I worked as a software engineer intern at CodeHS where, among other things, I implemented the Scratch sandbox, which is used to start teaching elementary school-aged children how to code."
@@ -351,9 +353,9 @@ export default function Page(): JSX.Element {
 				<Card>
 					<h3>{"Edikt Studios"}</h3>
 					<Image
-						src={edikt}
 						alt="Edikt Studios logo."
 						className={style["half"]}
+						src={edikt}
 					/>
 					<p>
 						{
@@ -363,7 +365,7 @@ export default function Page(): JSX.Element {
 				</Card>
 				<Card>
 					<h3>{"PDX"}</h3>
-					<Image src={pdx} alt="PDX logo." className={style["half"]} />
+					<Image alt="PDX logo." className={style["half"]} src={pdx} />
 					<p>
 						{
 							"I worked as a software programmer intern at PDX, where my primary task was to fix user experience-related bugs in the Java Swing front end of the Enterprise Pharmacy System (EPS)."
@@ -375,7 +377,7 @@ export default function Page(): JSX.Element {
 			<CardList>
 				<Card>
 					<h3>{"JavaScript Ray Tracer"}</h3>
-					<Image src={rayTracer} alt="A ray traced scene." />
+					<Image alt="A ray traced scene." src={rayTracer} />
 					<p>
 						{
 							"A simple ray tracer that uses the canvas 2D API to work in the browser. Written entirely in JavaScript."
@@ -385,9 +387,9 @@ export default function Page(): JSX.Element {
 				<Card>
 					<h3>{"WebGL City Viewer"}</h3>
 					<Image
-						src={cityViewer}
 						alt="A 3D model of part of the city of Chicago."
 						placeholder="empty"
+						src={cityViewer}
 						unoptimized
 					/>
 					<p>
@@ -399,8 +401,8 @@ export default function Page(): JSX.Element {
 				<Card>
 					<h3>{"Magic Missile Wizard Duel"}</h3>
 					<Image
-						src={mmwd}
 						alt="A screenshot of Magic Missile Wizard Duel gameplay."
+						src={mmwd}
 					/>
 					<p>
 						{
@@ -411,8 +413,8 @@ export default function Page(): JSX.Element {
 				<Card>
 					<h3>{"Rise of Civilizations"}</h3>
 					<Image
-						src={riseOfCivilizations}
 						alt="A screenshot of Rise of Civilizations."
+						src={riseOfCivilizations}
 					/>
 					<p>
 						{
@@ -423,13 +425,13 @@ export default function Page(): JSX.Element {
 				<Card>
 					<h3>{"Residuum"}</h3>
 					<YoutubeVideo
-						id="VGeUPhIjlzc"
 						ccLoadPolicy={false}
 						controls={false}
 						disableKeyboard
+						id="VGeUPhIjlzc"
 						ivLoadPolicy={false}
-						relYt
 						mute
+						relYt
 					/>
 					<p>
 						{
@@ -449,8 +451,8 @@ export default function Page(): JSX.Element {
 	);
 }
 
-export const metadata = {
+export const metadata: Metadata = {
 	description: "Travis Martin's portfolio.",
 	openGraph: { url: "/portfolio" },
 	title: "Portfolio"
-} satisfies Metadata;
+};

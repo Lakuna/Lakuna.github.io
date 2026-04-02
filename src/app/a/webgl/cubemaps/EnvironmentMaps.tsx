@@ -1,5 +1,10 @@
 "use client";
 
+import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
+import type { JSX } from "react/jsx-runtime";
+
+import domain from "#/util/domain.js";
+import ReactCanvas from "@lakuna/react-canvas";
 import {
 	Context,
 	ElementBuffer,
@@ -21,11 +26,7 @@ import {
 	rotateZ,
 	translate
 } from "@lakuna/umath/Matrix4";
-import type { JSX } from "react";
-import ReactCanvas from "@lakuna/react-canvas";
-import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 import { createVector3Like } from "@lakuna/umath/Vector3";
-import domain from "util/domain";
 
 const vss = `\
 #version 300 es
@@ -85,9 +86,11 @@ const indexData = new Uint8Array([
 	15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23
 ]);
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function EnvironmentMaps(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
+			// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 			init={(canvas) => {
 				const gl = Context.get(canvas);
 

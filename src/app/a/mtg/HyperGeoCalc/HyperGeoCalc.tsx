@@ -1,24 +1,28 @@
 "use client";
 
+import type { JSX } from "react/jsx-runtime";
+
+import multiclass from "#/util/multiclass.js";
+import { hypergeometricPmf, summation } from "@lakuna/umath";
 import {
 	type ChangeEvent,
 	type Dispatch,
-	type JSX,
 	type SetStateAction,
 	useState
 } from "react";
-import { hypergeometricPmf, summation } from "@lakuna/umath";
-import multiclass from "util/multiclass";
+
 import style from "./hyper-geo-calc.module.scss";
 
 const onChange =
 	(setter: Dispatch<SetStateAction<number>>) =>
-	(event: ChangeEvent<HTMLInputElement>) => {
+	// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+	(event: ChangeEvent<HTMLInputElement>): void => {
 		setter(parseInt(event.target.value, 10) || 0);
 	};
 
 export type HyperGeoCalcProps = Omit<JSX.IntrinsicElements["form"], "children">;
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function HyperGeoCalc({
 	className,
 	...props
@@ -37,25 +41,25 @@ export default function HyperGeoCalc({
 			<p>
 				<label>
 					{"Cards in deck:"}
-					<input type="number" name="N" value={N} onChange={onChange(setN)} />
+					<input name="N" onChange={onChange(setN)} type="number" value={N} />
 				</label>
 			</p>
 			<p>
 				<label>
 					{"Copies of [card] in deck:"}
-					<input type="number" name="K" value={K} onChange={onChange(setK)} />
+					<input name="K" onChange={onChange(setK)} type="number" value={K} />
 				</label>
 			</p>
 			<p>
 				<label>
 					{"Cards drawn:"}
-					<input type="number" name="n" value={n} onChange={onChange(setn)} />
+					<input name="n" onChange={onChange(setn)} type="number" value={n} />
 				</label>
 			</p>
 			<p>
 				<label>
 					{"Preferred copies of [card] drawn:"}
-					<input type="number" name="k" value={k} onChange={onChange(setk)} />
+					<input name="k" onChange={onChange(setk)} type="number" value={k} />
 				</label>
 			</p>
 			<p>

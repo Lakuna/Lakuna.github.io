@@ -1,4 +1,5 @@
-// eslint-disable-next-line camelcase
+import type { NextFontWithVariable } from "next/dist/compiled/@next/font";
+
 import { Noto_Serif, Ubuntu_Sans, Ubuntu_Sans_Mono } from "next/font/google";
 
 /**
@@ -6,7 +7,7 @@ import { Noto_Serif, Ubuntu_Sans, Ubuntu_Sans_Mono } from "next/font/google";
  * @public
  */
 // eslint-disable-next-line new-cap
-export const serif = Noto_Serif({
+export const serif: NextFontWithVariable = Noto_Serif({
 	subsets: ["latin"],
 	variable: "--font-serif"
 });
@@ -16,7 +17,7 @@ export const serif = Noto_Serif({
  * @public
  */
 // eslint-disable-next-line new-cap
-export const sansSerif = Ubuntu_Sans({
+export const sansSerif: NextFontWithVariable = Ubuntu_Sans({
 	subsets: ["latin"],
 	variable: "--font-sans-serif"
 });
@@ -26,7 +27,7 @@ export const sansSerif = Ubuntu_Sans({
  * @public
  */
 // eslint-disable-next-line new-cap
-export const monospace = Ubuntu_Sans_Mono({
+export const monospace: NextFontWithVariable = Ubuntu_Sans_Mono({
 	subsets: ["latin"],
 	variable: "--font-monospace"
 });

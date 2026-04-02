@@ -1,6 +1,8 @@
-import type { JSX } from "react";
-import Link from "components/Link";
-import multiclass from "util/multiclass";
+import type { JSX } from "react/jsx-runtime";
+
+import Link from "#/components/Link.js";
+import multiclass from "#/util/multiclass.js";
+
 import style from "./topnav.module.scss";
 
 /**
@@ -15,6 +17,7 @@ export type TopnavProps = Omit<JSX.IntrinsicElements["nav"], "children">;
  * @returns The navigation bar.
  * @public
  */
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function Topnav({
 	className,
 	...props

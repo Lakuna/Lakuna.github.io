@@ -1,5 +1,9 @@
 "use client";
 
+import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
+import type { JSX } from "react/jsx-runtime";
+
+import ReactCanvas from "@lakuna/react-canvas";
 import {
 	Context,
 	ElementBuffer,
@@ -7,9 +11,6 @@ import {
 	VertexArray,
 	VertexBuffer
 } from "@lakuna/ugl";
-import type { JSX } from "react";
-import ReactCanvas from "@lakuna/react-canvas";
-import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 
 const vss = `\
 #version 300 es
@@ -57,9 +58,11 @@ const indexData = new Uint8Array([
 	0, 2, 3
 ]);
 
-export default function Indices(props: UglCanvasProps): JSX.Element {
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+export default function Uniforms(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
+			// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 			init={(canvas) => {
 				const gl = Context.get(canvas);
 

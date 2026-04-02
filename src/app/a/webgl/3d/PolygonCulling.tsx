@@ -1,5 +1,9 @@
 "use client";
 
+import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
+import type { JSX } from "react/jsx-runtime";
+
+import ReactCanvas from "@lakuna/react-canvas";
 import { Context, Program, VertexArray, VertexBuffer } from "@lakuna/ugl";
 import {
 	createMatrix4Like,
@@ -8,9 +12,6 @@ import {
 	rotateZ,
 	translate
 } from "@lakuna/umath/Matrix4";
-import type { JSX } from "react";
-import ReactCanvas from "@lakuna/react-canvas";
-import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 
 const vss = `\
 #version 300 es
@@ -81,9 +82,11 @@ const colorData = new Uint8Array([
 	160, 160, 220
 ]);
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function PolygonCulling(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
+			// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 			init={(canvas) => {
 				const gl = Context.get(canvas);
 

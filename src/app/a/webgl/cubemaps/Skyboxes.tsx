@@ -1,5 +1,10 @@
 "use client";
 
+import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
+import type { JSX } from "react/jsx-runtime";
+
+import domain from "#/util/domain.js";
+import ReactCanvas from "@lakuna/react-canvas";
 import {
 	Context,
 	ElementBuffer,
@@ -23,11 +28,7 @@ import {
 	setTranslation,
 	translate
 } from "@lakuna/umath/Matrix4";
-import type { JSX } from "react";
-import ReactCanvas from "@lakuna/react-canvas";
-import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
 import { createVector3Like } from "@lakuna/umath/Vector3";
-import domain from "util/domain";
 
 const vss = `\
 #version 300 es
@@ -123,9 +124,11 @@ const indexData = new Uint8Array([
 const planePositionData = new Float32Array([-1, 1, -1, -1, 1, -1, 1, 1]);
 const planeIndexData = new Uint8Array([0, 1, 2, 0, 2, 3]);
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function Skyboxes(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
+			// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 			init={(canvas) => {
 				const gl = Context.get(canvas);
 

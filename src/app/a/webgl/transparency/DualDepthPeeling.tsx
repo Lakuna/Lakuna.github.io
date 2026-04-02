@@ -2,6 +2,10 @@
 
 // Based on "Order Independent Transparency with Dual Depth Peeling" by Louis Bavoil and Kevin Myers (NVIDIA).
 
+import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
+import type { JSX } from "react/jsx-runtime";
+
+import ReactCanvas from "@lakuna/react-canvas";
 import {
 	BlendEquation,
 	Context,
@@ -14,6 +18,7 @@ import {
 	VertexArray,
 	VertexBuffer
 } from "@lakuna/ugl";
+import { epsilon } from "@lakuna/umath";
 import {
 	createMatrix4Like,
 	perspective,
@@ -21,10 +26,6 @@ import {
 	rotateZ,
 	translate
 } from "@lakuna/umath/Matrix4";
-import type { JSX } from "react";
-import ReactCanvas from "@lakuna/react-canvas";
-import type { UglCanvasProps } from "app/a/webgl/UglCanvasProps";
-import { epsilon } from "@lakuna/umath";
 
 const depthPeelVss = `\
 #version 300 es
@@ -177,9 +178,11 @@ const colorData = new Uint8Array([
 	220, 0x80
 ]);
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function DualDepthPeeling(props: UglCanvasProps): JSX.Element {
 	return (
 		<ReactCanvas
+			// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 			init={(canvas) => {
 				const gl = Context.get(canvas);
 
@@ -206,7 +209,8 @@ export default function DualDepthPeeling(props: UglCanvasProps): JSX.Element {
 					planeIndexBuffer
 				);
 
-				const createTarget = (targetGl: Context) => {
+				// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+				const createTarget = (targetGl: Context): Texture2d => {
 					const target = new Texture2d(targetGl);
 					target.format = TextureFormat.RGBA32F;
 					target.magFilter = TextureFilter.NEAREST;
@@ -221,7 +225,7 @@ export default function DualDepthPeeling(props: UglCanvasProps): JSX.Element {
 				const frontColorTarget1 = createTarget(gl);
 				const backColorTarget1 = createTarget(gl);
 
-				const resizeTargets = () => {
+				const resizeTargets = (): void => {
 					depthTarget0.setMip(void 0, 0, void 0, [
 						0,
 						0,
@@ -280,11 +284,15 @@ export default function DualDepthPeeling(props: UglCanvasProps): JSX.Element {
 				const matrix = createMatrix4Like();
 
 				const drawScene = (
+					// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 					depthTarget: Texture2d,
+					// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 					frontColorTarget: Texture2d,
+					// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 					backColorTarget: Texture2d,
+					// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 					depthPeelFbo: Framebuffer
-				) => {
+				): void => {
 					depthPeelFbo.draw(depthPeelVao, {
 						backColorTex: backColorTarget,
 						depthTex: depthTarget,

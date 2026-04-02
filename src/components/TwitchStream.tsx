@@ -1,6 +1,8 @@
-import type { JSX } from "react";
-import multiclass from "util/multiclass";
-import { raw } from "util/domain";
+import type { JSX } from "react/jsx-runtime";
+
+import { raw } from "#/util/domain.js";
+import multiclass from "#/util/multiclass.js";
+
 import style from "./styles/youtube-video.module.scss";
 
 /**
@@ -10,31 +12,31 @@ import style from "./styles/youtube-video.module.scss";
  */
 export interface TwitchStreamProps extends Omit<
 	JSX.IntrinsicElements["iframe"],
-	"src" | "allow" | "children"
+	"allow" | "children" | "src"
 > {
 	/** Change `allow` functionality to support a list of strings. */
 	allow?: string[] | undefined;
 
-	/** The domain(s) that will be embedding Twitch. */
-	parent?: string;
+	/** Whether or not the video should start playing automatically. */
+	autoPlay?: boolean;
 
 	/** The name of the channel, to embed a live stream. Overrides the video and collection IDs if specified. At least one of the channel name, video ID, or collection ID must be specified. */
 	channel?: string;
 
-	/** The video ID, for past broadcasts, highlights, and video uploads. Must be prefixed with a `"v"`. */
-	video?: string;
-
 	/** The collection ID, for a collection of videos. If a video ID is specified and the video is in the collection, the collection starts playing from the specified video (if the video is not in the collection, the collection is ignored). */
 	collection?: string;
-
-	/** Whether or not the video should start playing automatically. */
-	autoPlay?: boolean;
 
 	/** Whether or not the initial state of the video should be muted. */
 	muted?: boolean;
 
+	/** The domain(s) that will be embedding Twitch. */
+	parent?: string;
+
 	/** The time in the video where playback starts. */
 	time?: string;
+
+	/** The video ID, for past broadcasts, highlights, and video uploads. Must be prefixed with a `"v"`. */
+	video?: string;
 }
 
 /**
@@ -44,18 +46,19 @@ export interface TwitchStreamProps extends Omit<
  * @throws `Error` if the channel name, video ID, and collection ID are all missing.
  * @public
  */
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function TwitchStream({
-	parent = raw,
-	channel,
-	video,
-	collection,
-	autoPlay,
-	muted,
-	time,
-
 	// Properties with modified functionality.
 	allow,
+	autoPlay,
+	channel,
 	className,
+	collection,
+	muted,
+	parent = raw,
+
+	time,
+	video,
 
 	// Remaining properties.
 	...props
@@ -89,9 +92,9 @@ export default function TwitchStream({
 
 	return (
 		<iframe
-			src={src.href}
 			allow={allow?.join(";")}
 			className={multiclass(className, style["embed"])}
+			src={src.href}
 			{...props}
 		/>
 	);

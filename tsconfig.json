@@ -1,69 +1,38 @@
 {
-	"include": [
-		"next-env.d.ts", // Next.js required.
-		"next.config.ts", // Next.js required.
-		"**/*.ts", // Next.js required.
-		"**/*.tsx", // Next.js required.
-		".next/types/**/*.ts", // Next.js required.
-		"**/*",
-		".next\\dev/types/**/*.ts",
-		".next\\dev/types/**/*.ts",
-		".next/dev/types/**/*.ts"
-	],
-	"exclude": ["node_modules"],
 	"compilerOptions": {
-		// Type Checking
+		"allowJs": false, // Next.js required.
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
+		"composite": true,
+		"esModuleInterop": true, // Next.js required.
 		"exactOptionalPropertyTypes": true,
+		"incremental": true, // Next.js required.
+		"isolatedDeclarations": true,
+		"isolatedModules": true, // Next.js required.
+		"jsx": "react-jsx", // Next.js required.
+		"lib": ["DOM", "ESNext"], // Next.js required.
+		"module": "esnext", // Next.js required.
+		"moduleResolution": "bundler", // Next.js required.
+		"noEmit": true, // Next.js required.
 		"noFallthroughCasesInSwitch": true,
-		"noImplicitAny": true,
 		"noImplicitOverride": true,
 		"noImplicitReturns": true,
 		"noPropertyAccessFromIndexSignature": true,
 		"noUncheckedIndexedAccess": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"strict": true,
-		// Modules
-		"module": "esnext", // Next.js required.
-		"moduleResolution": "bundler", // Next.js required.
-		"paths": {
-			"app/*": ["./src/app/*"],
-			"components/*": ["./src/components/*"],
-			"styles/*": ["./src/styles/*"],
-			"types/*": ["./src/types/*"],
-			"util/*": ["./src/util/*"]
-		},
-		"resolveJsonModule": true, // Next.js required.
-		// Emit
-		"noEmit": true, // Next.js required.
-		// JavaScript Support
-		"allowJs": true, // Next.js required.
-		"checkJs": true, // Next.js required.
-		// Editor Support
 		"plugins": [{ "name": "next" }], // Next.js required.
-		// Interop Constraints
-		"esModuleInterop": true,
-		"verbatimModuleSyntax": true,
-		// Backwards Compatibility
-		// N/A
-		// Language and Environment
-		"jsx": "react-jsx", // Next.js required.
-		"lib": ["dom", "dom.iterable", "esnext"], // Next.js required.
-		"target": "esnext",
-		// Compiler Diagnostics
-		// N/A
-		// Projects
-		"composite": true,
-		"incremental": true, // Next.js required.
-		// Output Formatting
-		// N/A
-		// Completeness
-		"skipLibCheck": true
-		// Command Line
-		// N/A
-		// Watch Options
-		// N/A
+		"resolveJsonModule": true, // Next.js required.
+		"skipLibCheck": true, // Next.js required.
+		"strict": true, // Next.js required.
+		"target": "esnext", // Next.js required.
+		"verbatimModuleSyntax": true
+	},
+	"exclude": ["dist", "docs", "node_modules"], // Next.js required.
+	"include": ["**/*", ".next/dev/types/**/*.ts", ".next/types/**/*.ts"], // Next.js required.
+	"mdx": {
+		// https://github.com/mdx-js/mdx-analyzer
+		"checkMdx": true,
+		"plugins": [["remark-frontmatter", ["yaml"]], "remark-math"]
 	}
 }
