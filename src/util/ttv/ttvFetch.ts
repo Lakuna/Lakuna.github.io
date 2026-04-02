@@ -1,4 +1,4 @@
-import "@/util/env.js";
+import "@/util/env";
 
 import getToken from "./getToken";
 

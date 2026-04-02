@@ -1,4 +1,4 @@
-import "styles/global.scss";
+import "@/styles/global.scss";
 import type { Metadata, Viewport } from "next";
 import type { JSX } from "react/jsx-runtime";
 

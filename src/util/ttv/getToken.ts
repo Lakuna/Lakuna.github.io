@@ -1,4 +1,4 @@
-import "@/util/env.js";
+import "@/util/env";
 import { number, object, string } from "zod";
 
 import type Token from "@/types/ttv/Token";
