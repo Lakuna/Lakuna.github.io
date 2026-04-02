@@ -8,6 +8,7 @@ import Image from "@/components/Image";
 import Link from "@/components/Link";
 import YoutubeVideo from "@/components/YoutubeVideo";
 
+import boundedRationality from "./bounded-rationality.png";
 import christmasHats from "./christmas-hats.png";
 import cityViewer from "./city-viewer.gif";
 import codehs from "./codehs.png";
@@ -22,7 +23,6 @@ import poseidon from "./poseidon.jpg";
 import prepareModerately from "./prepare-moderately.png";
 import rayTracer from "./ray-tracer.png";
 import riseOfCivilizations from "./rise-of-civilizations.png";
-import wellMet from "./well-met.png";
 
 export default function Page(): JSX.Element {
 	return (
@@ -136,6 +136,24 @@ export default function Page(): JSX.Element {
 						alt="Prepare Moderately subscriber count."
 						className={style["shield"]}
 						src="https://img.shields.io/steam/subscriptions/2057362949?style=for-the-badge&logo=steam"
+						untrusted
+					/>
+				</Card>
+				<Card href="https://steamcommunity.com/sharedfiles/filedetails/?id=2553173153">
+					<h3>{"Bounded Rationality"}</h3>
+					<Image
+						alt="The Bounded Rationality preview image."
+						src={boundedRationality}
+					/>
+					<p>
+						{
+							"A RimWorld mod that aims to increase mechanical difficulty via information hiding. Written in C# and fully backwards compatible since version 1.0."
+						}
+					</p>
+					<Image
+						alt="Well Met subscriber count."
+						className={style["shield"]}
+						src="https://img.shields.io/steam/subscriptions/2553173153?style=for-the-badge&logo=steam"
 						untrusted
 					/>
 				</Card>
@@ -266,21 +284,6 @@ export default function Page(): JSX.Element {
 							"Xanycki's art portfolio, written in TypeScript with Next.js (React)."
 						}
 					</p>
-				</Card>
-				<Card href="https://steamcommunity.com/sharedfiles/filedetails/?id=2553173153">
-					<h3>{"Well Met"}</h3>
-					<Image alt="The Well Met preview image." src={wellMet} />
-					<p>
-						{
-							"A RimWorld mod that hides pawns' traits until you get to know them. Written in C# and fully backwards compatible since version 1.0."
-						}
-					</p>
-					<Image
-						alt="Well Met subscriber count."
-						className={style["shield"]}
-						src="https://img.shields.io/steam/subscriptions/2553173153?style=for-the-badge&logo=steam"
-						untrusted
-					/>
 				</Card>
 				<Card href="https://steamcommunity.com/sharedfiles/filedetails/?id=1947309066">
 					<h3>{"RimWorld Christmas Hats"}</h3>
