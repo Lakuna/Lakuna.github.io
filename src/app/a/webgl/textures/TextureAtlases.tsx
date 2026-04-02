@@ -1,9 +1,7 @@
 "use client";
 
-import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
 import type { JSX } from "react/jsx-runtime";
 
-import domain from "#/util/domain.js";
 import ReactCanvas from "@lakuna/react-canvas";
 import {
 	Context,
@@ -24,6 +22,10 @@ import {
 	rotateY,
 	translate
 } from "@lakuna/umath/Matrix4";
+
+import type { UglCanvasProps } from "@/app/a/webgl/UglCanvasProps";
+
+import domain from "@/util/domain";
 
 const vss = `\
 #version 300 es

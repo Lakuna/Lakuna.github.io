@@ -2,7 +2,6 @@
 
 // Based on "Order Independent Transparency with Dual Depth Peeling" by Louis Bavoil and Kevin Myers (NVIDIA).
 
-import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
 import type { JSX } from "react/jsx-runtime";
 
 import ReactCanvas from "@lakuna/react-canvas";
@@ -26,6 +25,8 @@ import {
 	rotateZ,
 	translate
 } from "@lakuna/umath/Matrix4";
+
+import type { UglCanvasProps } from "@/app/a/webgl/UglCanvasProps";
 
 const depthPeelVss = `\
 #version 300 es

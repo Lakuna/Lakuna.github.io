@@ -1,7 +1,7 @@
 import type { JSX } from "react/jsx-runtime";
 
-import Link from "#/components/Link.js";
-import multiclass from "#/util/multiclass.js";
+import Link from "@/components/Link";
+import multiclass from "@/util/multiclass";
 
 import style from "./topnav.module.scss";
 

@@ -2,7 +2,6 @@
 
 import type { JSX } from "react/jsx-runtime";
 
-import multiclass from "#/util/multiclass.js";
 import { hypergeometricPmf, summation } from "@lakuna/umath";
 import {
 	type ChangeEvent,
@@ -10,6 +9,8 @@ import {
 	type SetStateAction,
 	useState
 } from "react";
+
+import multiclass from "@/util/multiclass";
 
 import style from "./hyper-geo-calc.module.scss";
 

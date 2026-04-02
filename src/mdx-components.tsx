@@ -1,6 +1,6 @@
 import type { MDXComponents } from "mdx/types";
 
-import Link from "#/components/Link.js";
+import Link from "@/components/Link";
 
 /** @see {@link https://nextjs.org/docs/app/guides/mdx} */
 // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types, @typescript-eslint/naming-convention

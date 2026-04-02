@@ -1,7 +1,5 @@
 "use server";
 
-import type Streams from "#/types/ttv/Streams.js";
-
 import {
 	array,
 	boolean,
@@ -11,6 +9,8 @@ import {
 	optional,
 	string
 } from "zod";
+
+import type Streams from "@/types/ttv/Streams";
 
 import ttvFetch from "./ttvFetch";
 

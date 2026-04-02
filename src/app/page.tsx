@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import type { JSX } from "react/jsx-runtime";
 
-import Link from "#/components/Link.js";
-import TwitchStreamIfLive from "#/components/TwitchStreamIfLive.js";
 import { Suspense } from "react";
 import { BsGithub, BsLinkedin, BsTwitch } from "react-icons/bs";
+
+import Link from "@/components/Link";
+import TwitchStreamIfLive from "@/components/TwitchStreamIfLive";
 
 import OneLiner from "./OneLiner";
 import style from "./page.module.scss";

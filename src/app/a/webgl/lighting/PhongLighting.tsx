@@ -1,6 +1,5 @@
 "use client";
 
-import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
 import type { JSX } from "react/jsx-runtime";
 
 import ReactCanvas from "@lakuna/react-canvas";
@@ -28,6 +27,8 @@ import {
 	fromValues,
 	normalize
 } from "@lakuna/umath/Vector3";
+
+import type { UglCanvasProps } from "@/app/a/webgl/UglCanvasProps";
 
 const vss = `\
 #version 300 es

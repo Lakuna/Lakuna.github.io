@@ -1,6 +1,6 @@
 import type { JSX } from "react/jsx-runtime";
 
-import multiclass from "#/util/multiclass.js";
+import multiclass from "@/util/multiclass";
 
 import Link, { type LinkProps } from "./Link";
 import style from "./styles/card.module.scss";

@@ -1,7 +1,7 @@
-import "#/util/env.js";
-import type Token from "#/types/ttv/Token.js";
-
+import "@/util/env.js";
 import { number, object, string } from "zod";
+
+import type Token from "@/types/ttv/Token";
 
 /* eslint-disable @typescript-eslint/naming-convention */
 const tokenSchema = object({

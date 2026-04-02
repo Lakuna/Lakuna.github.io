@@ -1,10 +1,12 @@
 "use client";
 
-import type StreamData from "#/types/ttv/StreamData.js";
 import type { JSX } from "react/jsx-runtime";
 
-import getStreams from "#/util/ttv/getStreams.js";
 import { useEffect, useState } from "react";
+
+import type StreamData from "@/types/ttv/StreamData";
+
+import getStreams from "@/util/ttv/getStreams";
 
 import TwitchStream, { type TwitchStreamProps } from "./TwitchStream";
 

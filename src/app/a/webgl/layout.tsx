@@ -1,8 +1,9 @@
-import "#/styles/highlight.scss";
-import "#/styles/katex.scss";
-import type LayoutProps from "#/types/LayoutProps.js";
+import "@/styles/highlight.scss";
+import "@/styles/katex.scss";
 import type { Metadata } from "next";
 import type { JSX } from "react/jsx-runtime";
+
+import type LayoutProps from "@/types/LayoutProps";
 
 // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export default function Layout({ children }: LayoutProps): JSX.Element {

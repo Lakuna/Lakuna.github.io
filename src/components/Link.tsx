@@ -1,10 +1,11 @@
 import type { JSX } from "react/jsx-runtime";
 
-import domain from "#/util/domain.js";
 import {
 	default as NextLink,
 	type LinkProps as NextLinkProps
 } from "next/link";
+
+import domain from "@/util/domain";
 
 /**
  * Equivalent to the props that can be passed to a Next.js link or an anchor element.

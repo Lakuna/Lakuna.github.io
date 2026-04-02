@@ -1,6 +1,6 @@
 import type { JSX } from "react/jsx-runtime";
 
-import multiclass from "#/util/multiclass.js";
+import multiclass from "@/util/multiclass";
 
 import style from "./styles/youtube-video.module.scss";
 

@@ -1,25 +1,26 @@
 import type { Metadata } from "next";
 import type { JSX } from "react/jsx-runtime";
 
-import Perspective from "#/app/a/webgl/3d/Perspective.js";
-import Indices from "#/app/a/webgl/attributes/Indices.js";
-import Skyboxes from "#/app/a/webgl/cubemaps/Skyboxes.js";
-import Fog from "#/app/a/webgl/fog/Fog.js";
-import Framebuffers from "#/app/a/webgl/framebuffers/Framebuffers.js";
-import PhongLighting from "#/app/a/webgl/lighting/PhongLighting.js";
-import SceneGraph from "#/app/a/webgl/scene-graph/SceneGraph.js";
-import PercentageCloserFiltering from "#/app/a/webgl/shadows/PercentageCloserFiltering.js";
-import GlyphTextures from "#/app/a/webgl/text/GlyphTextures.js";
-import TextureAtlases from "#/app/a/webgl/textures/TextureAtlases.js";
-import Matrices from "#/app/a/webgl/transformation/Matrices.js";
-import DualDepthPeeling from "#/app/a/webgl/transparency/DualDepthPeeling.js";
-import Uniforms from "#/app/a/webgl/uniforms/Uniforms.js";
-import Varyings from "#/app/a/webgl/varyings/Varyings.js";
-import Card from "#/components/Card.js";
-import CardList from "#/components/CardList.js";
-import Image from "#/components/Image.js";
 import contourDetection from "app/a/cccv/opengraph-image.png";
 import victoryScreen from "app/a/pedit5/opengraph-image.png";
+
+import Perspective from "@/app/a/webgl/3d/Perspective";
+import Indices from "@/app/a/webgl/attributes/Indices";
+import Skyboxes from "@/app/a/webgl/cubemaps/Skyboxes";
+import Fog from "@/app/a/webgl/fog/Fog";
+import Framebuffers from "@/app/a/webgl/framebuffers/Framebuffers";
+import PhongLighting from "@/app/a/webgl/lighting/PhongLighting";
+import SceneGraph from "@/app/a/webgl/scene-graph/SceneGraph";
+import PercentageCloserFiltering from "@/app/a/webgl/shadows/PercentageCloserFiltering";
+import GlyphTextures from "@/app/a/webgl/text/GlyphTextures";
+import TextureAtlases from "@/app/a/webgl/textures/TextureAtlases";
+import Matrices from "@/app/a/webgl/transformation/Matrices";
+import DualDepthPeeling from "@/app/a/webgl/transparency/DualDepthPeeling";
+import Uniforms from "@/app/a/webgl/uniforms/Uniforms";
+import Varyings from "@/app/a/webgl/varyings/Varyings";
+import Card from "@/components/Card";
+import CardList from "@/components/CardList";
+import Image from "@/components/Image";
 
 import style from "./page.module.scss";
 

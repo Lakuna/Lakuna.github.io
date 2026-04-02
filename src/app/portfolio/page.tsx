@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import type { JSX } from "react/jsx-runtime";
 
-import PhongLighting from "#/app/a/webgl/lighting/PhongLighting.js";
-import Card from "#/components/Card.js";
-import CardList from "#/components/CardList.js";
-import Image from "#/components/Image.js";
-import Link from "#/components/Link.js";
-import YoutubeVideo from "#/components/YoutubeVideo.js";
+import PhongLighting from "@/app/a/webgl/lighting/PhongLighting";
+import Card from "@/components/Card";
+import CardList from "@/components/CardList";
+import Image from "@/components/Image";
+import Link from "@/components/Link";
+import YoutubeVideo from "@/components/YoutubeVideo";
 
 import christmasHats from "./christmas-hats.png";
 import cityViewer from "./city-viewer.gif";

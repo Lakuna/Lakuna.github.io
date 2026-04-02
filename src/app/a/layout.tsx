@@ -1,6 +1,7 @@
-import type LayoutProps from "#/types/LayoutProps.js";
 import type { Metadata } from "next";
 import type { JSX } from "react/jsx-runtime";
+
+import type LayoutProps from "@/types/LayoutProps";
 
 import style from "./layout.module.scss";
 

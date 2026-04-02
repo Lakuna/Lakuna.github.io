@@ -1,6 +1,5 @@
 "use client";
 
-import type { UglCanvasProps } from "#/app/a/webgl/UglCanvasProps.js";
 import type { JSX } from "react/jsx-runtime";
 
 import ReactCanvas from "@lakuna/react-canvas";
@@ -15,6 +14,8 @@ import {
 	VertexBuffer
 } from "@lakuna/ugl";
 import { createMatrix4Like, identity, scale } from "@lakuna/umath/Matrix4";
+
+import type { UglCanvasProps } from "@/app/a/webgl/UglCanvasProps";
 
 const vss = `\
 #version 300 es

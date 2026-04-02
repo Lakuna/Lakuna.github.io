@@ -1,10 +1,11 @@
 import "styles/global.scss";
-import type LayoutProps from "#/types/LayoutProps.js";
 import type { Metadata, Viewport } from "next";
 import type { JSX } from "react/jsx-runtime";
 
-import domain from "#/util/domain.js";
-import { monospace, sansSerif, serif } from "#/util/font.js";
+import type LayoutProps from "@/types/LayoutProps";
+
+import domain from "@/util/domain";
+import { monospace, sansSerif, serif } from "@/util/font";
 
 import style from "./layout.module.scss";
 import Topnav from "./Topnav";
