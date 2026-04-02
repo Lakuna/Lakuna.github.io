@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import type { JSX } from "react/jsx-runtime";
 
-import contourDetection from "app/a/cccv/opengraph-image.png";
-import victoryScreen from "app/a/pedit5/opengraph-image.png";
-
+import contourDetection from "@/app/a/cccv/opengraph-image.png";
+import victoryScreen from "@/app/a/pedit5/opengraph-image.png";
 import Perspective from "@/app/a/webgl/3d/Perspective";
 import Indices from "@/app/a/webgl/attributes/Indices";
 import Skyboxes from "@/app/a/webgl/cubemaps/Skyboxes";

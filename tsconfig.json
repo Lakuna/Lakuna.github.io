@@ -4,6 +4,7 @@
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
 		"composite": true,
+		"declaration": true,
 		"esModuleInterop": true, // Next.js required.
 		"exactOptionalPropertyTypes": true,
 		"incremental": true, // Next.js required.

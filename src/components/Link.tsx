@@ -11,7 +11,10 @@ import domain from "@/util/domain";
  * Equivalent to the props that can be passed to a Next.js link or an anchor element.
  * @public
  */
-export type LinkProps = JSX.IntrinsicElements["a"] &
+export type LinkProps = Omit<
+	JSX.IntrinsicElements["a"],
+	"onClick" | "onMouseEnter" | "onTouchStart"
+> &
 	Omit<NextLinkProps, keyof JSX.IntrinsicElements["a"]>;
 
 /**
@@ -21,22 +24,11 @@ export type LinkProps = JSX.IntrinsicElements["a"] &
  * @public
  */
 // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
-export default function Link({
-	href,
-	onClick,
-	onMouseEnter,
-	onTouchStart,
-	...props
-}: LinkProps): JSX.Element {
+export default function Link({ href, ...props }: LinkProps): JSX.Element {
 	// Ensure that required properties are present.
 	if (!href) {
 		throw new Error("Link reference is required.");
 	}
-
-	// Ignore disallowed properties.
-	void onMouseEnter;
-	void onTouchStart;
-	void onClick;
 
 	// Set default properties.
 	if (

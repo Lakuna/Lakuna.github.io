@@ -1,8 +1,7 @@
 import type { NextConfig } from "next";
 import type { Configuration } from "webpack";
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-import createMDX from "@next/mdx";
+import createMdx from "@next/mdx";
 import bash from "highlight.js/lib/languages/bash";
 import c from "highlight.js/lib/languages/c";
 import glsl from "highlight.js/lib/languages/glsl";
@@ -18,7 +17,7 @@ import remarkMdxFrontmatter from "remark-mdx-frontmatter";
  * Next.js configuration options.
  * @internal
  */
-const out: NextConfig = createMDX({
+const out: NextConfig = createMdx({
 	// These options can't be serializable, so must use Webpack over Turbopack for now.
 	options: {
 		rehypePlugins: [
@@ -32,7 +31,7 @@ const out: NextConfig = createMDX({
 		]
 	}
 })({
-	pageExtensions: ["mdx", "ts", "tsx"],
+	pageExtensions: ["mdx", "tsx"],
 	reactCompiler: true,
 	trailingSlash: false,
 	// eslint-disable-next-line @typescript-eslint/naming-convention
