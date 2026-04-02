@@ -86,20 +86,6 @@ export default function Page(): JSX.Element {
 						</li>
 					</ul>
 				</Card>
-				<Card href="https://www.gcsleague.com/">
-					<h3>{"Gauntlet Championship Series Website"}</h3>
-					<Gcs className={style["half"]} />
-					<p>
-						{
-							"The website for the Gauntlet Championship Series, which is a League of Legends draft league. Primary features include statistic collection, storage, and display, roster management tools, and match scheduling tools."
-						}
-					</p>
-					<p>
-						{
-							"The website uses Next.js (React), a PostgreSQL database with Drizzle as an ORM, Sass modules for styling, and TypeScript."
-						}
-					</p>
-				</Card>
 				<Card>
 					<h3>{"lakuna.pw"}</h3>
 					<p>{"My personal website since November 13, 2017."}</p>
@@ -230,6 +216,20 @@ export default function Page(): JSX.Element {
 							{"here"}
 						</Link>
 						{"."}
+					</p>
+				</Card>
+				<Card href="https://www.gcsleague.com/">
+					<h3>{"Gauntlet Championship Series Website"}</h3>
+					<Gcs className={style["half"]} />
+					<p>
+						{
+							"The website for the Gauntlet Championship Series, which is a League of Legends draft league. Primary features include statistic collection, storage, and display, roster management tools, and match scheduling tools."
+						}
+					</p>
+					<p>
+						{
+							"The website uses Next.js (React), a PostgreSQL database with Drizzle as an ORM, Sass modules for styling, and TypeScript."
+						}
 					</p>
 				</Card>
 				<Card href="https://modrinth.com/mod/elytra_trinket">
