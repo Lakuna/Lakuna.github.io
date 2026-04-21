@@ -20,10 +20,10 @@ By default, when drawing a transparent primitive in WebGL, the primitive's color
 gl.enable(gl.BLEND);
 ```
 
-The behavior of blending can be modified by changing the _blend function_. For a fragment (source) color $C_{src}$, a background (destination) color $C_{dst}$, and a fragment (source) alpha value $A_{src}$, the following equation accurately blends the color value $C$ from back to front.
+The behavior of blending can be modified by changing the _blend function_. For a fragment (source) color $$C_{src}$$, a background (destination) color $$C_{dst}$$, and a fragment (source) alpha value $$A_{src}$$, the following equation accurately blends the color value $$C$$ from back to front.
 
 $$
-C = C_{src}A_{src} + C_{dst}(1 - A_{src})
+C=C_{src}A_{src}+C_{dst}(1-A_{src})
 $$
 
 ```js
@@ -59,9 +59,9 @@ One method of exact OIT, [dual depth peeling](https://developer.download.nvidia.
 
 ### Depth Peeling
 
-One simple method of exact OIT is _depth peeling_, in which an implicit sort is used to extract multiple depth layers. With $n$ rendering passes, up to $n$ layers of transparent fragments can be accurately rendered. On each successive pass, the color and depth of the next-nearest fragment is recorded. Two depth buffers are used to compare the previous fragment with the current one: one depth buffer is writable and is used to store the fragment data, while the other one is used only for comparison and thus can be read-only (a shadow map).
+One simple method of exact OIT is _depth peeling_, in which an implicit sort is used to extract multiple depth layers. With $$n$$ rendering passes, up to $$n$$ layers of transparent fragments can be accurately rendered. On each successive pass, the color and depth of the next-nearest fragment is recorded. Two depth buffers are used to compare the previous fragment with the current one: one depth buffer is writable and is used to store the fragment data, while the other one is used only for comparison and thus can be read-only (a shadow map).
 
-A faster version of depth peeling is _dual depth peeling_, which allows rendering $n$ layers of transparent fragments with $\frac{n}{2}+1$ 3D render passes (plus one 2D composition pass) by rendering both the next-farthest and the next-nearest fragment on each pass. Dual depth peeling requires the use of two additional framebuffers, each of which has three color attachments:
+A faster version of depth peeling is _dual depth peeling_, which allows rendering $$n$$ layers of transparent fragments with $$\frac{n}{2}+1$$ 3D render passes (plus one 2D composition pass) by rendering both the next-farthest and the next-nearest fragment on each pass. Dual depth peeling requires the use of two additional framebuffers, each of which has three color attachments:
 
 - A color attachment that uses one channel to store the negative front depth and another channel to store the back depth.
 - A color attachment that stores the color of the front fragment.
@@ -139,17 +139,17 @@ gl.blendEquation(gl.MAX);
 
 After this point, two possibilities remain. If `depth == nearDepth`, the current fragment belongs to the near layer that is to be processed on this render pass. In this case, the front-to-back blending equation must be used. As mentioned before, we use the `MAX` blend equation for this shader program, so we need to implement the front-to-back blending equation manually.
 
-For a source color $C_{src}$, a destination color $C_{dst}$, a source alpha value $A_{src}$, and a destination alpha value $A_{dst}$, and assuming an initial value of $A_{dst} = 1$, the following equations accurately blend the color value $C$ and the alpha value $A$ from front to back.
+For a source color $$C_{src}$$, a destination color $$C_{dst}$$, a source alpha value $$A_{src}$$, and a destination alpha value $$A_{dst}$$, and assuming an initial value of $$A_{dst}=1$$, the following equations accurately blend the color value $$C$$ and the alpha value $$A$$ from front to back.
 
 $$
-C = C_{src}A_{src}A_{dst} + C_{dst}
+C=C_{src}A_{src}A_{dst}+C_{dst}
 $$
 
 $$
-A = (1 - A_{src})A_{dst}
+A=(1-A_{src})A_{dst}
 $$
 
-Making some modifications to account for an initial value of $A_{dst} = 1$ yields the following code.
+Making some modifications to account for an initial value of $$A_{dst}=1$$ yields the following code.
 
 ```glsl
 if (depth == nearDepth) {

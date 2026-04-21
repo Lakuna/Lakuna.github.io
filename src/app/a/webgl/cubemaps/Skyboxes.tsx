@@ -187,7 +187,7 @@ export default function Skyboxes(props: UglCanvasProps): JSX.Element {
 
 					const w = canvas.width;
 					const h = canvas.height;
-					perspective(Math.PI / 4, w / (h || 1), 1, 10, proj);
+					perspective(Math.PI / 4, w / (h || 1) || 1, 1, 10, proj);
 					identity(cam);
 					rotateY(cam, now * 0.0001, cam);
 					translate(cam, [0, 0, 5], cam);

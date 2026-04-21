@@ -18,7 +18,7 @@ You may need to read the articles about [uniforms](/a/webgl/uniforms) and [varyi
 
 A _texture_ is an array of data that can be randomly accessed. Textures are mostly used to store image data.
 
-_Texture space_ is a coordinate system that represents a texture in the range $[0, 1]$ from left to right, bottom to top. _Sampling_ is retrieving the data from a texture at the given texture coordinates. A _sampler_ is a uniform that is used to sample a texture (via the built-in `texture` function). A discrete point of data in a texture is called a _texel_.
+_Texture space_ is a coordinate system that represents a texture in the range $$[0,1]$$ from left to right, bottom to top. _Sampling_ is retrieving the data from a texture at the given texture coordinates. A _sampler_ is a uniform that is used to sample a texture (via the built-in `texture` function). A discrete point of data in a texture is called a _texel_.
 
 ```glsl
 #version 300 es
@@ -98,7 +98,7 @@ Textures have various parameters that can be modified with [`texParameter[fi]`](
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 ```
 
-The value that is returned when sampling a value outside of texture space is controlled by the `TEXTURE_WRAP_S` and `TEXTURE_WRAP_T` parameters for the $s$ and $t$ axes, respectively.
+The value that is returned when sampling a value outside of texture space is controlled by the `TEXTURE_WRAP_S` and `TEXTURE_WRAP_T` parameters for the $$s$$ and $$t$$ axes, respectively.
 
 - `REPEAT` makes the texture repeat. This is the default functionality.
 - `CLAMP_TO_EDGE` repeats the last texel.
@@ -183,7 +183,7 @@ void main() {
 }
 ```
 
-The _texture matrix_ is a slightly modified version of the projector's view projection matrix that also converts from clip space to texture space. It can be constructed by multiplying a matrix that translates and then scales by $\frac{1}{2}$ on each axis by the projector's view projection matrix.
+The _texture matrix_ is a slightly modified version of the projector's view projection matrix that also converts from clip space to texture space. It can be constructed by multiplying a matrix that translates and then scales by $$\frac{1}{2}$$ on each axis by the projector's view projection matrix.
 
 ```js
 const half = Vector3.fromValues(0.5, 0.5, 0.5);

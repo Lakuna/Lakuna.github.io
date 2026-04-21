@@ -392,10 +392,10 @@ Depending on what we want to do with an image, it can be useful to modify that i
 If we want to make an image grayscale, we can do so by setting the red, green, and blue values of each pixel to the _luminance_ of that pixel. Luminance is calculated as follows:
 
 $$
-l = 0.2126r + 0.7152g + 0.0722b
+l=0.2126r+0.7152g+0.0722b
 $$
 
-Where $l$ is the luminance, $r$ is the red value, $g$ is the green value, and $b$ is the blue value.
+Where $$l$$ is the luminance, $$r$$ is the red value, $$g$$ is the green value, and $$b$$ is the blue value.
 
 Putting it all together, we get this script to convert an image `a.png` into a grayscale version `b.png`:
 
@@ -463,9 +463,9 @@ _Edge detection_ - that is, finding outlines - is a more complex process because
 
 $$
 \begin{bmatrix}
-\frac{1}{9} & \frac{1}{9} & \frac{1}{9} \\
-\frac{1}{9} & \frac{1}{9} & \frac{1}{9} \\
-\frac{1}{9} & \frac{1}{9} & \frac{1}{9}
+\frac{1}{9}&\frac{1}{9}&\frac{1}{9}\\
+\frac{1}{9}&\frac{1}{9}&\frac{1}{9}\\
+\frac{1}{9}&\frac{1}{9}&\frac{1}{9}
 \end{bmatrix}
 $$
 
@@ -499,9 +499,9 @@ This image is from [the OpenCV Python Image Gradients tutorial](https://docs.ope
 
 $$
 \begin{bmatrix}
-0 & 1 & 0 \\
-1 & -4 & 1 \\
-0 & 1 & 0
+0&1&0\\
+1&-4&1\\
+0&1&0
 \end{bmatrix}
 $$
 

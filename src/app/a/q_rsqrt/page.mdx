@@ -12,23 +12,21 @@ import "@/styles/katex.scss";
 
 "[Fast inverse square root](https://en.wikipedia.org/wiki/Fast_inverse_square_root)" refers to a famous algorithm invented by [William Kahan](https://en.wikipedia.org/wiki/William_Kahan), especially as implemented in [Quake III Arena](https://en.wikipedia.org/wiki/Quake_III_Arena).
 
-If you prefer, there is also an excellent video covering this topic [here](https://youtu.be/p8u_k2LIZyo).
-
 Although the algorithm has been made mostly obsolete due to advances in hardware technology, it was previously used to quickly and accurately (with a maximum of 1% error) calculate the multiplicative inverse of the square root of a number $$x$$ ($$\frac{1}{\sqrt{x}}$$).
 
 ```c
 float y = 1 / sqrt(x);
 ```
 
-The primary use of determining the inverse square root of a number is for normalizing vectors (maintaining their direction while setting their magnitude to 1). Normalized vectors are useful in computer graphics and physics simulations because, just like the number 1, multiplying by them doesn't change the magnitude of other vectors (while still modifying their direction).
+The primary use of determining the inverse square root of a number is for normalizing vectors (maintaining their direction while setting their magnitude to 1). Normalized vectors are useful in computer graphics and physics simulations because multiplying by them maintains the magnitude of other vectors while still modifying their direction. In this way, normalized vectors can be thought of like a "rotating 1."
 
-Vectors can be normalized by dividing them by their magnitudes. The magnitude of a vector is determined by taking the square root of the sum of the squares of its components (the two-dimensional version of this is called the [Pythagorean theorem](https://en.wikipedia.org/wiki/Pythagorean_theorem): $\sqrt{a^2 + b^2}$). In other words, multiplying a vector by its inverse square root (the inverse of its magnitude) normalizes it.
+Vectors can be normalized by dividing them by their magnitudes. The magnitude of a vector is determined by taking the square root of the sum of the squares of its components (the two-dimensional version of this is called the [Pythagorean theorem](https://en.wikipedia.org/wiki/Pythagorean_theorem): $$\sqrt{a^2+b^2}$$).
 
-The thing that makes fast inverse square root so important is, as the name implies, the computation speed of the algorithm. Division is very slow compared to the other basic arithmetic operations, so it is important to minimize its use. Even a small improvement means a lot in a function like fast inverse square root, which could be used hundreds or thousands of times per second.
+The thing that makes fast inverse square root so important is, as the name implies, the computation speed of the algorithm. Division is very slow compared to the other basic arithmetic operations, so it is important to minimize its use. Even a small improvement means a lot in a function like fast inverse square root, which could be used millions of times per second.
 
 ## Code Analysis
 
-The remainder of this article will be an analysis of the Quake III Arena code, which can be found [here](https://github.com/id-Software/Quake-III-Arena/blob/dbe4ddb10315479fc00086f08e25d968b4b43c49/code/game/q_math.c#L552). For reference, here is a slightly modified version of the function:
+The remainder of this article will be an analysis of the Quake III Arena code, which can be found [here](https://github.com/id-Software/Quake-III-Arena/blob/dbe4ddb10315479fc00086f08e25d968b4b43c49/code/game/q_math.c#L552). For reference, here is a slightly modified (functionally identical) version of the function:
 
 ```c
 float Q_rsqrt(float y) {
@@ -45,54 +43,80 @@ float Q_rsqrt(float y) {
 
 In order to understand how the function works, one must first understand how floating-point variables are stored in memory. Whenever a variable is declared as a `float` in C, it is stored according to the rules of [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754). IEEE 754 was created by William Kahan, in collaboration with Intel, in the 1980s. Today, almost all computers use it to store floating-point values.
 
-IEEE 754 is based on scientific notation, in which numbers are written as a value in the range $[1, b)$ multiplied by some power of $b$, where $b$ is the base of the number. For example, $45000_{10} = 4.5 * 10^4$. The first number ($4.5$ in the example) is called the "_mantissa_", and the exponent of the $10$ ($4$) is just called the "_exponent_."
+IEEE 754 is based on scientific notation, in which numbers are written as a value in the range $$[1,b)$$ multiplied by some power of $$b$$, where $$b$$ is the base of the number. For example, $$45000_{10}=4.5*10^4$$. The first number ($$4.5$$ in the example) is called the "_mantissa_", and the exponent of the $$10$$ ($$4$$) is just called the "_exponent_."
 
 IEEE 754 floating-point values are stored in 32 bits. The first bit is the "_sign bit_." The sign bit is `0b1` if the number is negative, or `0b0` if it is positive. The sign bit comes first in order to make it easier to sort floating-point values.
 
-The next 8 bits encode the exponent. This number is right-aligned. Rather than using _two's complement_ (which is a way to store signed integers where the first bit represents the negative of its typical value), the exponent is "biased" by adding $b^{n - 1} - 1 = 127$, where $b = 2$ is the base and $n = 8$ is the number of bits in the exponent, to its value, such that the smallest representable exponent is represented as `0b00000001`. This is done so that larger numbers visibly appear larger, and to make floating-point values easier to sort.
+The next 8 bits encode the exponent. This number is right-aligned. Rather than using _two's complement_ (which is a way to store signed integers where the first bit represents the negative of its typical value), the exponent is "biased" by adding $$b^{n-1}-1=127$$, where $$b=2$$ is the base and $$n=8$$ is the number of bits in the exponent, to its value, such that the smallest representable exponent is represented as `0b00000001`. This is done so that larger numbers visibly appear larger, and to make floating-point values easier to sort.
 
-The final 23 bits encode the mantissa. These bits are left-aligned, with each bit representing $\frac{1}{2^n}$, where $n$ is the index of the bit. Since computers store values in base-two (binary) rather than base-ten (decimal), the mantissa is instead multiplied by a power of 2, and must fall in the range $[1, 2)$. Since the integer portion of the mantissa is guaranteed to be 1 by definition, it doesn't need to be stored.
+The final 23 bits encode the mantissa. These bits are left-aligned, with each bit representing $$\frac{1}{2^n}$$, where $$n$$ is the index of the bit. Since computers store values in base-two (binary) rather than base-ten (decimal), the mantissa is instead multiplied by a power of 2, and must fall in the range $$[1,2)$$. Since the integer portion of the mantissa is guaranteed to be 1 by definition, it doesn't need to be represented.
 
-Since it would be impossible to represent $0$ with the standard described above, IEEE 754 also includes a few special rules:
+Since it would be impossible to represent $$0$$ with the standard described above, IEEE 754 also includes a few special rules:
 
-- If the exponent field is all zeros, the number is "_denormalized_," which means that the exponent becomes $1 - b$, where $b$ is the bias, and the integer $1$ is not added to the mantissa.
+- If the exponent field is all zeros, the number is "_denormalized_," which means that the exponent becomes $$1-b$$, where $$b$$ is the bias, and the integer $$1$$ is not added to the mantissa.
 - If the exponent field is all ones and the mantissa is all zeros, the value represented is infinity.
-- If the exponent field is all ones and the mantissa is not all zeros, the value represented is not a number.
+- If the exponent field is all ones and the mantissa is not all zeros, the value represented is not a number (`NaN`).
 
-For example, to store the number $3.75 = 1.875 * 2 ^ 1$ in IEEE 754:
+For example, to store the number $$3.75=1.875*2^1$$ in IEEE 754:
 
 - The number is positive, so the sign bit is `0b0`.
-- The exponent is $1$. Adding the bias of $127$, this means that the represented value must be $128$, or `0b10000000`.
-- The mantissa is $1.875$. Since the integer part doesn't need to be represented, the bits represent $0.875 = \frac{7}{8} = \frac{1}{2} + \frac{1}{4} + \frac{1}{8}$, or `0b11100000000000000000000`.
-- All together, $3.75$ is represented as `0b01000000011100000000000000000000`.
+- The exponent is $$1$$. Adding the bias of $$127$$, this means that the represented value must be $$128$$, or `0b10000000`.
+- The mantissa is $$1.875$$. Since the integer part doesn't need to be represented, the bits represent $$0.875=\frac{7}{8}=\frac{1}{2}+\frac{1}{4}+\frac{1}{8}$$, or `0b11100000000000000000000`.
+- All together, $$3.75$$ is represented as `0b01000000011100000000000000000000`.
 
 ### The Magic Constant
 
-Since the floating-point values that fast inverse square root is designed to work with are always positive (the square root of a negative number is imaginary), the sign bit is always `0b0`, so it can be disregarded. Since the 8-bit exponent is followed by the 23-bit mantissa, if given a binary exponent $x$ and a binary mantissa $m$, the IEEE 754 representation of a floating-point number can be calculated as $2^{23}x + m$, since multiplying $x$ by $2^{23}$ shifts it 23 binary digits to the left. Reverse-engineering this formula yields the following equation for the values of the IEEE 754 representations of the mantissa $m$ and the exponent $p$ for a given number $n$:
+Since the floating-point values that fast inverse square root is designed to work with are always positive (the square root of a negative number is imaginary), the sign bit is always `0b0`, so it can be disregarded. Since the 8-bit exponent is followed by the 23-bit mantissa, if given a binary exponent $$p$$ and a binary mantissa $$m$$, the IEEE 754 representation of a floating-point number can be calculated as $$2^{23}p+m$$, since multiplying $$p$$ by $$2^{23}$$ shifts it 23 binary digits to the left. Reverse-engineering this formula yields the following equation for the values of the IEEE 754 representations of the mantissa $$m$$ and the exponent $$p$$ for a given number $$n$$:
 
 $$
-n = (1 + \frac{m}{2^{23}}) * 2^{p - 127}
+n=(1+\frac{m}{2^{23}})*2^{p-127}
 $$
 
-Where $127$ comes from the bias in the exponent bits. For example:
+Where $$127$$ comes from the bias in the exponent bits. For example:
 
 $$
-3.75 = (1 + \frac{11100000000000000000000_2}{2^{23}}) * 2^{10000000_2 - 127}
+3.75=(1+\frac{11100000000000000000000_2}{2^{23}})*2^{10000000_2-127}
 $$
 
 Taking the binary logarithm of the above equation and simplifying yields the following equation:
 
 $$
-\log_2(n) = \log_2(1 + \frac{m}{2^{23}}) + p - 127
+\log_2(n)=\log_2(1+\frac{m}{2^{23}})+p-127
 $$
 
-For small values of $x$, $\log_2(1 + x) \approx x$. A corrective term, $\mu$, is added to this, yielding $\log_2(1 + x) \approx x + \mu$. $\mu \approx 0.043$ gives the smallest average error for numbers in the range $[0, 1]$. Since $\frac{m}{2^{23}}$ is in the range $[0, 1]$, the equation can be simplified further as follows:
+For small values of $$x$$ (those in the range $$[0,1]$$), $$\log_2(1+x)\approx{x}$$. A corrective term, $$\mu$$, is added to this, yielding $$\log_2(1+x)\approx{x}+\mu$$. Since $$\frac{m}{2^{23}}$$ is in the range $$[0,1]$$, the equation can be simplified further as follows:
 
 $$
-\log_2(n) = \frac{m}{2^{23}} + \mu + p - 127 = \frac{2^{23}p + m}{2^{23}} + \mu - 127
+\log_2(n)=\frac{m}{2^{23}}+\mu+p-127=\frac{2^{23}p+m}{2^{23}}+\mu-127
 $$
 
-The appearance of $2^{23}p + m$ here is important because, as explained previously, that is the IEEE 754 representation of $n$. In other words, the IEEE 754 representation of a number is its own binary logarithm, albeit scaled and shifted by some constants.
+The appearance of $$2^{23}p+m$$ here is important because, as explained previously, that is the IEEE 754 representation of $$n$$. In other words, the IEEE 754 representation of a number is its own binary logarithm, albeit scaled and shifted by some constants.
+
+The optimal value of $$\mu$$ is the value that gives the smallest average error for numbers in the range $$[0,1]$$. To determine this value, first take the function $$f$$ of the difference between $$\log_2(1+x)$$ and $$x$$.
+
+$$
+f(x)=\log_2(1+x)-x
+$$
+
+Find the maximum value of that function by calculating its derivative and setting it to zero.
+
+$$
+f'(x)=\frac{\mathrm{d}}{\mathrm{d}x}\log_2(1+x)-x=\frac{1}{(1+x)\ln(2)}-1
+$$
+
+$$
+\frac{1}{(1+x)\ln(2)}-1=0\implies{x}=\frac{1}{\ln(2)}-1\approx0.4427
+$$
+
+$$
+f(\frac{1}{\ln(2)}-1)\approx0.0861
+$$
+
+This value represents the maximum error. Based on the shape of the graph, the optimal value of $$\mu$$ can be determined by taking half of this value.
+
+$$
+\mu=\frac{f(\frac{1}{\ln(2)}-1)}{2}\approx0.043
+$$
 
 ### Evil Floating-Point Bit-Level Hacking
 
@@ -114,12 +138,12 @@ y = *(float*)&i;
 
 ### Applying the Magic Constant
 
-Recall that halving the exponent of a number yields the square root of that number ($x^{\frac{1}{2}} = \sqrt{x}$), and that negating the exponent yields its multiplicative inverse ($x^{-1} = \frac{1}{x}$). Therefore, $x^{-\frac{1}{2}} = \frac{1}{\sqrt{x}}$.
+Recall that halving the exponent of a number yields the square root of that number ($$x^{\frac{1}{2}}=\sqrt{x}$$), and that negating the exponent yields its multiplicative inverse ($$x^{-1}=\frac{1}{x}$$). Therefore, $$x^{-\frac{1}{2}}=\frac{1}{\sqrt{x}}$$.
 
 As explained in a prior section, `i` now contains the binary logarithm of `y` (scaled and shifted by some constants). Using this fact, it is possible to simplify the algorithm by finding the binary logarithm of the multiplicative inverse square root of `y`, rather than finding the multiplicative inverse square root of `y` directly.
 
 $$
-\log_2(\frac{1}{\sqrt{y}}) = \log_2(y^{-\frac{1}{2}}) = -\frac{\log_2(y)}{2}
+\log_2(\frac{1}{\sqrt{y}})=\log_2(y^{-\frac{1}{2}})=-\frac{\log_2(y)}{2}
 $$
 
 The third line of code is as follows:
@@ -128,44 +152,60 @@ The third line of code is as follows:
 i = 0x5f3759df - (i >> 1);
 ```
 
-The `- (i >> 1)` part of the line is effectively halving the binary logarithm of `y`, while the constant `0x5f3759DF` comes from the scaling and shifting applied to the binary logarithm previously. The constant can be reverse-engineered as the function $\Gamma$ as follows:
+The `- (i >> 1)` part of the line is effectively halving the binary logarithm of `y`, while the constant `0x5f3759DF` comes from the scaling and shifting applied to the binary logarithm previously. The constant can be reverse-engineered as the function $$\Gamma$$ as follows:
 
 $$
-\Gamma = \frac{1}{\sqrt{y}}
+\Gamma=\frac{1}{\sqrt{y}}
 $$
 
 Find the binary logarithm of both sides:
 
 $$
-\log_2(\Gamma) = \log_2(\frac{1}{\sqrt{y}}) = -\frac{\log_2(y)}{2}
+\log_2(\Gamma)=\log_2(\frac{1}{\sqrt{y}})=-\frac{\log_2(y)}{2}
 $$
 
 Replace both sides with the bit representation:
 
 $$
-\frac{2^{23}p_\Gamma + m_\Gamma}{2^{23}} + \mu - 127 = -\frac{\frac{2^{23}p_y + m_y}{2^{23}} + \mu - 127}{2}
+\frac{2^{23}p_\Gamma+m_\Gamma}{2^{23}}+\mu-127=-\frac{\frac{2^{23}p_y+m_y}{2^{23}}+\mu-127}{2}
 $$
 
-Solve for the bits of $\Gamma$:
+Solve for the bits of $$\Gamma$$:
 
 $$
-2^{23}p_\Gamma + m_\Gamma = \frac{3(2^{23})(127 - \mu) - (2^{23}p_y + m_y)}{2}
+2^{23}p_\Gamma+m_\Gamma=\frac{3(2^{23})(127-\mu)-(2^{23}p_y+m_y)}{2}
 $$
 
-$-\frac{2^{23}p_y + m_y}{2}$ is equivalent to `- (i >> 1)` in the code, which leaves $\frac{3(2^{23})(127 - \mu)}{2}$, which makes up the constant `0x5f3759DF`.
+$$-\frac{2^{23}p_y+m_y}{2}$$ is equivalent to `- (i >> 1)` in the code, which leaves $$\frac{3(2^{23})(127-\mu)}{2}\approx1597488310$$, which is approximately equal to the constant `0x5f3759DF` (the difference appears to come from rounding in the value of $$\mu$$).
 
 ### Newton's Method
 
-[Newton's method](https://en.wikipedia.org/wiki/Newton%27s_method) is an iterative algorithm which produces successively better approximations to the roots of a real-valued function. In other words, every time we run our approximation through Newton's method, it will become closer to the real value.
+[Newton's method](https://en.wikipedia.org/wiki/Newton%27s_method) is an iterative algorithm which produces successively better approximations to the roots of a real-valued function. In other words, every time we run our approximation through Newton's method with a function that has a root at the real value, it will become closer to the real value. The function $$f$$ that the code uses is $$f(y)=\frac{1}{y^2}-x$$, since if $$y$$ is a root of $$f$$, then $$y$$ is the inverse square root of $$x$$. This means that the value stored in `y` is our initial approximation $$x_0$$.
 
-The approximation that we've computed thus far is already so close to the real value that just one iteration of Newton's method will bring the error within 1%.
+$$
+0=\frac{1}{y^2}-x\implies{y}=\frac{1}{\sqrt{x}}
+$$
 
-Newton's method is accomplished in the code like this:
+Newton's method works by taking an approximated root, the actual value of the function at that position, and the derivative of the function at that position, and subtracting the expected difference between the approximated root and the actual root based on those values to get a closer approximation.
+
+$$
+x_{n+1}=x_n-\frac{f(x_n)}{f'(x_n)}=x_n-\frac{\frac{1}{x_n^2}-x}{-\frac{2}{x_n^3}}=\frac{x_n(3-xx_n^2)}{2}
+$$
+
+Because of the first line of code, `x2` stores half of $$x$$ (the value that we are trying to calculate the multiplicative inverse square root of). Since `y` contains an approximation $$x_0$$, a better approximation $$x_1$$ can be calculated and stored in `y` with the fifth line of code.
 
 ```c
 y *= 1.5f - x2 * y * y;
 ```
 
-$$
-f(y) = \frac{1}{y^2} - x \implies y = \frac{1}{\sqrt{x}}
-$$
+The approximation that we've computed thus far is already so close to the real value that just one iteration of Newton's method will bring the error within 1%, which was close enough to accurate for the purposes of Quake III Arena. If a closer approximation is needed, the previous line of code can simply be repeated as many times as necessary.
+
+### References
+
+Carmack, J., Duffy, R. A., & Dosé, J. (1999, December 2). _Quake III Arena_ [Source code]. [https://github.com/id-Software/Quake-III-Arena](https://github.com/id-Software/Quake-III-Arena).
+
+Nemean. (2020, November 28). _Fast Inverse Square Root - A Quake III Algorithm_ [Video]. YouTube. [https://youtu.be/p8u_k2LIZyo](https://youtu.be/p8u_k2LIZyo)
+
+Pompili, L. (2022, November 17). _Why does this approximation constant work?_ [Online forum post]. Mathematics Stack Exchange. [https://math.stackexchange.com/a/4579143](https://math.stackexchange.com/a/4579143).
+
+Theys, M. (2202). _Floating Point_ [PowerPoint slides].
