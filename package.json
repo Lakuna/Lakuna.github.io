@@ -1,7 +1,7 @@
 {
 	"dependencies": {
 		"@lakuna/react-canvas": "^2.0.7",
-		"@lakuna/ugl": "^27.0.0",
+		"@lakuna/ugl": "^27.1.0",
 		"@lakuna/umath": "^4.0.5",
 		"@mdx-js/loader": "^3.1.1",
 		"@mdx-js/react": "^3.1.1",
@@ -18,14 +18,12 @@
 		"remark-math": "^6.0.0",
 		"remark-mdx-frontmatter": "^5.2.0",
 		"sharp": "^0.34.5",
-		"zod": "^4.3.6"
+		"zod": "^4.4.2"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.39.4",
 		"@mdx-js/typescript-plugin": "^0.1.3",
 		"@svgr/webpack": "^8.1.0",
-		"@types/eslint": "^9.6.1",
-		"@types/eslint-config-prettier": "^6.11.3",
 		"@types/mdx": "^2.0.13",
 		"@types/node": "^25.6.0",
 		"@types/react": "^19.2.14",
@@ -38,11 +36,11 @@
 		"eslint-plugin-perfectionist": "^5.9.0",
 		"eslint-plugin-prettier": "^5.5.5",
 		"eslint-plugin-tsdoc": "^0.5.2",
-		"globals": "^17.5.0",
+		"globals": "^17.6.0",
 		"prettier": "^3.8.3",
 		"sass": "^1.99.0",
 		"typescript": "^6.0.3",
-		"typescript-eslint": "^8.58.2"
+		"typescript-eslint": "^8.59.1"
 	},
 	"private": true,
 	"scripts": {

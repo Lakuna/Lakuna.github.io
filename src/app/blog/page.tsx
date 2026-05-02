@@ -29,6 +29,17 @@ export default function Page(): JSX.Element {
 			<h1>{"Blog"}</h1>
 			<hr />
 			<CardList>
+				<Card href="/a/ugl">
+					<h2>{"Introduction to μGL"}</h2>
+					<p>{"An overview of my WebGL2 library and its major features."}</p>
+					<ul>
+						<li>{"WebGL API call deduplication."}</li>
+						<li>{"CPU caching of GPU state."}</li>
+						<li>{"Abstractions over binding points and texture units."}</li>
+						<li>{"Automatic hardware detection."}</li>
+						<li>{"Automatic extension management."}</li>
+					</ul>
+				</Card>
 				<Card href="/a/cccv">
 					<h2>{"Crash Course: Computer Vision"}</h2>
 					<p>

@@ -1,0 +1,81 @@
+---
+title: "Introduction to μGL"
+description: "An overview of my WebGL2 library."
+openGraph:
+  url: "/a/ugl"
+date: "2026-04-22T00:30:00.000Z"
+---
+
+import "@/styles/highlight.scss";
+
+# Introduction to μGL
+
+[μGL](https://ugl.lakuna.pw/) is the WebGL2 library that I develop. This article is targeted at developers who are already familiar with WebGL; if you are new to WebGL, consider reading [my WebGL tutorial series](/a/webgl) instead.
+
+WebGL is an archaic standard, and as such many parts of its API are pretty unpleasant to use. In the near future, it seems likely to be superceded by [WebGPU](https://webgpu.org/), but until that time comes, various libraries exist to make it easier to use. Some of these libraries (such as [TWGL](https://twgljs.org/)) are "low-level" libraries that more or less just group common sets of WebGL API calls together, leaving the developer completely in control. Others like [Three.js](https://threejs.org/) are "high-level" libraries that focus entirely on getting things done, completely removing the need for the developer to have knowledge of WebGL. μGL is in a somewhat unique position in that it still leaves the developer completely in control despite also doing a lot for them. For this reason, I would describe it as more of a "mid-level" library (although it is certainly closer to a low-level library than a high-level one).
+
+The remainder of this article will describe the major features of μGL - what it can do for you, and how you can best utilize it to maintain complete control while taking advantage of its various optimizations.
+
+## Caching
+
+μGL automatically keeps a cache of all of the relevant GPU state that it's aware of. Whenever it would make an expensive call to the WebGL API, it first checks against that cache to see if any GPU state would actually be modified by that call. If the call isn't necessary, it doesn't happen. This results in a runtime performance improvement in general, but there are a few cases where this improvement is especially noticeable:
+
+- When reading the contents of a buffer.
+- When getting the value of a shader variable.
+
+If you need to modify the state of the WebGL rendering context prior to initializing the μGL context, an escape hatch argument can be passed to the μGL context constructor to disable prefilling the cache according to the WebGL specification.
+
+μGL can be initialized by creating a [`Context`](https://ugl.lakuna.pw/classes/Context.html). This object is intended to take the place of the [`WebGLRenderingContext`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext) in a program that uses μGL.
+
+```js
+const gl = new Context(makeFullscreenCanvas());
+```
+
+Many other classes supplied by μGL also have direct equivalencies to those from the WebGL API to provide caching and easier-to-use accessors and methods.
+
+- [`ElementBuffer`](https://ugl.lakuna.pw/classes/ElementBuffer.html) and [`VertexBuffer`](https://ugl.lakuna.pw/classes/VertexBuffer.html) replace [`WebGLBuffer`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLBuffer).
+- [`Framebuffer`](https://ugl.lakuna.pw/classes/Framebuffer.html) replaces [`WebGLFramebuffer`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLFramebuffer).
+- [`Program`](https://ugl.lakuna.pw/classes/Program.html) replaces [`WebGLProgram`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLProgram).
+- [`Renderbuffer`](https://ugl.lakuna.pw/classes/Renderbuffer.html) replaces [`WebGLRenderbuffer`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderbuffer).
+- [`Shader`](https://ugl.lakuna.pw/classes/Shader.html) replaces [`WebGLShader`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLShader).
+- [`Sync`](https://ugl.lakuna.pw/classes/Sync.html) replaces [`WebGLSync`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLSync).
+- [`Texture`](https://ugl.lakuna.pw/classes/Texture.html) and its subclasses replace [`WebGLTexture`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLTexture).
+- [`TransformFeedback`](https://ugl.lakuna.pw/classes/TransformFeedback.html) replaces [`WebGLTransformFeedback`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLTransformFeedback).
+- [`VertexArray`](https://ugl.lakuna.pw/classes/VertexArray.html) replaces [`WebGLVertexArrayObject`](https://developer.mozilla.org/en-US/docs/Web/API/WebGLVertexArrayObject).
+
+## Abstraction of Binding Points and Texture Units
+
+Many functions in the WebGL API refer to objects via binding points (or to textures via texture units). μGL completely abstracts away these concepts, allowing developers to refer instead to the μGL object wrapper directly. μGL maintains a cache of binding points and texture units and assigns objects in a way that minimizes the number of WebGL API calls required, where applicable. Take the following block of code that assigns a texture to a sampler uniform as an example.
+
+```js
+const url = "https://www.lakuna.pw/images/webgl-example-texture.png";
+const texture = Texture2d.fromImageUrl(gl, url);
+gl.fbo.draw(vao, { texture });
+```
+
+μGL automatically detects hardware limitations (such as the maximum number of available texture units) and avoids exceeding those limitations.
+
+## Extension Management
+
+Some WebGL features are locked behind extensions. μGL exposes this functionality by default, attempting to enable the relevant extension as necessary. For example, to check the device's maximum available anisotropy with vanilla WebGL, multiple steps are required.
+
+```js
+const extension = gl.getExtension("EXT_texture_filter_anisotropic");
+console.log(gl.getParameter(extension.MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+```
+
+In comparison, μGL exposes this value via an accessor.
+
+```js
+console.log(gl.maxTextureMaxAnisotropy);
+```
+
+## Debugger
+
+μGL contains a debugger that can be attached to any WebGL rendering context. The debugger is based on [SpectorJS](https://spector.babylonjs.com/), but is designed to be easier to enable and disable to debug specific sections of code. To use the debugger, call [`debug`](https://ugl.lakuna.pw/functions/debug.html) to make a controller object. Debugging can then be enabled by toggling `isActive`, and error checking can be enabled by toggling `doLogErrors`.
+
+The debugger is context-aware, representing constant values as the corresponding WebGL constant name where applicable. Each debugger instance also assigns each WebGL object a unique name by which it refers to that object.
+
+## Documentation
+
+μGL is fully documented on [its website](https://ugl.lakuna.pw/). μGL is written in TypeScript and is fully typed, even where the WebGL API itself isn't.
