@@ -1,8 +1,8 @@
 {
 	"dependencies": {
-		"@lakuna/react-canvas": "^2.0.7",
-		"@lakuna/ugl": "^27.1.0",
-		"@lakuna/umath": "^4.0.5",
+		"@lakuna/react-canvas": "^2.0.8",
+		"@lakuna/ugl": "^27.1.1",
+		"@lakuna/umath": "^4.0.6",
 		"@mdx-js/loader": "^3.1.1",
 		"@mdx-js/react": "^3.1.1",
 		"@next/env": "16.1.7",
