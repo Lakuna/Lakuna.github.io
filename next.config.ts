@@ -111,27 +111,29 @@ const mdxConfig = <T extends Configuration>(
 				const uses = Array.isArray(rule.use) ? rule.use : [rule.use];
 				for (const entry of uses) {
 					if (
-						typeof entry === "object" &&
-						entry?.loader?.includes("next-swc-loader") &&
-						typeof entry.options === "object" &&
-						!entry.options["bundleLayer"]
+						typeof entry !== "object" ||
+						!entry?.loader?.includes("next-swc-loader") ||
+						typeof entry.options !== "object" ||
+						entry.options["bundleLayer"]
 					) {
-						entry.options["bundleLayer"] = WEBPACK_LAYERS.reactServerComponents;
+						continue;
 					}
+
+					entry.options["bundleLayer"] = WEBPACK_LAYERS.reactServerComponents;
 				}
 			}
 
-			if (Array.isArray(rule.oneOf)) {
+			if (rule.oneOf) {
 				patch(rule.oneOf);
 			}
 
-			if (Array.isArray(rule.rules)) {
+			if (rule.rules) {
 				patch(rule.rules);
 			}
 		}
 	};
 
-	if (Array.isArray(config.module?.rules)) {
+	if (config.module?.rules) {
 		patch(config.module.rules);
 	}
 
