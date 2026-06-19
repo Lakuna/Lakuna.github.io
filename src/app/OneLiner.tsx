@@ -80,7 +80,8 @@ const oneLiners = [
 		<Link href="https://fluquor.com/">{"fluquor.com"}</Link>
 		{"!"}
 	</span>,
-	<span key={67}>{"Reticulating Splines"}</span>
+	<span key={67}>{"Reticulating Splines"}</span>,
+	<span key={68}>{"Wololo"}</span>
 ];
 
 /*
