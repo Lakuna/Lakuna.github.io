@@ -63,7 +63,7 @@ const oneLiners = [
 	<span key={41}>{"If you can dodge a wrench, you can dodge a ball."}</span>,
 	<span key={42}>{"Open the pod bay doors, HAL."}</span>,
 	<span key={44}>
-		<Link href="https://discord.gg/sdcleague">{"SDC"}</Link>
+		<Link href="https://sdcleague.com/">{"SDC"}</Link>
 		{" champion."}
 	</span>,
 	<span key={45}>{"Time favors the Thallids."}</span>,
@@ -81,7 +81,11 @@ const oneLiners = [
 		{"!"}
 	</span>,
 	<span key={67}>{"Reticulating Splines"}</span>,
-	<span key={68}>{"Wololo"}</span>
+	<span key={68}>{"Wololo"}</span>,
+	<span key={69}>
+		<Link href="https://finalbossesports.net/">{"FBDL"}</Link>
+		{" champion."}
+	</span>
 ];
 
 /*
