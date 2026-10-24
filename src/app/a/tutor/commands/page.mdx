@@ -1,0 +1,985 @@
+---
+title: "TUTOR Commands"
+description: "A list of commands in the TUTOR language."
+openGraph:
+  url: "/a/tutor/commands"
+date: "2026-10-06T06:00:00.000Z"
+---
+
+# TUTOR Commands
+
+The following is an alphabetical list of commands in the TUTOR language. It is not comprehensive. One of the sources, _The TUTOR Language_ by Bruce Anne Sherwood, has a Wiki version [here](https://codex.retro1.org/plato:tutor:start). Other sources include _Introduction to TUTOR_ by James R. Ghesquiere and the `introtutor` and `aids` lessons (accessed via [cyber1](https://cyber1.org/)). To see a complete description of any command, refer to the `aids` lesson.
+
+You can find my overview of the TUTOR language [here](../tutor).
+
+## List of Commands
+
+### `ansv`
+
+**Judging command.**
+
+```
+ansv    expression[,tolerance]
+```
+
+Judge a numeric or algebraic answer. If the response matches `expression` within the specified `tolerance`, an `ok` judgment is given. `tolerance` may be specified as a range (such as `10`) or a percentage deviation (such as `2%`). If no `tolerance` is given, an exact answer is required.
+
+### `answer`
+
+**Judging command.**
+
+```
+answer  [expression]
+```
+
+Judge an alphanumeric answer or some simple numerical responses. If the response matches `expression`, an `ok` judgment is given and `ok` is displayed on the screen after the response. Punctuation marks can't appear in `expression`. If no `expression` is given, the response will match if it is a space, NEXT, a `jkey`, `jcount` is `0`, a TUTOR punctuation mark (such as `;`, `,`, `.`, or `$`), or any touch if the touch panel is enabled. _Required words_ listed in `expression` must appear in the response.
+
+Can't match a response over 39 words.
+
+_Synonymous words_ are separated by commas or spaces and enclosed in parentheses. Words that can be ignored are enclosed in angle brackets. Commas are used to separate synonymous responses. `*` is used between words of a phrase.
+
+There are automatic checks for spelling, extra words, word order, capitalization, missing words, and broken phrases that can be modified with `specs`. The closest matching answer is used for markup feedback. The following markups are possible:
+
+- `===`: the word is misspelled.
+- `↑`: the first letter of the word needs to be capitalized.
+- `***`: the word is part of a broken phrase.
+- `⇦`: the word is out of order (needs to be moved left).
+- `⇦==`: the word is misspelled and out of order (needs to be moved left).
+- `Δ`: the word implies something missing.
+- `Δ==`: the word is misspelled and implies something missing.
+- `↑⇦`: the first letter of the word needs to be capitalized and the word is out of order (needs to be moved left).
+- `Δ↑`: the first letter of the word needs to be capitalized and the word implies something missing.
+- `xxx`: the word is extra.
+
+### `arrow`
+
+```
+arrow   position
+```
+
+Plot an arrow on the screen at coarse grid position `position` and start a judging block.
+
+```
+arrow   positionx,positiony
+```
+
+Plot an arrow on the screen at fine grid position `positionx,positiony` and start a judging block.
+
+TUTOR continues to execute any regular commands until it encounters a judging command, then waits for a student response. See more details about judging blocks in my overview of the TUTOR language [here](../tutor#judging-blocks). Has default settings of `long    150`, `jkey    next`, an active EDIT key, and a disabled COPY key. The levels of `do` and `join`, writing size, and degree of rotation are also saved. Sets `where` to the next character position. After a judgment, `where` is set to the arrow location plus `302`. If used in an attached unit, the attached unit must contain an `endarrow` command and must not contain a `goto` command.
+
+### `at`
+
+**Regular command.**
+
+```
+at      position
+```
+
+Indicate the starting position of display on the screen at coarse grid position `position`.
+
+```
+at      positionx,positiony
+```
+
+Indicate the starting position of display on the screen at fine grid position `positionx,positiony`.
+
+Alters `wherex` and `wherey`. Sets a new left margin for continued lines of the display.
+
+### `atnm`
+
+**Regular command.**
+
+```
+at      position
+```
+
+Indicate the starting position of display on the screen at coarse grid position `position`.
+
+```
+at      positionx,positiony
+```
+
+Indicate the starting position of display on the screen at fine grid position `positionx,positiony`.
+
+Alters `wherex` and `wherey`.
+
+### `back`
+
+**Regular command.**
+
+```
+back    [unit]
+```
+
+Specify that unit `unit` will become the new main unit when the user presses BACK. No `unit` or a `unit` of `q` clears the pointer.
+
+```
+back    expression,...units
+```
+
+Specify that the unit specified by the conditional tag will become the new main unit when the user presses BACK. See my TUTOR overview [here](../tutor#conditional-operations) for more information about conditional operations. An `x` argument leaves the pointer unchanged and a `q` argument clears the pointer (returning the key to its default action).
+
+The default action of BACK is to be inactive except in help sequences, where the default action is to return to the base unit. This does not allow the passing of arguments to units because the pointers for the commands are set when the command is encountered (rather than at the time when the branch occurs).
+
+### `back1`
+
+**Regular command.**
+
+```
+back1   [unit]
+```
+
+Specify that unit `unit` will become the new main unit when the user presses shift-BACK. No `unit` or a `unit` of `q` clears the pointer.
+
+```
+back1   expression,...units
+```
+
+Specify that the unit specified by the conditional tag will become the new main unit when the user presses shift-BACK. See my TUTOR overview [here](../tutor#conditional-operations) for more information about conditional operations. An `x` argument leaves the pointer unchanged and a `q` argument clears the pointer (returning the key to its default action).
+
+The default action of shift-BACK is to be inactive except in help sequences, where the default action is to return to the base unit. This does not allow the passing of arguments to units because the pointers for the commands are set when the command is encountered (rather than at the time when the branch occurs).
+
+### `base`
+
+**Regular command.**
+
+```
+base    [unit]
+```
+
+Set the base unit (`baseu`) to unit `unit`, or clear the base unit if there is no `unit`. No `unit` or a `unit` of `q` clears the base unit.
+
+```
+base    expression,...units
+```
+
+Set the base unit (`baseu`) to the unit specified by the conditional tag. See my TUTOR overview [here](../tutor#conditional-operations) for more information about conditional operations. An `x` argument leaves the base unit unchanged and a `q` argument clears the base unit.
+
+When the base unit is set, the user is in a help sequence. See my TUTOR overview [here](../tutor#units) for more information about help sequences.
+
+### `bounds`
+
+**Regular command.**
+
+```
+bounds  xmax,ymax
+```
+
+Establish positive boundaries on the horizontal and vertical axes relative to the origin. `xmax` is the horizontal maxiumum boundary and `ymax` is the vertical maximum boundary.
+
+```
+bounds  xmin,ymin,xmax,ymax
+```
+
+Establish positive and negative boundaries on the horizontal and vertical axes relative to the origin. `xmin` is the horizontal minimum boundary, `ymin` is the vertical minimum boundary, `xmax` is the horizontal maxiumum boundary, and `ymax` is the vertical maximum boundary.
+
+All arguments are measured in screen dots. Upon entering a lesson, the boundaries are automatically set to the entire screen (`511,511`).
+
+### `box`
+
+**Regular command.**
+
+```
+box     [position0][;position1][;thickness]
+```
+
+Draw a rectangular box. `position0` and `position1` are the positions of opposite corners of the box; they can each be either a single number `position` representing a coarse grid position or two comma-separated numbers `positionx,positiony` representing fine grid coordinates. `thickness` specifies how many dots thick the walls of the box should be, with negative values extending into the box from the corners and positive values extending out of the bot from the corners. `thickness` values of `-1`, `0`, `1`, and unspecified all make a box with walls that are 1 dot thick. If neither `position0` nor `position1` are specified, a box will be drawn from `0,0` to `511,511`, affected by `gorigin` (other forms of the command are not affected by `gorigin`). If only `position0` is specified, a box is drawn from `0,0` to `position0`. If only `position1` is specified, a box is drawn from `wherex,wherey` to `position1`.
+
+`where`, `wherex`, and `wherey` are set to the lower-left corner of the box for boxes with positive thickness or the lower-left corner of the innermost box for boxes with negative thickness.
+
+### `branch`
+
+**Regular command.**
+
+```
+branch  label
+```
+
+Branch to statement label `label` in the current unit.
+
+```
+branch  expression,...labels
+```
+
+Branch to the statement label specified by the conditional tag. See my TUTOR overview [here](../tutor#conditional-operations) for more information about conditional operations.
+
+Cannot branch between units or around `entry` commands. If a `branch` command or statement label follows a non-`calc` command, it initiates a `calc` command. The tag may not extend across multiple lines (subsequent lines without a command name are treated as a `calc` command). This command is faster than `doto` but not quite as fast as `loop`. The condenser, step-mode, and execution error routines all treat `branch` commands and statement labels as if they were `calc` commands. `branch` can appear in the tag field instead of the command field to continue the current `calc`, in which case it may be followed by 1-2 spaces. If a branch goes over an `endarrow`, the branch is done, but execution will return to the `endarrow` once all the commands below the statement label are executed.
+
+### `calc`
+
+**Regular command.**
+
+Do a calculation.
+
+TODO.
+
+Stores the value `val` in the variable `var`.
+
+### `calcc`
+
+**Regular command.**
+
+TODO.
+
+A conditional version[^3] of `calc`. Performs one of several different calculations (each comma-separated expression in `exprs` being of the form `var⇦val` to be used as in `calc` or empty to do nothing) based on the value `val`.
+
+### `calcs`
+
+**Regular command.**
+
+TODO.
+
+A conditional version[^3] of `calc`. Similar to `calcc` except that only the first expression in `exprs` is of the form `var⇦val`; subsequent expressions are of the form `val`, and are assigned to the `var` from the first expression.
+
+### `charset`
+
+**Regular command.**
+
+TODO.
+
+Associates the character set[^7] in lesson `lesson`, block `block` with the current lesson. Typically placed in the IEU so that the character set is loaded even when the lesson is entered at a restart unit.
+
+### `circle`
+
+**Regular command.**
+
+TODO.
+
+Draws a circle with a radius of `r` fine grid dots and a center at fine grid coordinates (`x`, `y`). If `s` and `t` are specified, a partial circle is drawn starting at angle `s` degrees and ending at angle `t` degrees, where 0 degrees is the positive X-axis and 90 degrees is the positive Y-axis.
+
+### `circleb`
+
+**Regular command.**
+
+TODO.
+
+Similar to the `circle` command, but the displayed circle is broken/dashed.
+
+### `color`
+
+TODO.
+
+### `common`
+
+TODO.
+
+### `concept`
+
+**Judging command.**
+
+TODO.
+
+A judging command[^5]. Checks that the judging copy contains `str` and that the words used are part of the vocabulary specified by the `vocabs` command, in which case it is judged correct.
+
+### `data`
+
+**Regular command.**
+
+TODO.
+
+Similar to `next` but for the DATA function key. This is a help-type key so it initiates a help sequence[^4].
+
+The conditional version[^3] of `data`.
+
+### `data1`
+
+**Regular command.**
+
+TODO.
+
+Similar to `next` but for the shift-DATA function key. This is a help-type key so it initiates a help sequence[^4].
+
+The conditional version[^3] of `data1`.
+
+### `dataop`
+
+**Regular command.**
+
+TODO.
+
+### `define`
+
+**Non-executable command.**
+
+```
+define  ...definitions
+```
+
+Define variables, constants, functions, segments of variables, and arrays of variables. `definitions` is a comma- or newline-separated list of definitions. To define a meaningful name for a variable, use a definition of the form `name=variable`, where `name` is the meaningful name and `variable` is the primitive name of the variable (for example, `problem=v1`). To define a meaningful name for a constant, use a definition of the form `name=expression`, where `name` is the meaningful name and `expression` is the value of the constant. To define a name for a `define` set, use a definition that is just the name of the set as the first definition. To include another `define` set in a `define` set, use a definition that is just the name of the subset (for any definition other than the first).
+
+```
+define  segment,name=variable,bits[,signed]
+```
+
+Define a horizontally segmented variable. `segment` is a literal value, `name` is the meaningful name, `variable` is the primitive name, `bits` is the number of bits per segment (up to `59`), and `signed` is a literal value of either `signed` or `s` (the variable is signed if this is included or unsigned if it is omitted). `variable` must be a direct reference to a variable and `bits` must be a constant value.
+
+```
+define  segmentv,name=variable,start,bits[,signed]
+```
+
+Define a vertically segmented variable. `segmentv` is a literal value of either `segment,vertical` or `segmentv`, `name` is the meaningful name, `variable` is the primitive name, `start` is the 1-based starting bit index, `bits` is the number of bits per segment (up to `59`), and `signed` is a literal value of either `signed` or `s` (the variable is signed if this is included or unsigned if it is omitted). `variable` must be a direct reference to a variable and `bits` must be a constant value.
+
+```
+define  segmentf,name=variable,start,bits[,signed]
+```
+
+Define a field (which counts as a segment). `segmentf` is a literal value, `name` is the meaningful name, `variable` is the primitive name, `start` is the 1-based starting bit index, `bits` is the number of bits per segment (up to `59`), and `signed` is a literal value of either `signed` or `s` (the variable is signed if this is included or unsigned if it is omitted). `variable` must be a direct reference to a variable and `bits` must be a constant value.
+
+```
+define  array,name[(rows[,columns][;endrow[,endcolumn]])]=variable
+```
+
+Define an array. `array` is a literal value, `name` is the meaningful name, `rows` is the number of rows in the array if `endrow` is not defined or the index of the first row in the array otherwise, `columns` is the number of columns in the array if `endcolumn` is not defined or the index of the first column in the array otherwise, `endrow` is the index of the last row in the array (the array will have `endrow-rows` rows), `endcolumn` is the index of the last column in the array (the array will have `endcolumn-columns` columns), and `variable` is the primitive name. If none of `rows`, `columns`, `endrow`, or `endcolumn` (or the parentheses around them) are given, a 0-dimensional array (scalar) is defined instead. `rows`, `columns`, `endrow`, `endcolumn`, and `variable` must be literals or defined constants.
+
+```
+define  arraysegv,name[(rows[,columns][;endrow[,endcolumn]])]=variable,start,bits[,signed]
+```
+
+Define an array using vertical segments. `arraysegv` is a literal value, `name` is the meaningful name, `rows` is the number of rows in the array if `endrow` is not defined or the index of the first row in the array otherwise, `columns` is the number of columns in the array if `endcolumn` is not defined or the index of the first column in the array otherwise, `endrow` is the index of the last row in the array (the array will have `endrow-rows` rows), `endcolumn` is the index of the last column in the array (the array will have `endcolumn-columns` columns), `variable` is the primitive name, `start` is the 1-based starting bit index, `bits` is the number of bits per segment (up to `59`), and `signed` is a literal value of either `signed` or `s` (the variable is signed if this is included or unsigned if it is omitted). If none of `rows`, `columns`, `endrow`, or `endcolumn` (or the parentheses around them) are given, a 0-dimensional array (scalar) is defined instead. `rows`, `columns`, `endrow`, `endcolumn`, and `variable` must be literals or defined constants.
+
+```
+define  name[(...arguments)]=expression
+```
+
+Define a function. `name` is the name of the function, `arguments` is the comma-separated list of names of arguments to the function, and `expression` is the expression that is evaluated and returned by the function. `arguments` cannot contain an argument name that is the same as a previously-defined name. `expression` must be valid when enclosed in parentheses. `arguments` may contain no more than 6 argument names. `expression` may be of the form `(variable⇦expression)`, in which case the value of the variable `variable` is set to the result of the expression `expression` and returned.
+
+```
+define  name
+```
+
+Activate the `define` set named `name`.
+
+```
+define  purge[,name]
+```
+
+Discard the `define` set named `name`, or all existing `define` sets aside from `student` if no `name` is given. `purge` is a literal value.
+
+```
+define  units,...names
+```
+
+Define a list of _primary units_ for use with `storeu`, `ansu`, and `wrongu`. `units` is a literal value and `names` is a comma-separated list of primary unit names. There can be up to 10 primary units (but each can have _equivalent units_ defined further in the `define` set). Primary units can only be defined in `student`.
+
+Defined names must be 7 or fewer characters long, can't begin with a number, can't begin with any of `o`, `n`, `v`, `nc`, `vc`, `nr`, or `vr` followed by a number, can't contain FONT characters, can't contain backspaces, can't contain mathematical operators, and can't contain any of `$`, `#`, `%`, `?`, `Σ`, `Δ`, `°`, or `π`.
+
+The `define` command must physically precede any reference to any of the defined names; it is usually placed in the initial entry unit. If no `define` set has a name, all previous `define` sets will be in effect; otherwise, the previous `define` sets will not be in effect (unless they are part of the most recent `define` set). Only 5 `define` sets may be active at once; when a sixth is encountered (at condense time), the previous 5 are discared (`student`). The special `define` set named `student` allows the user to use variables defined within it in their responses. `student` may contain up to 500 variables, all of which work only with `ansv`, `ansu`, `wrongv`, `wrongu`, `store`, `storeu`, and `compute`.
+
+TODO.
+
+### `do`
+
+**Regular command.**
+
+TODO.
+
+Causes the contents of the unit `unit` to be executed as an attached unit. Execution returns to the position of the `do` command afterward.
+
+The conditional version[^3] of `do`.
+
+The iterative form of the `do` command. Sets variable `index` to `start`, then repeatedly (does unit `unit` then increments `index` by `incr`) until the value of `index` is greater than `end`. If `incr` is not specified, it is `1`.
+
+### `draw`
+
+**Regular command.**
+
+TODO.
+
+Draws a line between the multiple semicolon-separated rough grid positions in `pos`. A value of `skip` may be given instead of a position to skip to the next position in the list. Two comma-separated numbers can be used to specify fine grid coordinates.
+
+### `end`
+
+**Regular and judging command.**
+
+TODO.
+
+`opt` can be one of the following: `help`, in which case this indicates the end of a help sequence[^4], or `lesson`, in which case this indicates the end of the lesson.
+
+### `endarrow`
+
+TODO.
+
+Ends the current judging block.
+
+### `entry`
+
+TODO.
+
+Defines a pseudo-unit that is an alternate entry point to a unit. The entry point `name` may be used as a unit.
+
+### `erase`
+
+**Regular command.**
+
+TODO.
+
+Erases the entire display.
+
+Erases `len` characters from the display starting at the cursor.
+
+Erases an area of `w` characters by `h` lines from the display starting at the cursor.
+
+### `exact`
+
+**Judging command.**
+
+TODO.
+
+A judging command[^5]. Similar to `answer`, but the judging copy must match `str` exactly.
+
+### `exactc`
+
+**Judging command.**
+
+TODO.
+
+A judging command[^5]. The conditional version[^3] of `exact`. The judging copy is compared to the correct comma-separated string in `strs` according to the value `val` using the typical conditional expression rules.
+
+### `finish`
+
+**Regular command.**
+
+TODO.
+
+Designates unit `unit` as the finish unit[^9].
+
+### `gat`
+
+**Regular command.**
+
+TODO.
+
+Similar to a fine grid `at` command relative to the `gorigin` that locates a screen position `x` dots (times `scalex`) to the right and `y` dots (times `scaley`) above the origin. Establishes a left margin like `at`.
+
+### `gatnm`
+
+**Regular command.**
+
+TODO.
+
+Similar to `gat` but doesn't reset the left margin.
+
+### `gdraw`
+
+**Regular command.**
+
+TODO.
+
+### `gorigin`
+
+**Regular command.**
+
+TODO.
+
+### `goto`
+
+**Regular command.**
+
+TODO.
+
+Similar to `do`, except that execution does not return to the position of the `do` command afterward (pressing NEXT at the end of unit `unit` will continue to the unit after unit `unit` by default). Differs from `jump` in that the main unit does not change (unit `unit` is an attached unit).
+
+The conditional version[^3] of `goto`.
+
+### `group`
+
+**Regular command.**
+
+TODO.
+
+### `help`
+
+**Regular command.**
+
+TODO.
+
+Similar to `next` but for the HELP function key. This is a help-type key so it initiates a help sequence[^4].
+
+The conditional version[^3] of `help`.
+
+### `help1`
+
+**Regular command.**
+
+TODO.
+
+Similar to `next` but for the shift-HELP function key. This is a help-type key so it initiates a help sequence[^4].
+
+The conditional version[^3] of `help1`.
+
+### `imain`
+
+**Regular command.**
+
+TODO.
+
+### `inhibit`
+
+**Regular command.**
+
+TODO.
+
+If `opt` is `erase`, when placed in a main unit, prevents the display from being erased automatically upon changing to a new main unit. If `opt` is `arrow`, the arrow will not be displayed for the `arrow` command. If there is no `opt` or if a new main unit is entered, all inhibits are cleared.
+
+### `join`
+
+**Regular and judging command.**
+
+TODO.
+
+Similar to `do`, but it is executed in both judging state[^5] and regular state. Technically considered a judging command[^5].
+
+The conditional version[^3] of `join`. Technically considered a judging command[^5].
+
+The iterative form of the `join` command. Differs from the iterative form of the `do` command only in that it is executed in both judging state[^5] and regular state. Technically considered a judging command[^5].
+
+### `judge`
+
+**Regular command.**
+
+TODO.
+
+Used to modify PLATO's judgment (not itself a judging command[^5]). `opt` can be one of a few things: `continue` makes TUTOR switch to judging state, `exit` throws away the judging copy, `ignore` erases the judging copy and waits for new user input, `ok` judges the judging copy correct, `okquit` judges the judging copy correct and stops processing regular commands (proceeds to `specs`), `no` judges the judging copy incorrect (unanticipated), `noquit` judges the judging copy incorrect (unanticipated) and stops processing regular commands (proceeds to `specs`), `quit` stops processing regular commands (proceeds to `specs`), `rejudge` reopens judging using the original response (clearing the effects of `specs`, `bump`, `put`, et cetera but not `getword`), `wrong` judges the judging copy incorrect (anticipated), and `x` does not alter PLATO's judgment.
+
+The conditional version[^4] of `judge`. The value `val` is used to choose one of the comma-separated `opts` (from the non-conditional `judge` command) values following the typical conditional rules.
+
+### `jump`
+
+**Regular command.**
+
+TODO.
+
+Jumps to the unit `unit` and makes that the new main unit.
+
+The conditional version[^3] of `jump`.
+
+### `jumpout`
+
+**Regular command.**
+
+TODO.
+
+### `keytype`
+
+**Regular command.**
+
+TODO.
+
+### `lab`
+
+**Regular command.**
+
+TODO.
+
+Similar to `next` but for the LAB function key. This is a help-type key so it initiates a help sequence[^4].
+
+The conditional version[^3] of `lab`.
+
+### `lab1`
+
+**Regular command.**
+
+TODO.
+
+Similar to `next` but for the shift-LAB function key. This is a help-type key so it initiates a help sequence[^4].
+
+The conditional version[^3] of `lab1`.
+
+### `long`
+
+TODO.
+
+By following an `arrow` and preceding any judging commands[^5], sets the maximum length of the user's response to `n` character codes (capital letters use 2 character codes). The default length is 150. The maximum length is 300. If `n` is `1`, the response is judged immediately after the first character of the response is typed.
+
+### `match`
+
+**Judging command.**
+
+TODO.
+
+A judging command[^5]. `strs` is a comma-separated list of words (or synonyms[^2] in parentheses). The variable `var` is set to the 0-based index of the first word in the judging copy within `strs` (and the judging copy is judged correct), or `-1` if there were no matches (and the judging copy is judged incorrect). If there was a matching entry, it is replaced with blanks within the judging copy.
+
+### `micro`
+
+**Regular command.**
+
+TODO.
+
+Associates the micro table[^8] in lesson `lesson`, block `block` with the current lesson. Typically placed in the IEU.
+
+### `mode`
+
+**Regular command.**
+
+TODO.
+
+Changes the terminal's display mode to `m`, which can be one of the following: `erase`, which causes the dots making up the written characters to be turned off instead of on, `rewrite`, which erases everything in the character space that will be used before writing, or `write`, which simply turns on the dots that make up the characters being written. The terminal returns to `write` mode and the display is erased whenever a new main unit is entered.
+
+The conditional version[^3] of `mode`. A mode of `x` causes no change to the current mode.
+
+### `modperm`
+
+**Regular command.**
+
+TODO.
+
+Copies the contents of the "modperm list" created by `setperm` to the "setperm list" created by `setperm`.
+
+### `name`
+
+**Regular command.**
+
+TODO.
+
+### `next`
+
+**Regular command.**
+
+```
+next    [unit]
+```
+
+Specify that unit `unit` will become the new main unit when the user presses NEXT. No `unit` or a `unit` of `q` clears the pointer.
+
+```
+next    expression,...units
+```
+
+Specify that the unit specified by the conditional tag will become the new main unit when the user presses NEXT. See my TUTOR overview [here](../tutor#conditional-operations) for more information about conditional operations. An `x` argument leaves the pointer unchanged and a `q` argument clears the pointer (returning the key to its default action).
+
+All judging blocks in the current unit must be satisfied before this branch can occur. The default action of NEXT is to branch to the unit physically following the current one. This does not allow the passing of arguments to units because the pointers for the commands are set when the command is encountered (rather than at the time when the branch occurs).
+
+### `next1`
+
+**Regular command.**
+
+```
+next1   [unit]
+```
+
+Specify that unit `unit` will become the new main unit when the user presses shift-NEXT. No `unit` or a `unit` of `q` clears the pointer.
+
+```
+next1   expression,...units
+```
+
+Specify that the unit specified by the conditional tag will become the new main unit when the user presses shift-NEXT. See my TUTOR overview [here](../tutor#conditional-operations) for more information about conditional operations. An `x` argument leaves the pointer unchanged and a `q` argument clears the pointer (returning the key to its default action).
+
+The default action of shift-NEXT is to be inactive. This does not allow the passing of arguments to units because the pointers for the commands are set when the command is encountered (rather than at the time when the branch occurs).
+
+### `nextactc`
+
+**Judging command.**
+
+TODO.
+
+### `no`
+
+**Judging command.**
+
+TODO.
+
+A judging command[^5]. The judging copy is judged to be incorrect (unanticipated).
+
+### `ok`
+
+**Judging command.**
+
+TODO.
+
+A judging command[^5]. The judging copy is judged to be correct. TODO: Fact-check this.
+
+### `pause`
+
+**Regular command.**
+
+TODO.
+
+Waits for the user to press any key.
+
+### `randp`
+
+**Regular command.**
+
+TODO.
+
+Removes a number from the "setperm list" created by `setperm` and stores it in the variable `var`. After all numbers have been taken from the list, `0` is added to it.
+
+### `randu`
+
+**Regular command.**
+
+TODO.
+
+Generates a random number from `0` to `1` and stores it in the variable `var`. The same number may be generated more than once (sampling with replacement).
+
+Generates a random integer from `1` to `max` and stores it in the variable `var`. The same number may be generated more than once (sampling with replacement).
+
+### `rdraw`
+
+**Regular command.**
+
+TODO.
+
+Similar to the `draw` command, but drawing is done relative to the cursor position and is affected by `size` and `rotate` commands.
+
+### `remove`
+
+**Regular command.**
+
+TODO.
+
+Removes `val` from the "modperm list" created by `setperm`.
+
+### `restart`
+
+**Regular command.**
+
+TODO.
+
+Causes the user to be placed in unit `unit` if they leave and re-enter the current lesson. If no `unit` is specified, the unit in which the `restart` command is placed is used.
+
+Causes the user to be placed in lesson `lesson` in unit `unit` if they leave and re-enter the current lesson.
+
+### `return`
+
+**Regular command.**
+
+TODO.
+
+Can't return more than 10 values. Also returns execution to the point of the `do`.
+
+### `rotate`
+
+**Regular command.**
+
+TODO.
+
+Rotates printed text by `deg` degrees counter-clockwise. Only has an effect for line-drawn text.
+
+### `scalex`
+
+**Regular command.**
+
+TODO.
+
+### `scaley`
+
+**Regular command.**
+
+TODO.
+
+### `setperm`
+
+**Regular command.**
+
+TODO.
+
+Creates two identical lists of integers from `1` to `max`. One of these, the "setperm list," will be the list from which random numbers will be taken by `randp`. The other is the "modperm list." `max` may not exceed 120.
+
+### `show`
+
+**Regular command.**
+
+TODO.
+
+Displays the value `val`. Numbers will be left-aligned.
+
+### `showa`
+
+**Regular command.**
+
+TODO.
+
+Displays the contents of `val` in alphanumeric form.
+
+### `showe`
+
+**Regular command.**
+
+TODO.
+
+Displays the contents of `val` in scientific notation.
+
+### `showo`
+
+**Regular command.**
+
+TODO.
+
+Displays the contents of `val` as an octal number.
+
+### `showt`
+
+**Regular command.**
+
+TODO.
+
+Displays the value `val`. Numbers will be right-aligned.
+
+### `size`
+
+**Regular command.**
+
+TODO.
+
+Changes the size of printed text. Text uses a `val` value of `0` by default. A `val` value of `1` is approximately the same size as `0`. When `val` is greater than `0`, text is line-drawn (which takes longer).
+
+### `slide`
+
+**Regular command.**
+
+TODO.
+
+Turns on the slide projector and displays slide `val`.
+
+### `specs`
+
+**Judging command.**
+
+TODO.
+
+A judging command[^5]. Clears old specifications and allows you set new specifications within a judging block. `opts` can be zero, one, or multiple comma-separated specifications[^6]. After a judgment is made in a judgment block, execution returns to the most recent `specs` command within that judging block upon reaching the next judgment command or end of that judgment block.
+
+### `stop`
+
+**Regular command.**
+
+```
+stop    [unit]
+```
+
+Specify that unit `unit` will become the new main unit when the user presses STOP. No `unit` or a `unit` of `q` clears the pointer.
+
+```
+stop    expression,...units
+```
+
+Specify that the unit specified by the conditional tag will become the new main unit when the user presses STOP. See my TUTOR overview [here](../tutor#conditional-operations) for more information about conditional operations. An `x` argument leaves the pointer unchanged and a `q` argument clears the pointer (returning the key to its default action).
+
+The default action of STOP is to abort output to the terminal screen, and this is done regardless of whether a branch occurs. This does not allow the passing of arguments to units because the pointers for the commands are set when the command is encountered (rather than at the time when the branch occurs).
+
+### `store`
+
+**Judging command.**
+
+TODO.
+
+A judging command[^5]. Stores the value of the judging copy in the variable `var`. Does not cause a switch to regular state after a number has been stored unless the judging copy is not storeable (it is an illegal arithmetic expression), in which case the judging copy is judged to be incorrect.
+
+### `storea`
+
+**Judging command.**
+
+TODO.
+
+A judging command[^5]. Similar to `store`, but the value of the judging copy is stored in alphanumeric form rather than being evaluated as a numerical expression. Up to 10 characters can be stored in a variable.
+
+### `storen`
+
+**Judging command.**
+
+TODO.
+
+A judging command[^5]. Removes the first arithmetic expression from the judging copy (replacing it with blanks) and places it in the variable `var`. Does not cause a switch to regular state after a number has been stored unless the judging copy is not storeable (it is an illegal arithmetic expression), in which case the judging copy is judged to be incorrect.
+
+### `term`
+
+**Regular command.**
+
+TODO.
+
+Similar to `next` but for the TERM function key. Unlike other function key-branching commands, pressing TERM prompts the user to enter a term. The user will be sent to the unit containing the `term` command with a `str` tag matching the user's entered term (nothing will happen if there is no match). TERM is treated similarly to a help-type key[^4] except that it is always active.
+
+The conditional version[^3] of `term`.
+
+### `transfr`
+
+**Regular command.**
+
+TODO.
+
+Transfers data between student variables (`v` or `n` followed by a number `1` through `150`), local variables, extended memory common (`common,number` or `c,number` where `number` is `1` through `16000` set by `common`), extended memory storage (`storage,number` or `s,number` where `number` is `1` through `20000` set by `storage`), or central memory locations (`vc` or `nc` followed by a number `1` through `1500`; the number must be loaded with `comload` or `stoload`). `from` and `to` are the start locations of the memory to copy from and the memory to copy to, respectively, and `length` is the number of locations to copy.
+
+### `unit`
+
+**Regular command.**
+
+```
+unit    name[(...arguments)]
+        [type: ][...localvariables]
+```
+
+Identify a unit of code. `name` is the name of the unit, `arguments` is the comma-separated list of names of input variables to the unit, `type` is the type of the local variables declared on that line (either `floating` or `integer`, equivalent to the `type` of the previous line if not specified or `floating` if there was no previous line), and `localvariables` is the comma- or newline-separated list of names of local variables within the unit. `name` cannot be longer than 8 characters and can't be `x` or `q`. Each input variable listed in `arguments` must also be listed in `localvariables` if they are to be local variables (arguments can also be stored in global variables). `arguments` can't contain more than 10 names. Local variables can be arrays (for example, a local variable named `foo(4)` would define local variables `foo(1)` through `foo(4)`). Globally defined variables may be merged with local variables by including the `define` set name in `localvariables` (a unit that has local variables may not use global variables otherwise).
+
+A unit ends when it encounters the start of the next unit or the end of the lesson. Units can't be longer than 1023 condensed words. Lessons can't contain more than 750 units. Input arguments can be passed to a unit with `do`, `jump`, `goto`, `join`, and `jumpn` by including comma-separated expressions in parentheses after the unit name corresponding to the arguments defined in the unit. Not all arguments need to be passed values; for arguments stored in local variables, the value will be undefined, and for arguments stored in global variables, the value will remain as it was before the call. If the unit has `return` values, they should be included in the same set of parentheses as the arguments, separated from each other by commas and separated from the arguments by a semicolon (for example, `do      foo(1,2;a,b)` would pass `1` as the value of the first argument and `2` as the value of the second to unit `foo` and would receive the first `return` value from `foo` in variable `a` and the second in variable `b`). Return values can be used with `do` and `join`.
+
+### `vocabs`
+
+TODO.
+
+Defines vocabulary for use with the `concept` command.
+
+### `write`
+
+**Regular command.**
+
+TODO.
+
+Writes `str` to the display, wrapping to the left margin set by the most recent `at` command if necessary. `str` may contain a value surrounded by embed symbols like `⦓mode,val⦔` to insert the value `val` with mode `mode` (`s` for `show`, `t` for `showt`).
+
+### `writec`
+
+**Regular command.**
+
+TODO.
+
+The conditional version[^3] of `write`. `↕` may be used as a separator instead of a comma - whichever separator immediately follows `val` will be used throughout the tag. If there is nothing between two separators, no `write` operation will occur for that case.
+
+### `wrong`
+
+**Judging command.**
+
+```
+wrong   [expression]
+```
+
+Judge an alphanumeric answer or some simple numerical responses. If the response matches `expression`, a `wrong` judgment is given and `no` is displayed on the screen after the response. Punctuation marks can't appear in `expression`. If no `expression` is given, the response will match if it is a space, NEXT, a `jkey`, `jcount` is `0`, a TUTOR punctuation mark (such as `;`, `,`, `.`, or `$`), or any touch if the touch panel is enabled. _Required words_ listed in `expression` must appear in the response.
+
+Can't match a response over 39 words.
+
+_Synonymous words_ are separated by commas or spaces and enclosed in parentheses. Words that can be ignored are enclosed in angle brackets. Commas are used to separate synonymous responses. `*` is used between words of a phrase.
+
+There are automatic checks for spelling, extra words, word order, capitalization, missing words, and broken phrases that can be modified with `specs`.
+
+### `wrongv`
+
+**Judging command.**
+
+```
+wrongv  expression[,tolerance]
+```
+
+Judge a numeric or algebraic answer. If the response matches `expression` within the specified `tolerance`, a `no` judgment is given. `tolerance` may be specified as a range (such as `10`) or a percentage deviation (such as `2%`). If no `tolerance` is given, an exact answer is required.
+
+### `zero`
+
+**Regular command.**
+
+TODO.
+
+Assigns the value `0` to the variable `var`. If `num` is specified, the value `0` is assigned to the `num` variables starting at `var`.
+
+TODO.
+
+[^3]: A unit name of `x` indicates that nothing should be done. A unit name of `q` (for "quit") indicates that no more regular commands should be processed in the current main unit. When `q` is used with function key-branching commands, it clears that pointer for the current main unit.
+
+[^6]: The specifications are: `allwords` TODO, `alphxnum` TODO, `bumpshift` replaces the capital letters within the judging copy with the corresponding lowercase letters (making it case-insensitive), `exorder` TODO, `holdmark` TODO, `nodiff` TODO, `nomark` TODO, `nookno` prevents `ok` or `no` from being displayed after judging, `noops` disallows user input from containing math operators, `norder` TODO, `nospell` TODO, `novars` TODO, `okassign` TODO, `okcap` TODO, `okextra` makes every word other than required words in the next user input be ignorable[^2], `okspell` makes the next user input accept misspelled words, `toler` TODO.
+
+[^7]: A character set is a type of block that contains up to 126 custom characters to be used in a lesson. Users swap between the default character set and the character set loaded with `charset` (the special character set) by pressing the FONT key. The `size` and `rotate` commands have no effect on special character sets.
+
+[^8]: A micro table is a type of block that can be used to assign a string (including characters like BACKSPACE) to a single key. The user can utilize this by pressing MICRO and then pressing the assigned character.
+
+[^9]: The finish unit is executed whenever the user exits the current lesson by pressing shift-STOP (not by encountering an `end     lesson` statement). It may not contain any `write` or `show` commands.
+
+[^10]: A function may be defined in a `define` command using similar syntax. Functions may have an argument name in parentheses after the function name, such as `circ(r)=2πr`. Functions may contain an assignment operator, such as `incr=(i⇦i+1)` (in which case a statement of `calc    incr` would cause `i` to be incremented by `1`).

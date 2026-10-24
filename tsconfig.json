@@ -30,7 +30,7 @@
 		"target": "esnext", // Next.js required.
 		"verbatimModuleSyntax": true
 	},
-	"exclude": ["dist", "docs", "node_modules"], // Next.js required.
+	"exclude": [".next", "dist", "docs", "node_modules"], // Next.js required.
 	"include": ["**/*", ".next/dev/types/**/*.ts", ".next/types/**/*.ts"], // Next.js required.
 	"mdx": {
 		// https://github.com/mdx-js/mdx-analyzer

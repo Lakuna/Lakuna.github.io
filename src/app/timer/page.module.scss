@@ -1,0 +1,12 @@
+@use "../../styles/variables" as v;
+
+div.content {
+	text-align: center;
+
+	& > div.timer {
+		border: 1px solid v.$theme-color;
+		display: inline-block;
+		font-size: 42pt;
+		padding: 10px;
+	}
+}

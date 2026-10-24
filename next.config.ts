@@ -9,9 +9,12 @@ import glsl from "highlight.js/lib/languages/glsl";
 import javascript from "highlight.js/lib/languages/javascript";
 import python from "highlight.js/lib/languages/python";
 import { WEBPACK_LAYERS } from "next/dist/lib/constants";
+import { matchesGlob } from "node:path";
 import rehypeHighlight from "rehype-highlight";
 import rehypeKatex from "rehype-katex";
+import rehypeSlug from "rehype-slug";
 import remarkFrontmatter from "remark-frontmatter";
+import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 
@@ -37,7 +40,12 @@ const webpackRuleTest = (
 	:	(rule.test.and?.every((test) => webpackRuleTest({ test }, input)) ?? true) &&
 		// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 		(rule.test.or?.some((test) => webpackRuleTest({ test }, input)) ?? true) &&
-		(rule.test.not ? !webpackRuleTest({ test: rule.test.not }, input) : true));
+		(rule.test.not ? !webpackRuleTest({ test: rule.test.not }, input) : true) &&
+		(rule.test.glob ?
+			typeof rule.test.glob === "string" ?
+				matchesGlob(input, rule.test.glob)
+			:	rule.test.glob.some((glob) => matchesGlob(input, glob))
+		:	true));
 
 /**
  * Add the Webpack rule to enable SVGR.
@@ -149,10 +157,12 @@ const out: NextConfig = createMdx({
 	options: {
 		rehypePlugins: [
 			rehypeKatex,
-			[rehypeHighlight, { languages: { bash, c, glsl, javascript, python } }]
+			[rehypeHighlight, { languages: { bash, c, glsl, javascript, python } }],
+			rehypeSlug
 		],
 		remarkPlugins: [
 			remarkFrontmatter,
+			remarkGfm,
 			[remarkMdxFrontmatter, { name: "metadata" }],
 			remarkMath
 		]

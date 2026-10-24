@@ -12,7 +12,7 @@ import tseslint from "typescript-eslint";
 export default defineConfig(
 	...nextVitals,
 	...nextTs,
-	{ ignores: [".next", "next-env.d.ts"], name: "Ignore Generated Directories" },
+	{ ignores: ["next-env.d.ts"], name: "Ignore Generated Directories" },
 	eslint.configs.recommended,
 	{ languageOptions: { globals: globals.browser }, name: "Browser Globals" },
 	{

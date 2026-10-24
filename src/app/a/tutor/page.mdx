@@ -1,0 +1,148 @@
+---
+title: "The TUTOR Language"
+description: "A look into the quirks and oddities of the TUTOR programming language and why they led to networked multiplayer video games (among other things)."
+openGraph:
+  url: "/a/tutor"
+date: "2026-09-16T07:00:00.000Z"
+---
+
+# The TUTOR Language
+
+[TUTOR](https://en.wikipedia.org/wiki/TUTOR) was the programming language used on the [PLATO](<https://en.wikipedia.org/wiki/PLATO_(computer_system)>) system that ran on the University of Illinois' [ILLIAC I](https://en.wikipedia.org/wiki/ILLIAC_I) mainframe computer. PLATO is best known for being the frontier on which a variety of network-related concepts were pioneered, such as email and (networked) multiplayer video games. This is due in part to the way users interacted with PLATO and in part to some unique features of the TUTOR programming language.
+
+Students at the University of Illinois connected to PLATO via terminals. Multiple terminals could be connected to PLATO at the same time, and could be used to access _lessons_ (programs) in the PLATO system. All PLATO lessons were essentially server-authoritative programs: the terminals took user input and passed it to PLATO, where the lesson ran, then received the result and displayed it to the user. PLATO was intended to be used only for educational purposes, but this environment was so well-suited to developing the first real-time networked multiplayer video games that many quickly popped up, including such notable examples as:
+
+- [Avatar](<https://en.wikipedia.org/wiki/Avatar_(1979_video_game)>), an early MMO.
+- [The Game of Dungeons](<https://en.wikipedia.org/wiki/Dnd_(1975_video_game)>) ("dnd"), the first video game to include "bosses" and the game which inspired Moria.
+- [Empire](<https://en.wikipedia.org/wiki/Empire_(1973_video_game)>), the first networked multiplayer shoot 'em up and maybe even the first networked multiplayer action game.
+- [Moria](<https://en.wikipedia.org/wiki/Moria_(1975_video_game)>), an early RPG.
+- [Oubliette](<https://en.wikipedia.org/wiki/Oubliette_(video_game)>), the game which inspired Avatar and [Wizardry](<https://en.wikipedia.org/wiki/Wizardry_(video_game_series)>) (which in turn inspired games such as [Megami Tensei](https://en.wikipedia.org/wiki/Shin_Megami_Tensei), [Dragon Slayer](<https://en.wikipedia.org/wiki/Dragon_Slayer_(series)>), [Fire Emblem](https://en.wikipedia.org/wiki/Fire_Emblem), [Final Fantasy](https://en.wikipedia.org/wiki/Final_Fantasy), and [Dragon Quest](https://en.wikipedia.org/wiki/Dragon_Quest)).
+- [The Dungeon](https://en.wikipedia.org/wiki/Pedit5) ("pedit5"), the first dungeon crawl video game and probably the first-ever computer RPG[^1].
+- [Spasism](https://en.wikipedia.org/wiki/Spasim), considered an ancestor of the first-person shooter genre.
+
+[^1]: Many sources online refer to a deleted game called "m199h" that supposedly predated The Dungeon as the first computer RPG, but it [seems](https://crpgaddict.blogspot.com/2023/10/m199h-new-findings-both-solve-and.html) like m199h was probably in fact a remake of The Dungeon.
+
+## Unique Features of TUTOR
+
+TUTOR is a [procedural](https://en.wikipedia.org/wiki/Procedural_programming), [imperative](https://en.wikipedia.org/wiki/Imperative_programming) programming language. It was designed specifically for use in the PLATO (later CYBIS) system, and the terminology of the language reflects that fact. Many unique features of the language reflect its intended primary use as an educational tool, and many others take advantage of the unique method by which users interfaced with the PLATO system.
+
+Programs written in TUTOR are called _lessons_ and are composed of _units_ (which function somewhat similarly to functions in modern languages). TUTOR is a fixed format language, similar to pre-2002 COBOL; the first 8 characters (the _command field_) of each _statement_ (line) contain the _command name_ and the ninth character and beyond (the _tag field_) contain the _tag_ (arguments). Lines can only be up to 120 characters long, but tags can extend across multiple lines by omitting a command name from subsequent lines. Lines that begin with `*` are comments. Comments can also be inserted after any statement by placing `$$` before the comment. Instead of a command name, the command field may contain a _statement label_ that begins with a digit (must be unique per unit). A line with a statement label may contain a `calc` command.
+
+Lessons must be _condensed_ (compiled) before they can be used.
+
+Commands can either be _executable commands_ (which have an effect at execution time) or _non-executable commands_ (which have an effect only at condense time).
+
+### Units
+
+Execution of a lesson begins in the _initial entry unit_ (IEU), which is the code at the beginning of the lesson (before the first unit). The main unit that is currently being executed is called the _main unit_. By default, pressing the NEXT key at the end of one unit proceeds the unit physically following it in the lesson code, making that the new main unit. A unit can also be attached to the main unit (such as via `do`, `join`, or `goto`), in which case that unit is called the _attached unit_. A unit can be set as the _finish unit_ with the `finish` command.
+
+Some keys are _function keys_ that have corresponding branching commands. These keys are BACK (`back`), shift-BACK (`back1`), DATA (`data`), shift-DATA (`data1`), HELP (`help`), shift-HELP (`help1`), LAB (`lab`), shift-LAB (`lab1`), NEXT (`next`), shift-NEXT (`next1`), and TERM (`term`). STOP (`stop`) is also treated somewhat like a function key, but it also aborts the output to the terminal screen (regardless of whether or not its branching command is used). Shift-STOP has no branching command because it always (for non-system lessons) executes the finish unit then causes the user to immediately exit the lesson.
+
+Some function keys are _help-type keys_. These keys are DATA, shift-DATA, HELP, shift-HELP, LAB, and shift-LAB. TERM is also treated somewhat like a help-type key. Help-type keys initiate a _help sequence_ when used. When a branch to a help sequence occurs, the unit that the user was in is called the _base unit_. Completing a help sequence (typically via an `end     help` statement, pressing NEXT in a unit with an `end` command, or pressing BACK or shift-BACK in a unit in the help sequence that doesn't contain a `back` or `back1` command, respectively) returns the user to the base unit. When the user is not in a help sequence, they are in a _lesson sequence_. If the base unit is set the user is in a help sequence and if it isn't the user is in a lesson sequence.
+
+### Expressions
+
+Expressions in TUTOR are resolved slightly abnormally. The order of operations is exponentiation, multiplication, division, then addition and subtraction (from left to right). Notably, this means that something like `6/2*3` would resolve to `1` rather than the typical `9`. Parentheses, brackets, and curly braces can be used to control the order of operations. Exponentiation is denoted by either a superscript number (typed using SUPER then a number) or `**`, multiplication is denoted by either `×`, `*`, or an expression adjacent to another expression (such as `3(6)`), division is denoted by either `÷` or `/`, addition is denoted by `+`, and subtraction is denoted by `-`. `π` represents pi and `°` represents degrees (angles are in radians by default).
+
+The operators `=` (equal to), `≠` (not equal to), `<` (less than), `>` (greater than), `≤` (less than or equal to), and `≥` (greater than or equal to) operators produce logical values (`-1` for true or `0` for false). They consider their operands to be equal if they differ by less than one part in `10**11` or by an absolute difference of `10**-9`.
+
+`$and$` produces true if both operands are true or false otherwise. `$or$` produces true if either operand is true or false otherwise.
+
+`$cls$` performs a circular left shift of the left operand by right operand bit positions. `$ars$` performs an arithmetic right shift of the left operand by right operand bit positions. `$mask$` sets bits where both operands have bits set. `$union$` sets bits where either operand has a bit set. `$diff$` sets bits where one operand has a bit set and the other doesn't.
+
+### Judging Blocks
+
+One of the primary features of TUTOR is the _judging block_. Judging blocks act somewhat like modern switch-case statements, but with a lot of additional functionality. Judging blocks begin with an `arrow` command, which displays an arrow on the screen and prompts the user for input. Upon the user pressing NEXT, a copy of their input called the _judging copy_ is made and PLATO switches from _regular state_ to _judging state_.
+
+All executable commands in TUTOR are either _regular commands_ or _judging commands_ (a few are both). PLATO starts each lesson in regular state, in which it executes regular commands until it reaches a non-regular command. When PLATO enters judging state, execution returns to the beginning of the current judging block and proceeds through judging commands until one of them judges the judging copy, ignoring non-judging commands. Once a judgment is passed on the judging copy, PLATO returns to regular state. The possible judgments are as follows:
+
+- `ok`: The answer is judged correct. All functionality remains unchanged (NEXT proceeds out of the judging block).
+- `wrong`: The answer is judged incorrect (anticipated). Pressing NEXT clears the screen of any output from the corresponding judging block and returns execution to the beginning of the corresponding judging block (thus re-prompting the user for input).
+- `no`: The answer is judged incorrect (unanticipated). This is mostly handled the same way as a `wrong` judgment. If PLATO reaches the end of a judging block while in judging state, this is the judgment that is passed.
+
+There is also a special judging command, `specs`, that slightly modifies the control flow. When PLATO is in regular state after a judgment has been passed, execution returns to the most recent `specs` command within that judging block upon reaching a non-regular command.
+
+This control flow is pretty alien if you're used to modern languages, so I will give a simple example here. To understand this example, you need to know the following:
+
+- The tag of the `arrow` regular command is the prompt that the user is responding to.
+- The `answer` judging command judges the judging copy `ok` if it matches its tag.
+- The `wrong` judging command judges the judging copy `wrong` if it matches its tag.
+- The `write` regular command is similar to `print` (or similar) in most modern languages. The tag is displayed on-screen.
+
+```
+arrow   What is the answer to the ultimate question?
+write   1
+specs
+write   2
+answer  42
+write   3
+wrong   24
+write   4
+```
+
+In this example, `1` will be written on-screen before the user enters any input because it is before the first non-regular command (`specs`). If the user enters `42`, PLATO enters judging state and proceeds through the judging commands (`specs`, `answer`, and `wrong`) until it reaches one that judges the judging copy. `specs` doesn't pass a judgment. `answer` judges the judging copy `ok`, so PLATO returns to regular state and prints `3` to the screen. Then, while in regular state, PLATO encounters `wrong` (a non-regular command), so it returns to `specs` and prints `2` (making the final output `132`). Pressing NEXT from this state proceeds out of the judging block.
+
+If the user instead entered `24`, both `specs` and `answer` wouldn't pass a judgment, then `wrong` would judge the answer `wrong`. The final output would be `142`. Pressing NEXT from this state would clear the `142` and prompt from the screen and return to the beginning of the judging block (re-displaying the `1` and prompt).
+
+If the user entered anything else, none of the judging commands would pass a judgment, so PLATO would reach the end of the judging block and the judgment would automatically become `no`. The final output would be `12`. Pressing NEXT from this state would behave almost identically to the previous scenario.
+
+Judging blocks are ended by the `arrow`, `endarrow`, and `unit` commands.
+
+### Variables and Implicit Networking
+
+One of the primary reasons why so many network-related features first appeared on PLATO was the extreme ease of use provided by the unique variable system. PLATO features a few types of variables, some of which are implicitly shared between users in real time with no extra effort required by the developer. This is possible because of the server-authoritative nature of the PLATO system, as described prior.
+
+_Student variables_ are most similar to global variables in modern programming languages. Within a lesson, each user has 150 student variables with values that are unique to that user. These are referred to as `v1` through `v150` to use them as floating-point numbers or as `n1` through `n150` to use them as integers.
+
+TUTOR also has _local variables_ that function very similar to those found in modern languages (and are local to one unit), but no unit may contain more local variables than the number set with the `lvars` command. Units can even accept local variables as arguments and `return` local variables to the attaching unit, much like modern functions.
+
+The most interesting and unique type of variable offered by TUTOR are _common variables_, which are shared across all users of a lesson. Common variables are referred to as `vc1` through `vc1500` to use them as floating-point numbers or `nc1` through `nc1500` to use them as integers. There are three types of common variables: _permanent common_, _temporary common_, and _storage_. Permanent common persists indefinitely, so it is used for things like `pedit5`'s leaderboard and saved characters. Temporary common persists only as long as at least one user has the lesson open, so it is better used for things like real-time networked multiplayer. Storage variables persist as dictated by the author (they don't persist by default).
+
+Each variable can store either an integer between roughly `-10**14` and `10**14`, a floating point number with 14 decimal digits between roughly `10**-292` and `10**322`, or a 10-character alphanumeric string.
+
+Variables can be assigned a value using the `calc` command with an _assignment arrow_ (`⇦`), such as `calc    v124⇦65` to set the value of variable `v124` to `65`.
+
+Variables can be given names via the `define` command. For example, the following statement would allow the author to henceforth refer to `v1` as either `foo` or `v1`.
+
+```
+define  foo=v1
+```
+
+_Indexed variables_ are often used to handle arrays of data. This is accomplished by using an expression in parentheses in place of the number in the variable name, such as `v(1+1)` to refer to `v2`.
+
+Variables are composed of 60 bits, but they can be _segmented_ via the `define` command when that many bits aren't needed. The following statement would horizontally segment a variable `foo` into 4 14-bit _segments_ (sometimes referred to as _bytes_) that can be referred to as `foo(1)` (the most significant 14 bits) through `foo(4)` (the least significant 14 bits). `foo(5)` would refer to the most significant 14 bits of `v2` (the extra 4 unused bits in `v1` are skipped for horizontally segmented variables).
+
+```
+define  segment,foo=v1,14
+```
+
+Variables can also be vertically segmented, in which consecutive bytes are in consecutive words. For example, after the following lines, `foo(1)` would refer to the first 8 bits of `n1`, `foo(2)` would refer to the first 8 bits of `n2`, `bar(1)` would refer to the next 10 bits of `n1`, and `bar(2)` would refer to the next 10 bits of `n2`. Operations with vertical segments are "much faster" (according to the `aids` lesson) than those with horizontal segments.
+
+```
+define  segmentv,foo=n1,1,8
+        segmentv,bar=n1,9,10
+```
+
+Variables can also contain `fields`, which are very similar to vertical segments except that they aren't indexed. They are defined almost identically to vertical segments, except that they use `segmentf` instead of `segmentv`.
+
+When data is stored in a segment that is larger than the maximum value that is storable in that segment, a `$mask$` is automatically applied such that only the rightmost bits are stored (so the segment to the left is not overwritten). Only integers (and therefore alphanumeric information) can be stored in a segment; floating-point numbers are automatically rounded to the nearest integer before being stored in a segment.
+
+In PLATO, an _array_ refers to a consecutive group of variables that is to be used in a related fashion; there is not a specific array variable type like is often seen in modern languages. Arrays can be defined with `define` by using tags that start with `array` or `arraysegv`. Arrays cannot contain more than 255 elements nor may they have an index over `2**13-1`. Arrays cannot have more than 2 dimensions. 1-dimensional arrays are called _vectors_ and are regarded as having 1 column. 2-dimensional arrays are called _matrices_. Matrices may not be used in user-defined functions. Each element in an array is in an adjacent variable (matrices use row-major order). Attempting to refer to an index outside of the stated bounds of an array causes an execution error. Arrays are 0-base indexed by default. When an array is referenced without an index, all elements of the array are affected by the operation (exponentiation can't be used in this way). The vector dot/inner product can be calculated with the `○` (MICRO `×`) operator between two column vectors with the same number of elements. The vector cross product can be calculated with the `✕` (MICRO shift-`×`) operator between two vectors with the same number of elements. The matrix product can be calculated with the `○` (MICRO `×`) operator between two matrices in which the former has the same number of columns as the latter has rows. Full-array operations aren't legal in `calcc` or `calcs` statements.
+
+### Coarse and Fine Grids
+
+The screen of a PLATO terminal is 512 dots square, numbered 0 through 511 from left to right and bottom to top. The screen is divided into 32 lines of 64 characters each (so each character is 8 dots wide and 16 dots tall). There are 60 dots per inch (so the whole screen is ~8.53 inches square). Screen positions can generally be referenced in either of two ways: two comma-separated numbers indicating a specific dot are called _fine grid_ coordinates, while one number indicating a specific character is called a _coarse grid_ position. Coarse grid positions are 3-4 digit numbers in which the first 1-2 digits represent a line and the last 2 digits represent a column. For example, `205` represents line 2, column 5 of the coarse grid. Coarse grid positions specifically refer to the lower-left dot of the indicated character. Offscreen coordinates are wrapped around the screen.
+
+### Conditional Operations
+
+Some operations are _conditional_ or have a conditional form. In these operations, the first argument in the tag is an expression that is evaluated and rounded to the nearest integer and the remaining arguments are possible cases depending on the result of the evaluated expression. The first of the remaining arguments is used if the result is negative. The second of the remaining arguments and onward is used if the result matches the index of that argument, starting with 0. If the result is greater than the index of the last argument, the last argument is used. Since true is represented as `-1` and false is represented as `0` in TUTOR, the tag of a conditional command can often be read as `expression,truevalue,falsevalue`, where `truevalue` will be used if `expression` evaluates to true and `falsevalue` will be used otherwise.
+
+### Quick Reference
+
+I have written a few incomplete lists of TUTOR features for my own use as I examine the code of `pedit5`.
+
+- [TUTOR Commands](./tutor/commands)
+- [TUTOR System Defined Functions](./tutor/functions)
+- [TUTOR System Defined Words](./tutor/words)
+
+To get a full description of any feature of the TUTOR language, the best resource is the `aids` lesson, accessible via [cyber1](https://cyber1.org/) or by setting up your own PLATO system as detailed [here](https://codex.retro1.org/plato:start). If you want specific information added to this documentation, please [open an issue on GitHub](https://github.com/Lakuna/Lakuna.github.io/issues/new/choose).

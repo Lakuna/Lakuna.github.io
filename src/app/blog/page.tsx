@@ -29,6 +29,16 @@ export default function Page(): JSX.Element {
 			<h1>{"Blog"}</h1>
 			<hr />
 			<CardList>
+				{/*
+				<Card href="/a/tutor">
+					<h2>{"The TUTOR Language"}</h2>
+					<p>
+						{
+							"A look into the quirks and oddities of the TUTOR programming language and why they led to networked multiplayer video games (among other things)."
+						}
+					</p>
+				</Card>
+				*/}
 				<Card href="/a/ugl">
 					<h2>{"Introduction to μGL"}</h2>
 					<p>{"An overview of my WebGL2 library and its major features."}</p>
